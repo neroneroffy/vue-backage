@@ -13,7 +13,7 @@
       </Header>
       <Layout>
         <Sider hide-trigger :style="{background: '#fff'}" collapsible v-model="isCollapsed">
-          <Menu :active-name="currentPath" theme="light" width="auto" :class="menuitemClasses" :open-names="[openFirstMenu[0]]">
+          <Menu :active-name="currentPath" theme="light" width="auto" :class="menuitemClasses" :open-names="[openFirstMenu[0]]" class="menu">
             <router-link to="/index">
               <MenuItem name="/index">
                 <Icon type="ios-home"></Icon>
@@ -37,7 +37,6 @@
         </Sider>
         <Layout :style="{padding: '24px 24px'}">
           <Content :style="{padding: '24px', minHeight: '280px', background: '#fff'}">
-
             <loading v-if="this.$store.state.loading.isLoading" v-show="this.$store.state.loading.showModal"></loading>
             <router-view></router-view>
           </Content>
@@ -88,7 +87,6 @@
               }else{
                 this.$router.push(this.currentPath)
               }
-
             }
           })
         };
@@ -106,7 +104,7 @@
             cancelText:"取消",
             okText:"确定",
             onOk:()=>{
-              this.$store.dispatch('modalLoading')
+              this.$store.dispatch('modalLoading');
               axios.get(`${HOST}/logout`).then(res=>{
                 if(res.data.result){
                   sessionStorage.clear()
@@ -114,11 +112,8 @@
                   this.$router.push('/login')
                 }
               })
-
             },
-            onCancel:()=>{
-
-            }
+            onCancel:()=>{}
           });
 
         }
@@ -152,7 +147,6 @@
             return name
           }
           return []
-
         }
       }
     }
@@ -175,9 +169,12 @@
     .ivu-menu-submenu-title>i{
       margin-right:5px
     }
-    a{
-      color:#666666!important
+    .menu{
+      a{
+        color:#666666!important
+      }
     }
+
   }
   .layout-logo{
     width: 100px;

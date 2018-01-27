@@ -1,7 +1,6 @@
 <template>
     <div class="manager">
       <div class="search-wrapper">
-
         <Button type="primary" icon="plus-round" @click="addMember" class="add">新增</Button>
         <div class="search">
           <Form ref="formInline" :model="searchContent" inline>
@@ -248,17 +247,7 @@
                   { required: true, message: '请填写电话', trigger: 'blur' }
                 ]
               },*/
-              /*---------上传头像----------*/
-              defaultList: [
-                {
-                  'name': 'a42bdcc1178e62b4694c830f028db5c0',
-                  'url': 'https://o5wwk8baw.qnssl.com/a42bdcc1178e62b4694c830f028db5c0/avatar'
-                },
-                {
-                  'name': 'bc7521e033abdd1e92222d733590f104',
-                  'url': 'https://o5wwk8baw.qnssl.com/bc7521e033abdd1e92222d733590f104/avatar'
-                }
-              ],
+
               imgName: '',
               visible: false,
               uploadList: []
@@ -379,44 +368,5 @@
 </script>
 
 <style lang="stylus">
-  .pagination{
-    margin-top: 20px;
-    display: flex;
-    justify-content: flex-end;
-  }
-  .search-wrapper{
-    display: flex;
-    justify-content: space-between;
-    .add{
-      height: 32px
-    }
-    .ivu-form-item{
-      margin-right: 30px;
-      &:last-child{
-        margin-right 0
-      }
-    }
-  }
-  .avatar-edit-display{
-    width: 60px;
-    height: 60px;
-    line-height :60px
-    font-size 35px;
-    margin-top 10px
-  }
-.ivu-page-options{
-  position relative
-}
-.pagination-wrapper{
-  position relative;
-
-}
-
-  .ivu-page-options-sizer{
-    margin-right 0
-  }
-.status:hover{
-  border-color none!important
-}
-
+  @import 'usermanager.styl'
 </style>
