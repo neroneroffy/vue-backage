@@ -2,20 +2,52 @@
   "data":[
     {
       "id":"3213423412",
-      "name":"角色1"
+      "name":"按钮3",
+      "uri":"http://www.localhost.com/reset",
+      "permission":"ertyhgfd-oofjivi",
+      "type":"按钮",
+      "status":"true"
     },
     {
-      "id":"3213412",
-      "name":"角色2"
+      "id":"3213423412",
+      "name":"按钮4",
+      "uri":"http://www.localhost.com/reset",
+      "permission":"ertyd-ookkfjivi",
+      "type":"模块",
+      "status":"true"
     },
     {
-      "id":"3213423",
-      "name":"角色3"
+      "id":"3213423412",
+      "name":"模块6",
+      "uri":"http://www.localhost.com/reset",
+      "permission":"ertyhgfd-ookkfjivi",
+      "type":"模块",
+      "status":"true"
     },
     {
-      "id":"32134212",
-      "name":"角色4"
+      "id":"3213423412",
+      "name":"资源资源2",
+      "uri":"http://www.localhost.com/reset",
+      "permission":"ertyhgfd-990oodsaj",
+      "type":"模块",
+      "status":"true"
+    },
+    {
+      "id":"3213423412",
+      "name":"资源2",
+      "uri":"http://www.localhost.com/reset",
+      "permission":"ertyhgfd-ookkfjivi",
+      "type":"菜单",
+      "status":"true"
+    },
+    {
+      "id":"3213423412",
+      "name":"资源1",
+      "uri":"http://www.localhost.com/pssiomccon",
+      "permission":"ertyhgfd-oojivi",
+      "type":"按钮",
+      "status":"true"
     }
-  ],
-  "result":true
+],
+"result":true
 }

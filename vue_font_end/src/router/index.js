@@ -1,5 +1,7 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import Router from 'vue-router';
+import axios from 'axios';
+import { HOST } from '../const/api';
 import usermanage from '@/containers/usermanage/usermanage'
 import editmember from '@/containers/edit-member/edit-member'
 import login from '@/containers/login/login'
@@ -49,7 +51,15 @@ const router = new Router({
         {
           path: '/sys/user',
           name: 'usermanage',
-          component: usermanage
+          component: usermanage,
+          children:[
+
+          ]
+        },
+        {
+          path: '/sys/user/editmember',
+          name: 'editmember',
+          component: editmember
         }
 
       ]

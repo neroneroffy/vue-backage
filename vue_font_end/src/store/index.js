@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import resource from './resource/resource';
 import usermanage from './usermanage/usermanage';
 import user from './user';
 import loading from './loading';
@@ -9,7 +10,8 @@ const store = new Vuex.Store({
   modules:{
     usermanage,
     loading,
-    user
+    user,
+    resource
   }
 });
 export default store

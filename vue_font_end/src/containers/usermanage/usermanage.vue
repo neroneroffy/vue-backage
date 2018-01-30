@@ -223,7 +223,8 @@
                             this.statusEdit(params)
                           }
                         }
-                      },params.row.status?"禁用": '启用')
+                      },
+                        params.row.status?"禁用": '启用')
                     ]);
                   }
                 }
@@ -263,7 +264,7 @@
           this.visible = false
         },
         addMember(){
-          this.$router.push('/container/editmember')
+          this.$router.push('/sys/user/addmember')
         },
         cancel(){
           setTimeout(()=>{
@@ -298,7 +299,7 @@
         },
         //编辑
         edit(params){
-          this.$router.push({path:'/container/editmember',query:{id:params.row.id}})
+          this.$router.push({path:'/sys/user/editmember',query:{id:params.row.id}})
         },
         //删除
         remove (params) {

@@ -15,7 +15,13 @@ axios.interceptors.request.use((config)=>{
 });
 axios.interceptors.response.use((config)=>{
   //console.log(config);
+  if(config.data.flag === 'SESSION_INVALID'){
+    console.log('失效')
+    this.$router.push('/login');
+    return
+  }
   store.dispatch('endLoading');
+
  // console.log(config.headers)
 
   //获取token,验证，跳转

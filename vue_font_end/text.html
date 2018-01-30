@@ -9,8 +9,12 @@
 </body>
 </html>
 <script>
-  var str = '/sys/resource/list'
-  //var reg = /^/[a-z]+/[a-z]+/
-  var reg = /^\/[a-z]+\/[a-z]+\//g
-  document.write(str.match(reg))
+  function fn (){
+    console.log(this.a)
+  }
+  var obj = {
+    a:20
+  }
+  fn.call(obj)
+
 </script>

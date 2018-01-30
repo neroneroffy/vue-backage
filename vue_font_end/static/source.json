@@ -1,29 +1,25 @@
 {
   "data":[
     {
-      "id":"31234323432",
+      "id":"312343432",
       "name":"管理员权限",
-      "path":"url://mlkjklm.cn"
-    },
-    {
-      "id":"3123432332",
-      "name":"管理员权限",
-      "path":"url://mlkjklm.cn"
-    },
-    {
-      "id":"31234432",
-      "name":"管理员权限",
-      "path":"url://mlkjklm.cn"
+      "path":"url://mlkjklm.cn",
+      "status":true,
+      "type":"按钮"
     },
     {
       "id":"312343432",
       "name":"管理员权限",
-      "path":"url://mlkjklm.cn"
+      "path":"url://mlkjklm.cn",
+      "status":true,
+      "type":"按钮"
     },
     {
-      "id":"312343232",
+      "id":"312343432",
       "name":"管理员权限",
-      "path":"url://mlkjklm.cn"
+      "path":"url://mlkjklm.cn",
+      "status":true,
+      "type":"按钮"
     }
   ]
 }

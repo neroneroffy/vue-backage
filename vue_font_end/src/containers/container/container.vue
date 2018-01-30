@@ -3,7 +3,7 @@
     <Layout>
       <Header>
         <div class="layout-logo"></div>
-        <div class="user">
+        <div class="user" v-if="user">
           <div class="avatar">
             <Avatar icon="person"  size="large" />
           </div>
@@ -13,7 +13,7 @@
       </Header>
       <Layout>
         <Sider hide-trigger :style="{background: '#fff'}" collapsible v-model="isCollapsed">
-          <Menu :active-name="currentPath" theme="light" width="auto" :class="menuitemClasses" :open-names="[openFirstMenu[0]]" class="menu">
+          <Menu :active-name="currentPath" theme="light" width="auto" :class="menuitemClasses" :open-names="[openFirstMenu[0]]" class="menu" v-if="user">
             <router-link to="/index">
               <MenuItem name="/index">
                 <Icon type="ios-home"></Icon>
@@ -51,105 +51,105 @@
   import { HOST } from '../../const/api';
   import axios from 'axios'
   import loading from '../../components/loading'
-    export default {
-      name: "container",
-      components:{
-        Layout,Header,Sider,Menu,Breadcrumb,Content,
-        loading
-      },
-      data(){
-        return {
-          user:"",
-          isCollapsed: false
-        }
-      },
-      created(){
+  export default {
+    name: "container",
+    components:{
+      Layout,Header,Sider,Menu,Breadcrumb,Content,
+      loading
+    },
+    data(){
+      return {
+        user:"",
+        isCollapsed: false
+      }
+    },
+    created(){
 
-        this.user = JSON.parse(localStorage.getItem('user'));
-        //验证token
-        console.log('进入')
-        let xAuthToken = localStorage.getItem('xAuthToken');
-        console.log(xAuthToken);
-        if(!xAuthToken){
-          this.$router.push('/login');
-        }else{
+      this.user = JSON.parse(localStorage.getItem('user'));
+      //验证token
+      console.log('进入')
+      let xAuthToken = localStorage.getItem('xAuthToken');
+      console.log(xAuthToken);
+      if(!xAuthToken){
+        this.$router.push('/login');
+      }else{
 
-          axios.get(`${HOST}/validate`).then(response=>{
-            if(response.data.flag === 'SESSION_INVALID'){
-              console.log('失效')
-              this.$router.push('/login');
+        axios.get(`${HOST}/validate`).then(response=>{
+          if(response.data.flag === 'SESSION_INVALID'){
+            console.log('失效')
+            this.$router.push('/login');
+          }else{
+            localStorage.setItem('user',JSON.stringify(response.data.data));
+            this.user = JSON.parse(localStorage.getItem('user'));
+            console.log('验证通过');
+            if(this.lastPath === '/index'){
+              this.$router.push("/index")
             }else{
-              localStorage.setItem('user',JSON.stringify(response.data.data));
-              this.user = JSON.parse(localStorage.getItem('user'));
-              console.log('验证通过');
-              if(this.lastPath === '/index'){
-                this.$router.push("/index")
-              }else{
-                this.$router.push(this.currentPath)
-              }
+              this.$router.push(this.currentPath)
             }
-          })
-        };
+          }
+        })
+      };
 
-      },
-      mounted(){
-        //
-        console.log(this.openFirstMenu,this.openSecondMenu)
-      },
-      methods:{
-        logout(){
-          this.$Modal.confirm({
-            content: "确认退出吗？",
-            closable:true,
-            cancelText:"取消",
-            okText:"确定",
-            onOk:()=>{
-              this.$store.dispatch('modalLoading');
-              axios.get(`${HOST}/logout`).then(res=>{
-                if(res.data.result){
-                  sessionStorage.clear()
-                  localStorage.removeItem('xAuthToken');
-                  this.$router.push('/login')
-                }
-              })
-            },
-            onCancel:()=>{}
-          });
+    },
+    mounted(){
+      //
+      console.log(this.openFirstMenu,this.openSecondMenu)
+    },
+    methods:{
+      logout(){
+        this.$Modal.confirm({
+          content: "确认退出吗？",
+          closable:true,
+          cancelText:"取消",
+          okText:"确定",
+          onOk:()=>{
+            this.$store.dispatch('modalLoading');
+            axios.get(`${HOST}/logout`).then(res=>{
+              if(res.data.result){
+                sessionStorage.clear()
+                localStorage.removeItem('xAuthToken');
+                this.$router.push('/login')
+              }
+            })
+          },
+          onCancel:()=>{}
+        });
 
-        }
+      }
+    },
+    computed: {
+      menuitemClasses: function () {
+        return [
+          'menu-item',
+          this.isCollapsed ? 'collapsed-menu' : ''
+        ]
       },
-      computed: {
-        menuitemClasses: function () {
-          return [
-            'menu-item',
-            this.isCollapsed ? 'collapsed-menu' : ''
-          ]
-        },
-        currentPath(){
-          if(sessionStorage.getItem('currentPath') === '/'){
-            this.$router.push('/index')
-          }
-          return sessionStorage.getItem('currentPath')
-        },
-        lastPath(){
-          return sessionStorage.getItem('lastPath')
-        },
-        openFirstMenu(){
-          let name = sessionStorage.getItem('currentPath').match(/^\/[a-z]+/g)
-          if(name){
-            return name
-          }
-          return []
-        },
-        openSecondMenu(){
-          let name = sessionStorage.getItem('currentPath').match(/^\/[a-z]+\/[a-z]+/g);
-          if(name){
-            return name
-          }
-          return []
+      currentPath(){
+        if(sessionStorage.getItem('currentPath') === '/'){
+          this.$router.push('/index')
         }
+        return sessionStorage.getItem('currentPath')
+      },
+      lastPath(){
+        return sessionStorage.getItem('lastPath')
+      },
+      openFirstMenu(){
+        let name = sessionStorage.getItem('currentPath').match(/^\/[a-z]+/g)
+        if(name){
+          return name
+        }
+        return []
+      },
+      openSecondMenu(){
+        let name = sessionStorage.getItem('currentPath').match(/^\/[a-z]+\/[a-z]+/g);
+        if(name){
+          return name
+        }
+        return []
       }
     }
+  }
 </script>
 
 <style lang="stylus">
