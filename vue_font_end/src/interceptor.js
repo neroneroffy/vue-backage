@@ -1,12 +1,13 @@
 import axios from 'axios';
-import store from './store'
+import store from './store';
+import router from './router'
 axios.interceptors.request.use((config)=>{
   let xAuthToken = localStorage.getItem('xAuthToken');
 
   if(xAuthToken){
     config.headers['token'] = xAuthToken
   }else{
-    console.log(888)
+
   }
 
   store.dispatch('beginLoading');
@@ -14,10 +15,10 @@ axios.interceptors.request.use((config)=>{
   return config
 });
 axios.interceptors.response.use((config)=>{
-  //console.log(config);
+  console.log(config);
   if(config.data.flag === 'SESSION_INVALID'){
-    console.log('失效')
-    this.$router.push('/login');
+    console.log('失效');
+    router.push('/login');
     return
   }
   store.dispatch('endLoading');

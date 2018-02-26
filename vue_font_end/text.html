@@ -9,12 +9,20 @@
 </body>
 </html>
 <script>
-  function fn (){
-    console.log(this.a)
-  }
-  var obj = {
-    a:20
-  }
-  fn.call(obj)
+  var name = "The Window";
+
+  var object = {
+    name : "My Object",
+
+    getNameFunc : function(){
+      return function(){
+        return this.name;
+      };
+
+    }
+
+  };
+
+  console.log(object.getNameFunc()());
 
 </script>

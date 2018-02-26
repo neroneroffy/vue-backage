@@ -9,7 +9,10 @@ import container from '@/containers/container/container'
 import role from '@/containers/role/role'
 import resource from '@/containers/resource/resource'
 import resourceList from '@/containers/resource-list/resource-list'
+import editrole from '@/containers/editrole/editrole'
+import organization from '@/containers/organization/organization'
 import panel from '@/containers/panel/panel'
+import auth from '@/containers/auth/auth'
 
 Vue.use(Router);
 
@@ -49,15 +52,32 @@ const router = new Router({
           component: role
         },
         {
+          path: '/sys/role/auth',
+          name: 'auth',
+          component: auth
+        },
+        {
           path: '/sys/user',
           name: 'usermanage',
-          component: usermanage,
-          children:[
-
-          ]
+          component: usermanage
+        },
+        {
+          path: '/sys/organization',
+          name: 'usermanage',
+          component: organization
         },
         {
           path: '/sys/user/editmember',
+          name: 'editmember',
+          component: editmember
+        },
+        {
+          path: '/sys/user/checkmember',
+          name: 'editmember',
+          component: editmember
+        },
+        {
+          path: '/sys/user/addmember',
           name: 'editmember',
           component: editmember
         }

@@ -7,7 +7,10 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
-var auth = require('./routes/auth');
+var member = require('./routes/member');
+var resource = require('./routes/resource');
+var role = require('./routes/role');
+var authInfo = require('./routes/auth');
 
 //连接mongodb数据库
 let mongoose = require('mongoose');
@@ -36,7 +39,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
-app.use('/auth', auth);
+app.use('/auth', member);
+app.use('/resource', resource);
+app.use('/role', role);
+app.use('/authinfo', authInfo);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

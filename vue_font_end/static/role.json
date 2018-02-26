@@ -1,52 +1,34 @@
 {
   "data":[
     {
-      "id":"3213423412",
-      "name":"按钮3",
-      "uri":"http://www.localhost.com/reset",
-      "permission":"ertyhgfd-oofjivi",
-      "type":"按钮",
-      "status":"true"
+      "roleId":"3213423412",
+      "roleName":"角色1",
+      "roleCode":"ertyhgfd-oofjivi",
+      "备注":"物流信息"
     },
     {
-      "id":"3213423412",
-      "name":"按钮4",
-      "uri":"http://www.localhost.com/reset",
-      "permission":"ertyd-ookkfjivi",
-      "type":"模块",
-      "status":"true"
+      "roleId":"321342412",
+      "roleName":"角色2",
+      "roleCode":"ertyhgfd-oofjivi",
+      "备注":"很保险大保险"
     },
     {
-      "id":"3213423412",
-      "name":"模块6",
-      "uri":"http://www.localhost.com/reset",
-      "permission":"ertyhgfd-ookkfjivi",
-      "type":"模块",
-      "status":"true"
+      "roleId":"32133412",
+      "roleName":"角色1",
+      "roleCode":"erthgfd-oofjivi",
+      "备注":"迷倒十大苏小诺"
     },
     {
-      "id":"3213423412",
-      "name":"资源资源2",
-      "uri":"http://www.localhost.com/reset",
-      "permission":"ertyhgfd-990oodsaj",
-      "type":"模块",
-      "status":"true"
+      "roleId":"321342342",
+      "roleName":"角色2",
+      "roleCode":"ertyhgfd-oofjivi",
+      "备注":"美丽大山村"
     },
     {
-      "id":"3213423412",
-      "name":"资源2",
-      "uri":"http://www.localhost.com/reset",
-      "permission":"ertyhgfd-ookkfjivi",
-      "type":"菜单",
-      "status":"true"
-    },
-    {
-      "id":"3213423412",
-      "name":"资源1",
-      "uri":"http://www.localhost.com/pssiomccon",
-      "permission":"ertyhgfd-oojivi",
-      "type":"按钮",
-      "status":"true"
+      "roleId":"13423412",
+      "roleName":"角色4",
+      "roleCode":"ertyhgfd-oofjivi",
+      "备注":"奋斗奋斗了榴弹发射器"
     }
 ],
 "result":true

@@ -7,13 +7,13 @@
             <FormItem prop="user">
               <Input type="text" v-model="searchContent.id" placeholder="请输入ID"/>
             </FormItem>
-            <FormItem prop="password">
-              <Input type="password" v-model="searchContent.account" placeholder="请输入搜索账户"/>
+            <FormItem prop="account">
+              <Input type="text" v-model="searchContent.account" placeholder="请输入搜索账户"/>
             </FormItem>
-            <FormItem prop="password">
-              <Input type="password" v-model="searchContent.account" placeholder="请输入搜索电话"/>
+            <FormItem prop="phone">
+              <Input type="text" v-model="searchContent.account" placeholder="请输入搜索电话"/>
             </FormItem>
-            <FormItem prop="password">
+            <FormItem >
               <Select v-model="searchContent.role" style="width:200px" placeholder="请选择角色">
                 <Option v-for="item in roleList" :value="item.value" :key="item.value">{{ item.label }}</Option>
               </Select>
@@ -289,13 +289,14 @@
         //查看信息
         show (params) {
           //this.formValidate.roleId = params.row.roleId;
-          this.formValidate.roleName = params.row.roleName;
+/*          this.formValidate.roleName = params.row.roleName;
           this.formValidate.id = params.row.id;
           this.formValidate.avatar = params.row.avatar;
           this.formValidate.account = params.row.account;
           this.formValidate.phone = params.row.phone;
           this.formValidate.remark = params.row.remark;
-          this.visible = true
+          this.visible = true*/
+          this.$router.push({path:'/sys/user/checkmember',query:{id:params.row.id}})
         },
         //编辑
         edit(params){
@@ -312,7 +313,6 @@
               axios.post(`${API}/auth/delete`,{id}).then(response=>{
                 let res = response.data;
                 if(res.result){
-
                   this.$store.dispatch('getList');
                   this.$Modal.remove();
                   this.$Message.info('删除成功');

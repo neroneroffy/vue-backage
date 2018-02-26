@@ -31,6 +31,11 @@
                   {{k.menuName}}
                 </MenuItem>
               </router-link>
+              <router-link to="/sys/organization" key="/sys/organization">
+                <MenuItem name="/sys/organization">
+                  组织管理
+                </MenuItem>
+              </router-link>
             </Submenu>
 
           </Menu>
@@ -67,16 +72,19 @@
 
       this.user = JSON.parse(localStorage.getItem('user'));
       //验证token
-      console.log('进入')
+      console.log('进入');
       let xAuthToken = localStorage.getItem('xAuthToken');
       console.log(xAuthToken);
       if(!xAuthToken){
         this.$router.push('/login');
       }else{
-
         axios.get(`${HOST}/validate`).then(response=>{
+          //如果用户token失效，那么return
+          if(!response){
+            return
+          }
           if(response.data.flag === 'SESSION_INVALID'){
-            console.log('失效')
+            console.log('失效');
             this.$router.push('/login');
           }else{
             localStorage.setItem('user',JSON.stringify(response.data.data));
@@ -90,11 +98,9 @@
           }
         })
       };
-
     },
     mounted(){
       //
-      console.log(this.openFirstMenu,this.openSecondMenu)
     },
     methods:{
       logout(){
@@ -106,6 +112,7 @@
           onOk:()=>{
             this.$store.dispatch('modalLoading');
             axios.get(`${HOST}/logout`).then(res=>{
+              console.log(res)
               if(res.data.result){
                 sessionStorage.clear()
                 localStorage.removeItem('xAuthToken');

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API } from '../../const/api'
+import { HOST } from '../../const/api'
 const resource = {
   state:{
     list:null
@@ -11,8 +11,9 @@ const resource = {
   },
   actions:{
     getList({commit}){
-      axios.get(`${API}/resource/getlist`).then(res=>{
+      axios.get(`${HOST}/sys/resource/list`).then(res=>{
         if(res.data.result){
+          console.log(res.data);
           commit("GET_LIST",res.data.data)
         }
       })
