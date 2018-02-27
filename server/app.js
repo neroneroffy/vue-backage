@@ -11,6 +11,7 @@ var member = require('./routes/member');
 var resource = require('./routes/resource');
 var role = require('./routes/role');
 var authInfo = require('./routes/auth');
+var charts = require('./routes/charts');
 
 //连接mongodb数据库
 let mongoose = require('mongoose');
@@ -43,6 +44,7 @@ app.use('/auth', member);
 app.use('/resource', resource);
 app.use('/role', role);
 app.use('/authinfo', authInfo);
+app.use('/charts', charts);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
