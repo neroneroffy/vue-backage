@@ -1,194 +1,23 @@
 <template>
-  <div id="data-analyze">
-    <div class="chart">
-     <div class="chart-item-wrapper">
-        <!--同比-->
-        <div class="chart-item" id="year"></div>
-        <!--环比-->
-        <div class="chart-item" id="link-relative"></div>
-      </div>
-      <div class="chart-item-wrapper">
-        <!--销售地域分布-->
-        <div class="chart-item" id="areal-distribution"></div>
-        <!--区域销量-->
-        <div class="chart-item" id="areal-sale"></div>
-
-      </div>
-      <div class="chart-item-wrapper">
-        <!--人员销量-->
-        <div class="chart-item" id="sales"></div>
-      </div>
-
-    </div>
-
+  <div class="sale-distribution">
+    <div id="sale-distribution"></div>
+    <div id="area-sale-distribution"></div>
   </div>
 </template>
 
 <script>
-    import axios from 'axios';
-    import {API} from '../../const/api';
     export default {
-      name: "data-analyze",
-      data(){
-        return {
-          yearSaleData:""
-        }
-      },
+      name: "sale-distribution",
       mounted(){
-        axios.get(`${API}/charts`).then(response=>{
-          let res = response.data;
-          if(res.result){
-            this.yearSaleData = res.data[0].yearSaleData;
-            console.log(res.data);
-            this.year();
-          }
-        });
         this.$nextTick(()=>{
-          this.linkRelative();
-          this.map();
-          this.arealSale();
-          this.sales();
-        });
+          this.initCharts();
+          this.initArealSale()
+        })
+
       },
       methods:{
-        //同比
-        year(){
-          let year =  this.$echarts.init(document.getElementById('year'));
-          const colors = ['#5793f3', '#d14a61', '#675bba'];
-          const option = {
-            color: colors,
-            title: {
-              left: 'center',
-              text: '同比增长',
-            },
-            tooltip: {
-              trigger: 'none',
-              axisPointer: {
-                type: 'cross'
-              }
-            },
-            legend: {
-              data:['2017销售量', '2018销售量'],
-              bottom:-5
-            },
-            grid: {
-              top: 70,
-              bottom: 50
-            },
-            xAxis: [
-              {
-                type: 'category',
-                axisTick: {
-                  alignWithLabel: true
-                },
-                axisLine: {
-                  onZero: false,
-                  lineStyle: {
-                    color: colors[1]
-                  }
-                },
-                axisPointer: {
-                  label: {
-                    formatter: function (params) {
-                      return '销售量  ' + params.value
-                        + (params.seriesData.length ? '：' + params.seriesData[0].data : '');
-                    }
-                  }
-                },
-                data: ["2018-1", "2018-2", "2018-3", "2018-4", "2018-5", "2018-6", "2018-7", "2018-8", "2018-9", "2018-10", "2018-11", "2018-12"]
-              },
-              {
-                type: 'category',
-                axisTick: {
-                  alignWithLabel: true
-                },
-                axisLine: {
-                  onZero: false,
-                  lineStyle: {
-                    color: colors[0]
-                  }
-                },
-                axisPointer: {
-                  label: {
-                    formatter: function (params) {
-                      return '销售量  ' + params.value
-                        + (params.seriesData.length ? '：' + params.seriesData[0].data : '');
-                    }
-                  }
-                },
-                data: ["2017-1", "2017-2", "2017-3", "2017-4", "2017-5", "2017-6", "2017-7", "2017-8", "2017-9", "2017-10", "2017-11", "2017-12"]
-              }
-            ],
-            yAxis: [
-              {
-                type: 'value'
-              }
-            ],
-            series: [
-              {
-                name:'2017销售量',
-                type:'line',
-                xAxisIndex: 1,
-                smooth: true,
-                data: this.yearSaleData.dataPrev
-              },
-              {
-                name:'2018销售量',
-                type:'line',
-                smooth: true,
-                data: this.yearSaleData.dataNow
-              }
-            ]
-          };
-          year.setOption(option);
-          window.addEventListener('resize', function () {
-            year.resize();
-          });
-        },
-        //环比
-        linkRelative(){
-          let linkRelative =  this.$echarts.init(document.getElementById('link-relative'));
-
-          const option = {
-            title: {
-              text: '每月销售量',
-              left:"center"
-            },
-            tooltip: {
-              trigger: 'axis'
-            },
-
-            grid: {
-              left: '3%',
-              right: '4%',
-              bottom: '3%',
-              containLabel: true
-            },
-
-            xAxis: {
-              type: 'category',
-              boundaryGap: false,
-              data: ['2017-1','2017-2','2017-3','2017-4','2017-5','2017-6','2017-8']
-            },
-            yAxis: {
-              type: 'value'
-            },
-            series: [
-              {
-                name:'销售量',
-                type:'line',
-                stack: '总量',
-                data:[120, 132, 101, 134, 90, 230, 210]
-              }
-            ]
-          };
-          linkRelative.setOption(option);
-          window.addEventListener('resize', function () {
-            linkRelative.resize();
-          });
-        },
         //地区分布
-        map(){
+        initCharts(){
           var data = [
             {name: '海门', value: 9},
             {name: '鄂尔多斯', value: 12},
@@ -573,7 +402,7 @@
             '武汉':[114.31,30.52],
             '大庆':[125.03,46.58]
           };
-          //const chinaJson = require('./china.json');
+          const chinaJson = require('./china.json');
           this.$echarts.registerMap('china', chinaJson)
           var convertData = function (data) {
             var res = [];
@@ -588,94 +417,94 @@
             }
             return res;
           };
-         let arealDistribution =  this.$echarts.init(document.getElementById('areal-distribution'));
-         var option = {
-           backgroundColor: '#ffffff',
-           title: {
-             text: '销售量分布图',
-             left: 'center',
+          let arealDistribution =  this.$echarts.init(document.getElementById('sale-distribution'));
+          var option = {
+            backgroundColor: '#ffffff',
+            title: {
+              text: '销售量分布图',
+              left: 'left',
 
-           },
-           tooltip : {
-             trigger: 'item'
-           },
+            },
+            tooltip : {
+              trigger: 'item'
+            },
 
-           geo: {
-             map: 'china',
-             zoom:1.2,
-             label: {
-               emphasis: {
-                 show: false
-               }
-             },
-             roam: true,
-             itemStyle: {
-               normal: {
-                 areaColor: '#eaeaea',
-                 borderColor: '#c7c7c7'
-               },
-               emphasis: {
-                 areaColor: '#cecece'
-               }
-             }
-           },
-           series : [
-             {
-               name: 'pm2.5',
-               type: 'scatter',
-               coordinateSystem: 'geo',
-               data: convertData(data),
-               symbolSize: function (val) {
-                 return val[2] / 10;
-               },
-               label: {
-                 normal: {
-                   formatter: '{b}',
-                   position: 'right',
-                   show: false
-                 },
-                 emphasis: {
-                   show: true
-                 }
-               },
-               itemStyle: {
-                 normal: {
-                   color: '#ed9067'
-                 }
-               }
-             },
-             {
-               name: 'Top 5',
-               type: 'effectScatter',
-               coordinateSystem: 'geo',
-               data: convertData(data.sort(function (a, b) {
-                 return b.value - a.value;
-               }).slice(0, 6)),
-               symbolSize: function (val) {
-                 return val[2] / 10;
-               },
-               showEffectOn: 'render',
-               rippleEffect: {
-                 brushType: 'stroke'
-               },
-               hoverAnimation: true,
-               label: {
-                 normal: {
-                   formatter: '{b}',
-                   position: 'right',
-                   show: true
-                 }
-               },
-               itemStyle: {
-                 normal: {
-                   color: '#e16934',
-                   shadowBlur: 10,
-                   shadowColor: '#bb4714'
-                 }
-               },
-               zlevel: 1
-             }
-           ]
+            geo: {
+              map: 'china',
+              zoom:1,
+              label: {
+                emphasis: {
+                  show: false
+                }
+              },
+              roam: true,
+              itemStyle: {
+                normal: {
+                  areaColor: '#eaeaea',
+                  borderColor: '#c7c7c7'
+                },
+                emphasis: {
+                  areaColor: '#cecece'
+                }
+              }
+            },
+            series : [
+              {
+                name: 'pm2.5',
+                type: 'scatter',
+                coordinateSystem: 'geo',
+                data: convertData(data),
+                symbolSize: function (val) {
+                  return val[2] / 10;
+                },
+                label: {
+                  normal: {
+                    formatter: '{b}',
+                    position: 'right',
+                    show: false
+                  },
+                  emphasis: {
+                    show: true
+                  }
+                },
+                itemStyle: {
+                  normal: {
+                    color: '#ed9067'
+                  }
+                }
+              },
+              {
+                name: 'Top 5',
+                type: 'effectScatter',
+                coordinateSystem: 'geo',
+                data: convertData(data.sort(function (a, b) {
+                  return b.value - a.value;
+                }).slice(0, 6)),
+                symbolSize: function (val) {
+                  return val[2] / 10;
+                },
+                showEffectOn: 'render',
+                rippleEffect: {
+                  brushType: 'stroke'
+                },
+                hoverAnimation: true,
+                label: {
+                  normal: {
+                    formatter: '{b}',
+                    position: 'right',
+                    show: true
+                  }
+                },
+                itemStyle: {
+                  normal: {
+                    color: '#e16934',
+                    shadowBlur: 10,
+                    shadowColor: '#bb4714'
+                  }
+                },
+                zlevel: 1
+              }
+            ]
           };
           arealDistribution.setOption(option);
           window.addEventListener('resize', function () {
@@ -683,9 +512,8 @@
           });
 
         },
-        //区域销量
-        arealSale(){
-          let arealSale =  this.$echarts.init(document.getElementById('areal-sale'));
+        initArealSale(){
+          let arealSale =  this.$echarts.init(document.getElementById('area-sale-distribution'));
           const option = {
             color: ['#3398DB'],
             tooltip : {
@@ -696,7 +524,7 @@
             },
             title:{
               text:"区域销量",
-              left:"center"
+              left:"left"
             },
             grid: {
               left: '3%',
@@ -733,79 +561,10 @@
           });
 
         },
-        //人员销量
-        sales(){
-          let sales =  this.$echarts.init(document.getElementById('sales'));
-          const option = {
-            title : {
-              text: '人员销售额分布',
-              x:'center',
-              y:50
-            },
-            tooltip : {
-              trigger: 'item',
-              formatter: "{a} <br/>{b} : {c} ({d}%)"
-            },
-            legend: {
-              orient: 'vertical',
-              left: 'right',
-              top: 'bottom',
-              data: ['直接访问','邮件营销','联盟广告','视频广告','搜索引擎']
-            },
-            series : [
-              {
-                name: '访问来源',
-                type: 'pie',
-                radius : '55%',
-                center: ['50%', '60%'],
-                data:[
-                  {value:335, name:'直接访问'},
-                  {value:310, name:'邮件营销'},
-                  {value:234, name:'联盟广告'},
-                  {value:135, name:'视频广告'},
-                  {value:1548, name:'搜索引擎'},
-                  {value:335, name:'直接访问'},
-                  {value:310, name:'邮件营销'},
-                  {value:234, name:'联盟广告'},
-                  {value:135, name:'视频广告'},
-                  {value:1548, name:'搜索引擎'},
-                  {value:335, name:'直接访问'},
-                  {value:310, name:'邮件营销'},
-                  {value:234, name:'联盟广告'},
-                  {value:135, name:'视频广告'},
-                  {value:1548, name:'搜索引擎'},
-                  {value:335, name:'直接访问'},
-                  {value:310, name:'邮件营销'},
-                  {value:234, name:'联盟广告'},
-                  {value:135, name:'视频广告'},
-                  {value:1548, name:'搜索引擎'},
-                  {value:335, name:'直接访问'},
-                  {value:310, name:'邮件营销'},
-                  {value:234, name:'联盟广告'},
-                  {value:135, name:'视频广告'},
-
-                ],
-                itemStyle: {
-                  emphasis: {
-                    shadowBlur: 10,
-                    shadowOffsetX: 0,
-                    shadowColor: 'rgba(0, 0, 0, 0.5)'
-                  }
-                }
-              }
-            ]
-          };
-          sales.setOption(option);
-          window.addEventListener('resize', function () {
-            sales.resize();
-          });
-
-        }
       }
     }
-
 </script>
 
 <style lang="stylus">
- @import './data-analyze.styl'
+ @import './sale-distribution.styl'
 </style>

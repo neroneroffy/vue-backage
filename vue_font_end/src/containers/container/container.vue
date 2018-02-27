@@ -37,12 +37,35 @@
                 </MenuItem>
               </router-link>
             </Submenu>
-            <router-link to="/data-analyze">
-              <MenuItem name="/data-analyze">
-                <Icon type="stats-bars"></Icon>
-                数据分析
-              </MenuItem>
-            </router-link>
+
+              <Submenu name="/dataAnalyze">
+                <template slot="title">
+                  <Icon type="stats-bars"></Icon>
+                  数据分析
+                </template>
+                <router-link to="/dataAnalyze/month-sales" key="/dataAnalyze/month-sales">
+                  <MenuItem name="/dataAnalyze/month-sales">
+                    每月销量
+                  </MenuItem>
+                </router-link>
+                <router-link to="/dataAnalyze/year-grow" key="/dataAnalyze/year-grow">
+                  <MenuItem name="/dataAnalyze/year-grow">
+                    同比增长
+                  </MenuItem>
+                </router-link>
+                <router-link to="/dataAnalyze/sale-distribution" key="/dataAnalyze/sale-distribution">
+                  <MenuItem name="/dataAnalyze/sale-distribution">
+                    销量分布
+                  </MenuItem>
+                </router-link>
+                <router-link to="/dataAnalyze/sale-rate" key="/dataAnalyze/sale-rate">
+                  <MenuItem name="/dataAnalyze/sale-rate">
+                    销量比例
+                  </MenuItem>
+                </router-link>
+
+              </Submenu>
+
 
           </Menu>
         </Sider>
@@ -148,10 +171,12 @@
         return sessionStorage.getItem('lastPath')
       },
       openFirstMenu(){
-        let name = sessionStorage.getItem('currentPath').match(/^\/[a-z]+/g)
+        let name = sessionStorage.getItem('currentPath').match(/^\/[a-z]+/ig);
         if(name){
+          console.log(name)
           return name
         }
+
         return []
       },
       openSecondMenu(){

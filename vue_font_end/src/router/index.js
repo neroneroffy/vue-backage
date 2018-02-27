@@ -12,6 +12,10 @@ import resourceList from '@/containers/resource-list/resource-list'
 import editrole from '@/containers/editrole/editrole'
 import organization from '@/containers/organization/organization'
 import dataAnalyze from '@/containers/data-analyze/data-analyze'
+import monthSales from '@/containers/data-analyze/month-sales/month-sales'
+import saleDistribution from '@/containers/data-analyze/sale-distribution/sale-distribution'
+import saleRate from '@/containers/data-analyze/sale-rate/sale-rate'
+import yearGrow from '@/containers/data-analyze/year-grow/year-grow'
 import panel from '@/containers/panel/panel'
 import auth from '@/containers/auth/auth'
 
@@ -82,11 +86,28 @@ const router = new Router({
           name: 'editmember',
           component: editmember
         },
-        {
-          path: '/data-analyze',
-          name: 'data-analyze',
-          component: dataAnalyze
-        }
+
+            {
+              path: '/dataAnalyze/month-sales',
+              name:'month-sales',
+              component:monthSales
+            },
+            {
+              path: '/dataAnalyze/year-grow',
+              name:'year-grow',
+              component:yearGrow
+            },
+            {
+              path: '/dataAnalyze/sale-distribution',
+              name:'sale-distribution',
+              component:saleDistribution
+            },
+            {
+              path: '/dataAnalyze/sale-rate',
+              name:'sale-rate',
+              component:saleRate
+            }
+
 
       ]
     },
