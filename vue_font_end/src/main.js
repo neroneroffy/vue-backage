@@ -7,8 +7,10 @@ import iView from 'iView'
 import 'iview/dist/styles/iview.css';
 import store from './store'
 import './interceptor'
-import axios from 'axios'
+import axios from 'axios';
+import echarts from 'echarts'
 Vue.use(iView);
+Vue.prototype.$echarts = echarts
 axios.create({
   headers: 'X-Auth-Token'
 });

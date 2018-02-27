@@ -37,6 +37,12 @@
                 </MenuItem>
               </router-link>
             </Submenu>
+            <router-link to="/data-analyze">
+              <MenuItem name="/data-analyze">
+                <Icon type="stats-bars"></Icon>
+                数据分析
+              </MenuItem>
+            </router-link>
 
           </Menu>
         </Sider>

@@ -11,6 +11,7 @@ import resource from '@/containers/resource/resource'
 import resourceList from '@/containers/resource-list/resource-list'
 import editrole from '@/containers/editrole/editrole'
 import organization from '@/containers/organization/organization'
+import dataAnalyze from '@/containers/data-analyze/data-analyze'
 import panel from '@/containers/panel/panel'
 import auth from '@/containers/auth/auth'
 
@@ -80,6 +81,11 @@ const router = new Router({
           path: '/sys/user/addmember',
           name: 'editmember',
           component: editmember
+        },
+        {
+          path: '/data-analyze',
+          name: 'data-analyze',
+          component: dataAnalyze
         }
 
       ]
