@@ -51,7 +51,6 @@ const router = new Router({
           path: '/sys/resource',
           name: 'resource',
           component: resource,
-
         },
         {
           path: '/sys/role',
@@ -119,8 +118,6 @@ const router = new Router({
           name:'sale-rate',
           component:saleRate
         }
-
-
       ]
     },
   ]

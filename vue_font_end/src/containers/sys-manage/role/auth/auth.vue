@@ -1,7 +1,7 @@
 <template>
   <div class="auth">
-    <div class="title">角色授权</div>
-    <Form :model="roleInfo" :label-width="40">
+    <div class="title">角色权限</div>
+    <Form :model="roleInfo" :label-width="40" v-if="authInfo">
       <FormItem label="ID">
         <Input v-model="roleInfo.roleId" disabled />
       </FormItem>
@@ -15,36 +15,12 @@
         <Input v-model="roleInfo.remark" disabled type="textarea" :autosize="{minRows: 2,maxRows: 5}" />
       </FormItem>
     </Form>
-
-
     <div class="auth-wrapper">
       <Tree v-if="authInfo" :data="authInfo" show-checkbox @select-change="select"  @on-check-change="check" multiple></Tree>
     </div>
-    <div class="submit-button">
+    <div class="submit-button" v-if="authInfo" v-show="!this.$route.query.checked">
       <Button type="primary" @click="submit">提交</Button>
     </div>
-
-     <!-- <div v-model="secondCheckGroup" class="second-level" v-for="(item,k) in authInfo">
-        <div class="second-level-title">
-
-          <Checkbox
-            :value="checkedInfo[i][k].length===item.children.length"
-            :key="item.id"
-            :indeterminate="checkedInfo[i][k].length!==item.children.length && checkedInfo[i][k].length!==0"
-            @click.prevent.native="thirdAll(i,k)"
-          >
-            {{item.name}}
-          </Checkbox>
-        </div>
-        {{`选中的个数-&#45;&#45;&#45;&#45;&#45;&#45;${checkedInfo[i][k].length}`}}
-            <CheckboxGroup class="third-level" v-model="checkedInfo[i][k]">
-              <Checkbox v-for="m in item.children" :label="m.id" :key="m.id">
-                {{m.name}}
-              </Checkbox>
-            </CheckboxGroup>
-
-      </div>-->
-
 
 
   </div>
@@ -64,7 +40,7 @@
             roleCode:"",
             remark:""
           },
-          authInfo:[],
+          authInfo:"",
           checkedInfo:[],
           noCheck:[],
           test:["9976332783"],
@@ -111,9 +87,30 @@
         }).then(response=>{
           let res = response.data;
           if(res.result){
-            console.log(res);
+
             this.roleInfo = res.data.roleInfo;
             this.authInfo = res.data.authInfo;
+            if(this.$route.query.checked){
+              this.authInfo.forEach(v=>{
+                if(v.children){
+                  v.expand=true;
+                  v.disabled = true;
+                  v.children.forEach(i=>{
+                    if(i.children){
+                      i.expand = true;
+                      i.disabled = true;
+                      i.children.forEach(k=>{
+                        k.disabled = true;
+                        if(res.data.alreadyAuth.indexOf(k.id)>0){
+                          k.checked = true;
+                        }
+                      })
+                    }
+                  })
+                }
+              });
+              return
+            }
             this.authInfo.forEach(v=>{
               if(v.children){
                 v.expand=true;

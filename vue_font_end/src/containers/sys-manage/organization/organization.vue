@@ -31,7 +31,6 @@
 </template>
 
 <script>
-
     export default {
       name: "organization",
       data(){
@@ -62,7 +61,7 @@
               width:180
             },
             {
-              title: '部门',
+              title: '上级组织',
               key: 'department',
               width:180
             },
@@ -270,13 +269,14 @@
       },
       methods:{
         edit(params){
-          console.log(params)
+          console.log(params.row._id);
+          this.$router.push({path:"/sys/edit-organization",query:{id:params.row._id}})
         },
         remove(params){
           console.log(params)
         },
         add(){
-
+          this.$router.push('/sys/edit-organization')
         },
         handleSearch(){
 

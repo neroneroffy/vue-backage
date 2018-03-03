@@ -65,7 +65,6 @@
             if(response.data.result){
               for (let k in response.headers){
                 if(k === "x-auth-token"){
-
                   //this.$store.dispatch('saveUserInfo',response.data.data);//请求回来后，把用户信息存储到VUEX里
                   sessionStorage.setItem('user',JSON.stringify(response.data.data));//为了防止刷新后用户数据丢失，存到sessionStorege里一份
                   localStorage.setItem('xAuthToken',response.headers[k]);//将token长期存储，便于下次进入系统验证
@@ -76,7 +75,6 @@
                       return menu.uri
                     }
                   }
-
                   this.$router.push('/index');//登陆成功后跳转到首页
                   return
                 }

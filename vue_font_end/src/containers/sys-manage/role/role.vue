@@ -117,7 +117,7 @@
                 },
                 on: {
                   click: () => {
-                  this.show(params)
+                  this.showAuth(params)
               }
           }
       }, '查看权限'),
@@ -159,7 +159,7 @@
         },
         on: {
           click: () => {
-          this.remove(params)
+            this.remove(params)
       }
     }
     }, '删除')
@@ -190,19 +190,8 @@
       })
     },
     methods:{
-      show(params){
-        this.visible = true;
-        axios.get(`${API}/authinfo/getauthinfo`,{
-          params:{
-            id:params.row.roleId
-          }
-        }).then(response=>{
-          let res = response.data;
-        if(res.result){
-          this.authInfo = res.data[0].data;
-          console.log(this.authInfo);
-        }
-      })
+      showAuth(params){
+        this.$router.push({path:"/sys/role/auth",query:{id:params.row.roleId,checked:true}});
       },
       addRole(){
         this.$router.push("/sys/role/edit-role")
@@ -214,12 +203,13 @@
         this.$router.push({path:"/sys/role/auth",query:{id:params.row.roleId}});
       },
       edit(params){
-        this.editVisible = true;
+        //this.$router.push("/sys/role/edit-role")
+        /*this.editVisible = true;
         this.formItem.name = params.row.roleName;
         this.formItem.code = params.row.roleCode;
-        this.formItem.remark = params.row.remark;
-        console.log(666);
-        //this.$router.push({path:"/sys/role/editrole",query:{id:params.row.roleId}})
+        this.formItem.remark = params.row.remark;*/
+
+        this.$router.push({path:"/sys/role/edit-role",query:{id:params.row.roleId}})
       },
       cancel(){
         this.visible = false;
