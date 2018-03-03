@@ -127,7 +127,8 @@ router.beforeEach((to, from, next) => {
     if (!to.query.url && from.query.url) {
       to.query.url = from.query.url
     }*/
-  sessionStorage.setItem('currentPath',to.fullPath);
+
+  //sessionStorage.setItem('currentPath',to.fullPath);
   if(from.fullPath === '/login'){
     sessionStorage.setItem('lastPath','/index');
   }else{

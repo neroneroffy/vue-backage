@@ -184,8 +184,7 @@
       axios.get(`${API}/role/list`).then(response=>{
         let res = response.data;
         if(res.result){
-          this.listData = res.data
-          console.log(this.listData)
+          this.listData = res.data;
         }
       })
     },

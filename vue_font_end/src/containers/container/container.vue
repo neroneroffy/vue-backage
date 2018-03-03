@@ -25,14 +25,13 @@
                 <Icon type="android-settings"></Icon>
                 {{v.menuName}}
               </template>
-
               <router-link v-for="k in v.children" :to="k.uri" :key="k.uri">
-                <MenuItem :name="k.uri">
+                <MenuItem :name="k.uri" @click.native="storePath(k.uri)">
                   {{k.menuName}}
                 </MenuItem>
               </router-link>
-              <router-link to="/sys/organization" key="/sys/organization">
-                <MenuItem name="/sys/organization">
+              <router-link to="/sys/organization" key="/sys/organization" >
+                <MenuItem name="/sys/organization"  @click.native="storePath('/sys/organization')">
                   组织管理
                 </MenuItem>
               </router-link>
@@ -117,6 +116,7 @@
             this.$router.push('/login');
           }else{
             localStorage.setItem('user',JSON.stringify(response.data.data));
+            console.log(response.data.data)
             this.user = JSON.parse(localStorage.getItem('user'));
             console.log('验证通过');
             if(this.lastPath === '/index'){
@@ -152,6 +152,10 @@
           onCancel:()=>{}
         });
 
+      },
+      storePath(path){
+
+        sessionStorage.setItem('currentPath',path)
       }
     },
     computed: {
