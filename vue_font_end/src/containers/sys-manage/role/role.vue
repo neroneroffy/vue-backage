@@ -4,7 +4,7 @@
       <Button type="primary" icon="plus-round" @click="addRole" class="add" >新增</Button>
     </div>
 
-    <Table v-if="this.$store.state.role.list" :columns="columns" :data="this.$store.state.role.list" class="table"></Table>
+    <Table v-if="listData" :columns="columns" :data="listData" class="table"></Table>
     <Modal
       v-model="visible"
       title="查看权限"
@@ -66,8 +66,9 @@
 </template>
 
 <script>
+
   import axios from 'axios';
-  import { API } from '../../const/api';
+  import { API } from '@/const/api';
   import { Menu,Modal,Button,Checkbox,Form,Input,SelectRow,Col, } from 'iview';
   export default {
     name: "role",
@@ -166,7 +167,7 @@
     }
     }
     ],
-      indeterminate: true,
+        indeterminate: true,
         firstCheckAll: false,
         firstCheckGroup:[],
         secondCheckAll: false,
@@ -174,11 +175,19 @@
         thirdCheckAll: false,
         thirdCheckGroup: [],
         authInfo:[],
-        text:["99763783"]
+        text:["99763783"],
+        listData:""
     }
     },
     created(){
-      this.$store.dispatch('getRoleList')
+      //请求角色列表
+      axios.get(`${API}/role/list`).then(response=>{
+        let res = response.data;
+        if(res.result){
+          this.listData = res.data
+          console.log(this.listData)
+        }
+      })
     },
     methods:{
       show(params){
@@ -203,7 +212,6 @@
       },
       auth(params){
         this.$router.push({path:"/sys/role/auth",query:{id:params.row.roleId}});
-
       },
       edit(params){
         this.editVisible = true;
@@ -222,9 +230,7 @@
       },
     },
     computed:{
-      listData(){
-        return this.$store.role.list
-      }
+
     }
 
   }

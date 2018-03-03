@@ -24,11 +24,10 @@
           </Form>
         </div>
       </div>
-          <Table :columns="columns" :data="listData" class="table"></Table>
-        <div class="pagination">
-          <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize" placement="top" :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
-        </div>
-
+      <Table :columns="columns" :data="listData" class="table" v-if="listData"></Table>
+      <div class="pagination">
+        <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize" placement="top" :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
+      </div>
 
       <Modal
         v-model="visible"
@@ -66,8 +65,8 @@
 
 <script>
   import axios from 'axios';
-  import { API } from '../../const/api';
-  import { HOST } from '../../const/api';
+  import { API } from '@/const/api';
+
   import { Table,Page,Form,Input,Select,Modal,Row,Col,Upload,Avatar } from 'iview';
     export default {
         name: "usermanage",
@@ -75,6 +74,7 @@
             return {
               pageSizeList:[30,50,100],
               pageSize:30,
+              total:0,
               currentPage:1,
               visible:false,
               loading:true,
@@ -237,26 +237,18 @@
                 avatarUrl:"",
                 remark:""
               },
-              /*ruleValidate: {
-                id: [
-                  { required: true, message: 'ID不能为空', trigger: 'blur' }
-                ],
-                account: [
-                  { required: true, message: '账户不能为空', trigger: 'blur' }
-                ],
-                phone: [
-                  { required: true, message: '请填写电话', trigger: 'blur' }
-                ]
-              },*/
-
               imgName: '',
-              visible: false,
-              uploadList: []
+              uploadList: [],
+              listData:""
             }
         },
       mounted() {
         //初始请求分页
-        this.pagination()
+        let params = {
+          pageNum:this.currentPage,
+          pageSize:this.pageSize
+        };
+        this.pagination(params)
       },
 
       methods:{
@@ -273,29 +265,12 @@
         },
         //提交搜索
         handleSubmit(name) {
-          axios.get(`${HOST}/myshop/validate`).then(res=>{
-            console.log(res)
-          })
-/*
-              this.$refs[name].validate((valid) => {
-                if (valid) {
-                  this.$Message.success('Success!');
-                } else {
-                  this.$Message.error('Fail!');
-                }
-              })
-*/
-            },
+
+
+        },
         //查看信息
         show (params) {
-          //this.formValidate.roleId = params.row.roleId;
-/*          this.formValidate.roleName = params.row.roleName;
-          this.formValidate.id = params.row.id;
-          this.formValidate.avatar = params.row.avatar;
-          this.formValidate.account = params.row.account;
-          this.formValidate.phone = params.row.phone;
-          this.formValidate.remark = params.row.remark;
-          this.visible = true*/
+
           this.$router.push({path:'/sys/user/checkmember',query:{id:params.row.id}})
         },
         //编辑
@@ -330,7 +305,7 @@
                 console.log(res)
                 this.$Message.info('修改成功');
                 //更新成功后重新获取表格数据
-                this.$store.dispatch('getList');
+                this.pagination()
               }
             })
         },
@@ -338,32 +313,44 @@
             this.$refs.selection.selectAll(status);
         },
         //分页函数
-        pagination(){
-          let params = {
-            pageNum:this.currentPage,
-            pageSize:this.pageSize
+        pagination(customsParams){
+          let defaultParams = {
+            pageNum :1,
+            pageSize : 30
           };
-          this.$store.dispatch('getList',params)
+          let params = customsParams || defaultParams;
+          axios.get(`${API}/auth/manager`,{params}).then(response=>{
+            let res = response.data;
+            if(res.result){
+              this.listData = res.list;
+              this.total = res.total;
+            }
+          })
         },
         //点击分页
         changePage(currentPageNum){
           this.currentPage = currentPageNum;
-          this.pagination()
+          let params = {
+            pageNum:this.currentPage,
+            pageSize:this.pageSize
+          };
+
+          this.pagination(params)
         },
         changePageSize(currentPageSize){
           this.pageSize = currentPageSize;
           this.currentPage = 1;
-          this.pagination()
+          let params = {
+            pageNum:this.currentPage,
+            pageSize:this.pageSize
+          };
+
+          this.pagination(params)
         },
-        /*-------上传头像--------*/
+
         },
         computed:{
-          listData(){
-            return this.$store.state.usermanage.list
-          },
-          total(){
-            return this.$store.state.usermanage.total
-          }
+
         }
     }
 </script>

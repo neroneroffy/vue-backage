@@ -52,7 +52,7 @@
 
 <script>
   import axios from 'axios';
-  import { API } from "../../../const/api";
+  import { API } from "@/const/api";
   import { Form,Checkbox,Input,Button } from 'iview'
     export default {
       name: "auth",

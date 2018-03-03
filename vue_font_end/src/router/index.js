@@ -1,24 +1,31 @@
 import Vue from 'vue'
 import Router from 'vue-router';
-import axios from 'axios';
-import { HOST } from '../const/api';
-import usermanage from '@/containers/usermanage/usermanage'
-import editmember from '@/containers/edit-member/edit-member'
+
 import login from '@/containers/login/login'
 import container from '@/containers/container/container'
-import role from '@/containers/role/role'
-import resource from '@/containers/resource/resource'
-import resourceList from '@/containers/resource-list/resource-list'
-import editrole from '@/containers/role/editrole/editrole'
-import organization from '@/containers/organization/organization'
-import dataAnalyze from '@/containers/data-analyze/data-analyze'
+//资源管理
+import resource from '@/containers/sys-manage/resource/resource'
+
+//角色管理
+import role from '@/containers/sys-manage/role/role'
+import editrole from '@/containers/sys-manage/role/editrole/editrole'
+import auth from '@/containers/sys-manage/role/auth/auth'
+
+//用户管理
+import usermanage from '@/containers/sys-manage/usermanage/usermanage'
+import editmember from '@/containers/sys-manage/usermanage/edit-member/edit-member'
+
+
+//组织管理
+import organization from '@/containers/sys-manage/organization/organization'
+import editOrganization from '@/containers/sys-manage/organization/edit-organization/edit-organization'
+
+//数据分析
 import monthSales from '@/containers/data-analyze/month-sales/month-sales'
 import saleDistribution from '@/containers/data-analyze/sale-distribution/sale-distribution'
 import saleRate from '@/containers/data-analyze/sale-rate/sale-rate'
 import yearGrow from '@/containers/data-analyze/year-grow/year-grow'
 import panel from '@/containers/panel/panel'
-import auth from '@/containers/role/auth/auth'
-import editOrganization from '@/containers/edit-organization/edit-organization'
 
 Vue.use(Router);
 
@@ -44,13 +51,7 @@ const router = new Router({
           path: '/sys/resource',
           name: 'resource',
           component: resource,
-          children:[
-            {
-              path:"/sys/resource/list",
-              name:"resource-list",
-              component:resourceList
-            }
-          ]
+
         },
         {
           path: '/sys/role',

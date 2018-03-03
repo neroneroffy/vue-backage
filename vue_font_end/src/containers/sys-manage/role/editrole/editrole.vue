@@ -21,8 +21,8 @@
 </template>
 
 <script>
-  import axios from 'axios';
-  import { API } from '../../../const/api';
+
+  import { API } from '@/const/api';
   import { Form,Input,Button,Modal } from 'iview';
   export default {
     name: "editrole",

@@ -44,7 +44,7 @@
 </template>
 
 <script>
-  import { API } from '../../const/api';
+  import { API } from '@/const/api';
   import { Form,Select,Upload,Avatar,Button } from 'iview'
   import axios from 'axios';
     export default {

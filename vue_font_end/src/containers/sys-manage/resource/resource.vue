@@ -1,10 +1,12 @@
 <template>
   <div>
-    <Table class="resource-table" :columns="tableTitle" :data="list" v-if="list"></Table>
+    <Table class="resource-table" :columns="tableTitle" :data="listData" v-if="listData"></Table>
   </div>
 </template>
 
 <script>
+  import axios from 'axios';
+  import { HOST } from '@/const/api'
   import { Tabs,Table,Tag } from 'iview'
     export default {
       name: "resource",
@@ -49,17 +51,20 @@
                   params.row.status)
               }
             }
-          ]
+          ],
+          listData:""
         }
       },
       created(){
-        this.$store.dispatch('getList')
+        axios.get(`${HOST}/sys/resource/list`).then(res=>{
+          if(res.data.result){
+            this.listData = res.data.data
+          }
+        })
       },
       methods: {},
       computed:{
-        list(){
-          return this.$store.state.resource.list
-        }
+
       }
     }
 </script>
