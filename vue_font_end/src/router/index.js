@@ -9,7 +9,7 @@ import container from '@/containers/container/container'
 import role from '@/containers/role/role'
 import resource from '@/containers/resource/resource'
 import resourceList from '@/containers/resource-list/resource-list'
-import editrole from '@/containers/editrole/editrole'
+import editrole from '@/containers/role/editrole/editrole'
 import organization from '@/containers/organization/organization'
 import dataAnalyze from '@/containers/data-analyze/data-analyze'
 import monthSales from '@/containers/data-analyze/month-sales/month-sales'
@@ -17,7 +17,8 @@ import saleDistribution from '@/containers/data-analyze/sale-distribution/sale-d
 import saleRate from '@/containers/data-analyze/sale-rate/sale-rate'
 import yearGrow from '@/containers/data-analyze/year-grow/year-grow'
 import panel from '@/containers/panel/panel'
-import auth from '@/containers/auth/auth'
+import auth from '@/containers/role/auth/auth'
+import editOrganization from '@/containers/edit-organization/edit-organization'
 
 Vue.use(Router);
 
@@ -57,6 +58,11 @@ const router = new Router({
           component: role
         },
         {
+          path: '/sys/role/edit-role',
+          name: 'editrole',
+          component: editrole
+        },
+        {
           path: '/sys/role/auth',
           name: 'auth',
           component: auth
@@ -70,6 +76,11 @@ const router = new Router({
           path: '/sys/organization',
           name: 'usermanage',
           component: organization
+        },
+        {
+          path: '/sys/edit-organization',
+          name: 'editOrganization',
+          component: editOrganization
         },
         {
           path: '/sys/user/editmember',
@@ -87,26 +98,26 @@ const router = new Router({
           component: editmember
         },
 
-            {
-              path: '/dataAnalyze/month-sales',
-              name:'month-sales',
-              component:monthSales
-            },
-            {
-              path: '/dataAnalyze/year-grow',
-              name:'year-grow',
-              component:yearGrow
-            },
-            {
-              path: '/dataAnalyze/sale-distribution',
-              name:'sale-distribution',
-              component:saleDistribution
-            },
-            {
-              path: '/dataAnalyze/sale-rate',
-              name:'sale-rate',
-              component:saleRate
-            }
+        {
+          path: '/dataAnalyze/month-sales',
+          name:'month-sales',
+          component:monthSales
+        },
+        {
+          path: '/dataAnalyze/year-grow',
+          name:'year-grow',
+          component:yearGrow
+        },
+        {
+          path: '/dataAnalyze/sale-distribution',
+          name:'sale-distribution',
+          component:saleDistribution
+        },
+        {
+          path: '/dataAnalyze/sale-rate',
+          name:'sale-rate',
+          component:saleRate
+        }
 
 
       ]
@@ -114,10 +125,10 @@ const router = new Router({
   ]
 })
 router.beforeEach((to, from, next) => {
-/*  document.title = to.meta.title || 'demo'
-  if (!to.query.url && from.query.url) {
-    to.query.url = from.query.url
-  }*/
+  /*  document.title = to.meta.title || 'demo'
+    if (!to.query.url && from.query.url) {
+      to.query.url = from.query.url
+    }*/
   sessionStorage.setItem('currentPath',to.fullPath);
   if(from.fullPath === '/login'){
     sessionStorage.setItem('lastPath','/index');
