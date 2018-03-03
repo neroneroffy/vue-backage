@@ -36,36 +36,44 @@
                 </MenuItem>
               </router-link>
             </Submenu>
-
-              <Submenu name="/dataAnalyze">
+            <Submenu name="/dataAnalyze">
                 <template slot="title">
                   <Icon type="stats-bars"></Icon>
                   数据分析
                 </template>
                 <router-link to="/dataAnalyze/month-sales" key="/dataAnalyze/month-sales">
-                  <MenuItem name="/dataAnalyze/month-sales">
+                  <MenuItem name="/dataAnalyze/month-sales"  @click.native="storePath('/dataAnalyze/month-sales')">
                     每月销量
                   </MenuItem>
                 </router-link>
                 <router-link to="/dataAnalyze/year-grow" key="/dataAnalyze/year-grow">
-                  <MenuItem name="/dataAnalyze/year-grow">
+                  <MenuItem name="/dataAnalyze/year-grow" @click.native="storePath('/dataAnalyze/year-grow')">
                     同比增长
                   </MenuItem>
                 </router-link>
                 <router-link to="/dataAnalyze/sale-distribution" key="/dataAnalyze/sale-distribution">
-                  <MenuItem name="/dataAnalyze/sale-distribution">
+                  <MenuItem name="/dataAnalyze/sale-distribution" @click.native="storePath('/dataAnalyze/sale-distribution')">
                     销量分布
                   </MenuItem>
                 </router-link>
                 <router-link to="/dataAnalyze/sale-rate" key="/dataAnalyze/sale-rate">
-                  <MenuItem name="/dataAnalyze/sale-rate">
+                  <MenuItem name="/dataAnalyze/sale-rate" @click.native="storePath('/dataAnalyze/sale-rate')">
                     销量比例
                   </MenuItem>
                 </router-link>
 
               </Submenu>
-
-
+            <Submenu name="/baseData">
+                <template slot="title">
+                  <Icon type="document-text"></Icon>
+                  基础资料
+                </template>
+                <router-link to="/baseData/month-sales" key="/baseData/month-sales">
+                  <MenuItem name="/baseData/month-sales">
+                    每月销量
+                  </MenuItem>
+                </router-link>
+              </Submenu>
           </Menu>
         </Sider>
         <Layout :style="{padding: '24px 24px'}">
@@ -116,7 +124,7 @@
             this.$router.push('/login');
           }else{
             localStorage.setItem('user',JSON.stringify(response.data.data));
-            console.log(response.data.data)
+
             this.user = JSON.parse(localStorage.getItem('user'));
             console.log('验证通过');
             if(this.lastPath === '/index'){
@@ -175,7 +183,11 @@
         return sessionStorage.getItem('lastPath')
       },
       openFirstMenu(){
-        let name = sessionStorage.getItem('currentPath').match(/^\/[a-z]+/ig);
+        let name = "";
+        if(sessionStorage.getItem('currentPath')){
+          name = sessionStorage.getItem('currentPath').match(/^\/[a-z]+/ig);
+        }
+        console.log(name)
         if(name){
           console.log(name)
           return name

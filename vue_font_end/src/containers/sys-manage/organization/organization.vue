@@ -31,6 +31,8 @@
 </template>
 
 <script>
+  import axios from "axios";
+  import { API } from "@/const/api";
     export default {
       name: "organization",
       data(){
@@ -279,7 +281,13 @@
           this.$router.push('/sys/edit-organization')
         },
         handleSearch(){
-
+/*          axios.post(`${API}/search`).then(response=>{
+            let res = response.data;
+            if(res.result){
+              this.data = res.data;
+            }
+          });*/
+          console.log(this.searchContent);
         }
       },
       computed:{

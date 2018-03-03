@@ -75,6 +75,7 @@
                       return menu.uri
                     }
                   }
+                  sessionStorage.setItem('currentPath','/index')
                   this.$router.push('/index');//登陆成功后跳转到首页
                   return
                 }

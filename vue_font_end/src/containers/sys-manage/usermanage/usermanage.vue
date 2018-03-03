@@ -11,7 +11,7 @@
               <Input type="text" v-model="searchContent.account" placeholder="请输入搜索账户"/>
             </FormItem>
             <FormItem prop="phone">
-              <Input type="text" v-model="searchContent.account" placeholder="请输入搜索电话"/>
+              <Input type="text" v-model="searchContent.phone" placeholder="请输入搜索电话"/>
             </FormItem>
             <FormItem >
               <Select v-model="searchContent.role" style="width:200px" placeholder="请选择角色">
@@ -66,7 +66,6 @@
 <script>
   import axios from 'axios';
   import { API } from '@/const/api';
-
   import { Table,Page,Form,Input,Select,Modal,Row,Col,Upload,Avatar } from 'iview';
     export default {
         name: "usermanage",
@@ -259,18 +258,20 @@
           this.$router.push('/sys/user/addmember')
         },
         cancel(){
-          setTimeout(()=>{
-          },200)
 
         },
         //提交搜索
-        handleSubmit(name) {
-
-
+        handleSubmit() {
+          console.log(this.searchContent)
+/*
+          axios.post(`${API}/search`,{data:this.searchContent}).then(response=>{
+            let res = response.data;
+            this.listData = res.data;
+          })
+*/
         },
         //查看信息
         show (params) {
-
           this.$router.push({path:'/sys/user/checkmember',query:{id:params.row.id}})
         },
         //编辑
