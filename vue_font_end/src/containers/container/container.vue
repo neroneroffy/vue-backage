@@ -63,14 +63,14 @@
                 </router-link>
 
               </Submenu>
-            <Submenu name="/baseData">
+            <Submenu v-for="v in subMenu" :name="v.uri">
                 <template slot="title">
-                  <Icon type="document-text"></Icon>
-                  基础资料
+                  <Icon :type="v.icon"></Icon>
+                  {{v.menuName}}
                 </template>
-                <router-link to="/baseData/month-sales" key="/baseData/month-sales">
-                  <MenuItem name="/baseData/month-sales">
-                    每月销量
+                <router-link v-for="i in v.children" :to="i.uri" :key="i.uri">
+                  <MenuItem :name="i.uri"  @click.native="storePath(k.uri)">
+                    {{i.menuName}}
                   </MenuItem>
                 </router-link>
               </Submenu>
@@ -101,7 +101,116 @@
     data(){
       return {
         user:"",
-        isCollapsed: false
+        isCollapsed: false,
+        subMenu:[
+          {
+            menuName:"基础信息管理",
+            uri:"/baseData",
+            icon:"document-text",
+            children:[
+              {
+                menuName:"商品管理",
+                uri:"/baseData/commodity"
+              },
+              {
+                menuName:"赠品管理",
+                uri:"/baseData/present"
+              },
+              {
+                menuName:"物料管理",
+                uri:"/baseData/materiel"
+              },
+              {
+                menuName:"客户管理",
+                uri:"/baseData/client"
+              },
+              {
+                menuName:"供货商管理",
+                uri:"/baseData/supplier"
+              },
+              {
+                menuName:"仓库管理",
+                uri:"/baseData/warehouse"
+              },
+              {
+                menuName:"联系人管理",
+                uri:"/baseData/contact"
+              },
+              {
+                menuName:"地址管理",
+                uri:"/baseData/address"
+              },
+              {
+                menuName:"单位设置",
+                uri:"/baseData/unit"
+              },
+              {
+                menuName:"进货价格设置",
+                uri:"/baseData/stock-price"
+              },
+            ]
+          },
+          {
+            menuName:"财务管理",
+            uri:"/finance",
+            icon:"cash",
+          },
+          {
+            menuName:"库存管理",
+            uri:"/repertory",
+            icon:"pie-graph",
+            children:[
+              {
+                menuName:"库存盘点",
+                uri: "/repertory/stock-taking"
+              },
+              {
+                menuName:"盘点记录查询",
+                uri: "/repertory/record"
+              },
+              {
+                menuName:"盘点入库",
+                uri: "/repertory/in"
+              },
+              {
+                menuName:"盘点出库",
+                uri: "/repertory/out"
+              },
+              {
+                menuName:"库存报表",
+                uri: "/repertory/statement"
+              },
+            ]
+          },
+          {
+            menuName:"售货管理",
+            uri:"/selling",
+            icon:"forward",
+            children:[
+              {
+                menuName:"客户订单管理",
+                uri: "/selling/order-form"
+              },
+              {
+                menuName:"出库单管理",
+                uri: "/selling/out"
+              },
+              {
+                menuName:"在线支付",
+                uri: "/selling/pay"
+              },
+              {
+                menuName:"报表统计",
+                uri: "/repertory/report"
+              }
+            ]
+          },
+          {
+            menuName:"进货管理",
+            uri:"/stock",
+            icon:"archive"
+          }
+        ]
       }
     },
     created(){
@@ -210,6 +319,9 @@
   .ivu-layout{
     height: 100%;
   }
+    .ivu-layout-sider{
+      overflow auto
+    }
   .layout{
     height: 100%;
     border: 1px solid #d7dde4;
