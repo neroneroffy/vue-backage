@@ -21,8 +21,6 @@
 </template>
 
 <script>
-  import axios from 'axios';
-  import { API } from '@/const/api';
   import { Form,Input,Button,Modal } from 'iview';
   export default {
     name: "editrole",
@@ -64,7 +62,7 @@
     },
     created(){
       if(this.$route.query.id){
-        axios.get(`${API}/role/info`,{
+        this.$http.get(`${this.$api}/role/info`,{
           params:{
             id:this.$route.query.id
           }

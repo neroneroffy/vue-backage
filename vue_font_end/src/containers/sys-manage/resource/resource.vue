@@ -5,8 +5,6 @@
 </template>
 
 <script>
-  import axios from 'axios';
-  import { HOST } from '@/const/api'
   import { Tabs,Table,Tag } from 'iview'
     export default {
       name: "resource",
@@ -56,7 +54,7 @@
         }
       },
       created(){
-        axios.get(`${HOST}/sys/resource/list`).then(res=>{
+        this.$http.get(`${this.$host}/sys/resource/list`).then(res=>{
           if(res.data.result){
             this.listData = res.data.data
           }

@@ -31,8 +31,7 @@
 </template>
 
 <script>
-  import axios from "axios";
-  import { API } from "@/const/api";
+
     export default {
       name: "organization",
       data(){

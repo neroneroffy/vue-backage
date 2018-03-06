@@ -1,6 +1,6 @@
 <template>
   <div class="edit-member">
-    <div class="title">{{this.$route.query.id?"编辑成员":"新增成员"}}</div>
+    <BastTitle :title="title"></BastTitle>
     <Form ref="editData" :model="editData" :label-width="40" v-if="editData" label-position="left">
       <FormItem label="ID" prop="id">
         <Input v-model="editData.id" :disabled="checkMember" placeholder="请输入ID" />
@@ -44,14 +44,14 @@
 </template>
 
 <script>
-  import { API } from '@/const/api';
+  import BastTitle from '@/components/title'
   import { Form,Select,Upload,Avatar,Button } from 'iview'
-  import axios from 'axios';
+
     export default {
         name: "editmember",
       data(){
           return {
-            title:"新增成员",
+            title:this.$route.query.id?'编辑成员':'新增成员',
             editData:{
               id:"",
               account:"",
@@ -81,6 +81,9 @@
             ],
           }
       },
+      components:{
+        BastTitle
+      },
       mounted(){
           if(window.location.hash.indexOf('checkmember')>0){
             this.checkMember = true
@@ -89,7 +92,7 @@
           }
 
         if(this.$route.query.id){
-          axios.get(`${API}/auth/queryuser`,{
+          this.$http.get(`${this.$api}/auth/queryuser`,{
             params:{ id:this.$route.query.id }
           }).then(response=>{
             let res = response.data;

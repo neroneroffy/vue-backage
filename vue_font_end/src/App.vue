@@ -3,8 +3,7 @@
 </template>
 
 <script>
-  import axios from 'axios';
-  import { HOST } from './const/api'
+
 export default {
   name: 'App',
   created(){

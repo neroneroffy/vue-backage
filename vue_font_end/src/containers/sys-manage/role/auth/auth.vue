@@ -27,8 +27,7 @@
 </template>
 
 <script>
-  import axios from 'axios';
-  import { API } from "@/const/api";
+
   import { Form,Checkbox,Input,Button } from 'iview'
     export default {
       name: "auth",
@@ -80,7 +79,7 @@
         }
       },
       created(){
-        axios.get(`${API}/role/info`,{
+        this.$http.get(`${this.$api}/role/info`,{
           params:{
             id:this.$route.query.id
           }

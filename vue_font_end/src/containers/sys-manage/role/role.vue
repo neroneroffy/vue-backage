@@ -67,8 +67,6 @@
 
 <script>
 
-  import axios from 'axios';
-  import { API } from '@/const/api';
   import { Menu,Modal,Button,Checkbox,Form,Input,SelectRow,Col, } from 'iview';
   export default {
     name: "role",
@@ -181,7 +179,7 @@
     },
     created(){
       //请求角色列表
-      axios.get(`${API}/role/list`).then(response=>{
+      this.$http.get(`${this.$api}/role/list`).then(response=>{
         let res = response.data;
         if(res.result){
           this.listData = res.data;

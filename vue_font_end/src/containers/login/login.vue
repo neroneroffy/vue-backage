@@ -34,7 +34,6 @@
 </template>
 
 <script>
-  import axios from 'axios';
   import { Form,Input,Button } from 'iview';
   import { HOST } from '../../const/api'
     export default {
@@ -58,7 +57,7 @@
       methods: {
         handleSubmit () {
           //this.$router.push('/manager')
-          axios.post(`${HOST}/login`,{
+          this.$http.post(`${this.$host}/login`,{
             userName:this.form.userName,
             password:this.form.password
           }).then(response=>{

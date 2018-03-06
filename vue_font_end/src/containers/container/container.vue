@@ -69,7 +69,7 @@
                   {{v.menuName}}
                 </template>
                 <router-link v-for="i in v.children" :to="i.uri" :key="i.uri">
-                  <MenuItem :name="i.uri"  @click.native="storePath(k.uri)">
+                  <MenuItem :name="i.uri"  @click.native="storePath(i.uri)">
                     {{i.menuName}}
                   </MenuItem>
                 </router-link>

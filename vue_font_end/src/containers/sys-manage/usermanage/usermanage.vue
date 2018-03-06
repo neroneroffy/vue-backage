@@ -64,8 +64,7 @@
 </template>
 
 <script>
-  import axios from 'axios';
-  import { API } from '@/const/api';
+
   import { Table,Page,Form,Input,Select,Modal,Row,Col,Upload,Avatar } from 'iview';
     export default {
         name: "usermanage",
@@ -120,7 +119,6 @@
                 {
                   title: '账户',
                   key: 'account',
-
                 },
                 {
                   title: '头像',
@@ -264,7 +262,7 @@
         handleSubmit() {
           console.log(this.searchContent)
 /*
-          axios.post(`${API}/search`,{data:this.searchContent}).then(response=>{
+          this.$http.post(`${this.$api}/search`,{data:this.searchContent}).then(response=>{
             let res = response.data;
             this.listData = res.data;
           })
@@ -286,7 +284,7 @@
             loading: true,
             onOk: () => {
               this.$store.dispatch('modalLoading');
-              axios.post(`${API}/auth/delete`,{id}).then(response=>{
+              this.$http.post(`${this.$api}/auth/delete`,{id}).then(response=>{
                 let res = response.data;
                 if(res.result){
                   this.$store.dispatch('getList');
@@ -300,7 +298,7 @@
         //切换状态
         statusEdit(params){
           //更新管理员状态
-            axios.post(`${API}/auth/updatestatus`,{id:params.row.id,status:params.row.status}).then(response=>{
+            this.$http.post(`${this.$api}/auth/updatestatus`,{id:params.row.id,status:params.row.status}).then(response=>{
               let res = response.data;
               if(res.result){
                 console.log(res)
@@ -320,7 +318,7 @@
             pageSize : 30
           };
           let params = customsParams || defaultParams;
-          axios.get(`${API}/auth/manager`,{params}).then(response=>{
+          this.$http.get(`${this.$api}/auth/manager`,{params}).then(response=>{
             let res = response.data;
             if(res.result){
               this.listData = res.list;

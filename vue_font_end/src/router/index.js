@@ -27,6 +27,19 @@ import saleRate from '@/containers/data-analyze/sale-rate/sale-rate'
 import yearGrow from '@/containers/data-analyze/year-grow/year-grow'
 import panel from '@/containers/panel/panel'
 
+//基础信息管理
+import commodity from '@/containers/base-data/commodity/commodity'
+import editCommodity from '@/containers/base-data/commodity/edit-commodity/edit-commodity'
+import present from '@/containers/base-data/present/present'
+import materiel from '@/containers/base-data/materiel/materiel'
+import client from '@/containers/base-data/client/client'
+import supplier from '@/containers/base-data/supplier/supplier'
+import warehouse from '@/containers/base-data/warehouse/warehouse'
+import contact from '@/containers/base-data/contact/contact'
+import address from '@/containers/base-data/address/address'
+import unit from '@/containers/base-data/unit/unit'
+import stockPrice from '@/containers/base-data/stock-price/stock-price'
+
 Vue.use(Router);
 
 const router = new Router({
@@ -97,7 +110,6 @@ const router = new Router({
           name: 'editmember',
           component: editmember
         },
-
         {
           path: '/dataAnalyze/month-sales',
           name:'month-sales',
@@ -117,7 +129,63 @@ const router = new Router({
           path: '/dataAnalyze/sale-rate',
           name:'sale-rate',
           component:saleRate
-        }
+        },
+        {
+          path: '/baseData/commodity',
+          name:'commodity',
+          component:commodity
+        },
+        {
+          path: '/baseData/commodity/edit-commodity',
+          name:'editCommodity',
+          component:editCommodity
+        },
+        {
+          path: '/baseData/present',
+          name:'present',
+          component:present
+        },
+        {
+          path: '/baseData/materiel',
+          name:'materiel',
+          component:materiel
+        },
+        {
+          path: '/baseData/client',
+          name:'client',
+          component:client
+        },
+        {
+          path: '/baseData/supplier',
+          name:'supplier',
+          component:supplier
+        },
+        {
+          path: '/baseData/warehouse',
+          name:'warehouse',
+          component:warehouse
+        },
+        {
+          path: '/baseData/contact',
+          name:'contact',
+          component:contact
+        },
+        {
+          path: '/baseData/address',
+          name:'address',
+          component:address
+        },
+        {
+          path: '/baseData/unit',
+          name:'unit',
+          component:unit
+        },
+        {
+          path: '/baseData/stock-price',
+          name:'stock-price',
+          component:stockPrice
+        },
+
       ]
     },
   ]
