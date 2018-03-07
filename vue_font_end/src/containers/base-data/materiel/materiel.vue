@@ -1,5 +1,7 @@
 <template>
-    <div class="materiel"></div>
+    <div class="materiel">
+      物料管理
+    </div>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-    <div class="supplier"></div>
+    <div class="supplier">供货商管理</div>
 </template>
 
 <script>

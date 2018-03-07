@@ -1,6 +1,6 @@
 <template>
     <div class="contact">
-
+      联系人管理
     </div>
 </template>
 

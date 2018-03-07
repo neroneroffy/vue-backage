@@ -1,5 +1,5 @@
 <template>
-    <div class="present"></div>
+    <div class="present">赠品管理</div>
 </template>
 
 <script>

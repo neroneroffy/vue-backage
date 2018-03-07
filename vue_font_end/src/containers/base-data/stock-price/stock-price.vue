@@ -1,5 +1,5 @@
 <template>
-    <div class="stock-price"></div>
+    <div class="stock-price">进货价格设置</div>
 </template>
 
 <script>

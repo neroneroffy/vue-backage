@@ -1,5 +1,7 @@
 <template>
-    <div class="address"></div>
+    <div class="address">
+      地址管理
+    </div>
 </template>
 
 <script>
