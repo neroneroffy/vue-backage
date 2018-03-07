@@ -29,7 +29,7 @@ router.get('/getList',(req,res,next)=>{
 
     })
 });
-router.get('/querycommidity',(req,res,next)=>{
+router.get('/querycommodity',(req,res,next)=>{
     let id = req.param('id');
     Commodity.findOne({id},(err,doc)=>{
         if(err){

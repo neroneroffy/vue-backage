@@ -4,23 +4,21 @@
 
       <Form ref="editData" :model="editData" :label-width="40" v-if="editData" label-position="left">
         <FormItem label="名称" prop="id">
-          <Input v-model="editData.id" :disabled="checkMember" placeholder="请输入ID" />
+          <Input v-model="editData.id" placeholder="请输入ID" />
         </FormItem>
-        <FormItem label="账户" prop="account">
-          <Input v-model="editData.account" :disabled="checkMember" placeholder="请输入账户"/>
+        <FormItem label="单位" prop="unit">
+          <Input v-model="editData.unit" placeholder="请输入单位"/>
         </FormItem>
-        <FormItem label="角色" prop="role">
-          <Select v-model="editData.roleId" :disabled="checkMember"  placeholder="请选择角色" @on-change = 'roleChange'>
-            <Option :value="v.roleId" :key="v.roleId" v-for="v in editRoleList">{{v.roleName}}</Option>
-          </Select>
+        <FormItem label="价格" prop="price">
+          <Input v-model="editData.unit" placeholder="请输入价格"/>
         </FormItem>
-        <FormItem label="电话" prop="phone">
-          <Input v-model="editData.phone" placeholder="请输入电话" :disabled="checkMember"/>
+        <FormItem label="重量" prop="weight">
+          <Input v-model="editData.weight" placeholder="请输入重量"/>
         </FormItem>
         <FormItem label="备注" prop="remark">
-          <Input v-model="editData.remark" :disabled="checkMember" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请填写备注"/>
+          <Input v-model="editData.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请填写备注"/>
         </FormItem>
-        <FormItem v-if="!checkMember" >
+        <FormItem>
           <Button type="primary" @click="submit">提交</Button>
         </FormItem>
       </Form>
@@ -29,7 +27,7 @@
 </template>
 
 <script>
-  import BastTitle from "@/components/title";
+  import BastTitle from "@/components/base-title";
   import { Form,Select,Upload,Avatar,Button } from 'iview'
     export default {
       name: "edit-commodity",
@@ -41,30 +39,32 @@
             unit:"",
             price:"",
             weight:""
-          },
-          checkMember:false,
-          editRoleList: [
-            {
-              roleId: 'role1',
-              roleName: '角色1'
-            },
-            {
-              roleId: 'role2',
-              roleName: '角色2'
-            },
-            {
-              roleId: 'role3',
-              roleName: '角色3'
-            },
-            {
-              roleId: 'role4',
-              roleName: '角色4'
-            }
-          ]
+          }
+
         }
       },
       components:{
         BastTitle
+      },
+      mounted(){
+        if(this.$route.query.id){
+          this.$http.get(`${this.$api}/commodity/querycommodity`,{
+            params:{ id:this.$route.query.id }
+          }).then(response=>{
+            let res = response.data;
+
+            if(res.result){
+              this.editData = res.data;
+            }
+          });
+        }
+
+
+      },
+      methods:{
+        submit(){
+          console.log(this.editData)
+        }
       }
     }
 </script>

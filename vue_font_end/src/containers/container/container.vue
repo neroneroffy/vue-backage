@@ -63,7 +63,7 @@
                 </router-link>
 
               </Submenu>
-            <Submenu v-for="v in subMenu" :name="v.uri">
+            <Submenu v-for="v in subMenu" :name="v.uri" :key ="v.uri">
                 <template slot="title">
                   <Icon :type="v.icon"></Icon>
                   {{v.menuName}}
@@ -239,7 +239,7 @@
             if(this.lastPath === '/index'){
               this.$router.push("/index")
             }else{
-              this.$router.push(this.currentPath)
+              //this.$router.push(this.currentPath)
             }
           }
         })
@@ -255,12 +255,15 @@
           closable:true,
           cancelText:"取消",
           okText:"确定",
+          loading: true,
           onOk:()=>{
             this.$store.dispatch('modalLoading');
             axios.get(`${HOST}/logout`).then(res=>{
               console.log(res)
               if(res.data.result){
-                sessionStorage.clear()
+                sessionStorage.clear();
+                this.$Modal.remove();
+                this.$Message.info('退出成功');
                 localStorage.removeItem('xAuthToken');
                 this.$router.push('/login')
               }
@@ -271,7 +274,6 @@
 
       },
       storePath(path){
-
         sessionStorage.setItem('currentPath',path)
       }
     },
@@ -282,6 +284,7 @@
           this.isCollapsed ? 'collapsed-menu' : ''
         ]
       },
+      //只是记录哪个菜单高亮用
       currentPath(){
         if(sessionStorage.getItem('currentPath') === '/'){
           this.$router.push('/index')

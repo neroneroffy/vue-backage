@@ -287,7 +287,7 @@
               this.$http.post(`${this.$api}/auth/delete`,{id}).then(response=>{
                 let res = response.data;
                 if(res.result){
-                  this.$store.dispatch('getList');
+                  this.pagination();//请求列表数据
                   this.$Modal.remove();
                   this.$Message.info('删除成功');
                 }

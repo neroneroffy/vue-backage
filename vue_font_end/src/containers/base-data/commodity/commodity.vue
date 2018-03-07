@@ -65,8 +65,7 @@
 </template>
 
 <script>
-  import axios from 'axios';
-  import { API } from '@/const/api';
+
   import { Table,Page,Form,Input,Select,Modal,Row,Col,Upload,Avatar } from 'iview';
     export default {
         name: "commodity",
@@ -212,7 +211,7 @@
         handleSubmit() {
           console.log(this.searchContent)
           /*
-                    axios.post(`${API}/search`,{data:this.searchContent}).then(response=>{
+                    this.$http.post(`${this.$api}/search`,{data:this.searchContent}).then(response=>{
                       let res = response.data;
                       this.listData = res.data;
                     })
@@ -230,10 +229,11 @@
             loading: true,
             onOk: () => {
               this.$store.dispatch('modalLoading');
-              axios.post(`${API}/auth/delete`,{id}).then(response=>{
+              console.log(this)
+              this.$http.post(`${this.$api}/commodity/delete`,{id}).then(response=>{
                 let res = response.data;
                 if(res.result){
-                  this.$store.dispatch('getList');
+                  this.pagination();
                   this.$Modal.remove();
                   this.$Message.info('删除成功');
                 }

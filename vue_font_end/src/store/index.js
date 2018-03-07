@@ -1,16 +1,16 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import usermanage from './usermanage/usermanage';
-import user from './user';
+//import usermanage from './usermanage/usermanage';
+//import user from './user';
 import loading from './loading';
 
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
   modules:{
-    usermanage,
+    //usermanage,
     loading,
-    user,
+    //user,
 
   }
 });

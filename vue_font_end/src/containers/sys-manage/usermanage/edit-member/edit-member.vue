@@ -44,7 +44,7 @@
 </template>
 
 <script>
-  import BastTitle from '@/components/title'
+  import BastTitle from '@/components/base-title'
   import { Form,Select,Upload,Avatar,Button } from 'iview'
 
     export default {

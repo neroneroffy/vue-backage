@@ -28,21 +28,22 @@ import yearGrow from '@/containers/data-analyze/year-grow/year-grow'
 import panel from '@/containers/panel/panel'
 
 //基础信息管理
-import commodity from '@/containers/base-data/commodity/commodity'
-import editCommodity from '@/containers/base-data/commodity/edit-commodity/edit-commodity'
-import present from '@/containers/base-data/present/present'
-import materiel from '@/containers/base-data/materiel/materiel'
-import client from '@/containers/base-data/client/client'
-import supplier from '@/containers/base-data/supplier/supplier'
-import warehouse from '@/containers/base-data/warehouse/warehouse'
-import contact from '@/containers/base-data/contact/contact'
-import address from '@/containers/base-data/address/address'
-import unit from '@/containers/base-data/unit/unit'
-import stockPrice from '@/containers/base-data/stock-price/stock-price'
+import commodity from '@/containers/base-data/commodity/commodity'//商品管理
+import editCommodity from '@/containers/base-data/commodity/edit-commodity/edit-commodity'//编辑商品
+import present from '@/containers/base-data/present/present'//赠品管理
+import materiel from '@/containers/base-data/materiel/materiel'//物料管理
+import client from '@/containers/base-data/client/client'//客户管理
+import supplier from '@/containers/base-data/supplier/supplier'//供货商管理
+import warehouse from '@/containers/base-data/warehouse/warehouse'//仓库管理
+import contact from '@/containers/base-data/contact/contact'//联系人管理
+import address from '@/containers/base-data/address/address'//地址管理
+import unit from '@/containers/base-data/unit/unit'//单位设置
+import stockPrice from '@/containers/base-data/stock-price/stock-price'//进货价格设置
 
 Vue.use(Router);
 
 const router = new Router({
+
   routes: [
     {
       path:"/login",

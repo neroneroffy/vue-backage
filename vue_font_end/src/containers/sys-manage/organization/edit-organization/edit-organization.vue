@@ -22,7 +22,7 @@
 </template>
 
 <script>
-  import BastTitle from '@/components/title'
+  import BastTitle from '@/components/base-title'
   import { Select,Form,Input,Button,Cascader } from "iview"
   export default {
     name: "edit-organization",

@@ -23,7 +23,7 @@
               </Input>
             </FormItem>
             <FormItem>
-              <Button @click="handleSubmit" type="primary" long>登录</Button>
+              <Button @click="handleSubmit" :loading="loading" type="primary" long>登录</Button>
             </FormItem>
           </Form>
 
@@ -44,6 +44,7 @@
             userName: '',
             password: ''
           },
+          loading:false,
           rules: {
             userName: [
               { required: true, message: '账号不能为空', trigger: 'blur' }
@@ -57,6 +58,7 @@
       methods: {
         handleSubmit () {
           //this.$router.push('/manager')
+          this.loading = true;
           this.$http.post(`${this.$host}/login`,{
             userName:this.form.userName,
             password:this.form.password
@@ -74,7 +76,8 @@
                       return menu.uri
                     }
                   }
-                  sessionStorage.setItem('currentPath','/index')
+                  sessionStorage.setItem('currentPath','/index');
+                  this.loading = false;
                   this.$router.push('/index');//登陆成功后跳转到首页
                   return
                 }
