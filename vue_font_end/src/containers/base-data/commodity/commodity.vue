@@ -13,11 +13,6 @@
             <FormItem prop="phone">
               <Input type="text" v-model="searchContent.phone" placeholder="请输入搜索电话"/>
             </FormItem>
-            <FormItem >
-              <Select v-model="searchContent.role" style="width:200px" placeholder="请选择角色">
-                <Option v-for="item in roleList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-              </Select>
-            </FormItem>
             <FormItem>
               <Button type="primary" icon="ios-search" @click="handleSubmit('formInline')">搜索</Button>
             </FormItem>
@@ -28,7 +23,6 @@
       <div class="pagination">
         <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize" placement="top" :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
       </div>
-
       <Modal
         v-model="visible"
         title="查看详情"
@@ -68,7 +62,7 @@
 
   import { Table,Page,Form,Input,Select,Modal,Row,Col,Upload,Avatar } from 'iview';
     export default {
-        name: "commodity",
+      name: "commodity",
       data(){
           return {
             pageSizeList:[30,50,100],
@@ -82,29 +76,7 @@
               account: '',
               phone:"",
               role:""
-            },
-            roleList: [
-              {
-                value: '',
-                label: '请选择角色'
-              },
-              {
-                value: 'role1',
-                label: '角色1'
-              },
-              {
-                value: 'role2',
-                label: '角色2'
-              },
-              {
-                value: 'role3',
-                label: '角色3'
-              },
-              {
-                value: 'role4',
-                label: '角色4'
-              }
-            ],
+             },
             columns: [
               {
                 type: 'selection',

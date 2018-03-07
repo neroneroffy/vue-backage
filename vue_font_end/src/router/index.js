@@ -34,7 +34,9 @@ import present from '@/containers/base-data/present/present'//赠品管理
 import materiel from '@/containers/base-data/materiel/materiel'//物料管理
 import client from '@/containers/base-data/client/client'//客户管理
 import supplier from '@/containers/base-data/supplier/supplier'//供货商管理
+import editSupplier from '@/containers/base-data/supplier/edit-supplier/edit-supplier'//编辑供货商
 import warehouse from '@/containers/base-data/warehouse/warehouse'//仓库管理
+import editWarehouse from '@/containers/base-data/warehouse/edit-warehouse/edit-warehouse'//编辑仓库
 import contact from '@/containers/base-data/contact/contact'//联系人管理
 import address from '@/containers/base-data/address/address'//地址管理
 import unit from '@/containers/base-data/unit/unit'//单位设置
@@ -162,9 +164,19 @@ const router = new Router({
           component:supplier
         },
         {
+          path: '/baseData/supplier/edit-supplier',
+          name:'edit-supplier',
+          component:editSupplier
+        },
+        {
           path: '/baseData/warehouse',
           name:'warehouse',
           component:warehouse
+        },
+        {
+          path: '/baseData/warehouse/edit-warehouse',
+          name:'edit-warehouse',
+          component:editWarehouse
         },
         {
           path: '/baseData/contact',
