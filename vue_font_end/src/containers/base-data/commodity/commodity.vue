@@ -1,24 +1,24 @@
 <template>
     <div class="commodity">
       <div class="search-wrapper">
-        <Button type="primary" icon="plus-round" @click="addMember" class="add">新增</Button>
-        <div class="search">
-          <Form ref="formInline" :model="searchContent" inline>
-            <FormItem prop="user">
-              <Input type="text" v-model="searchContent.id" placeholder="请输入ID"/>
-            </FormItem>
-            <FormItem prop="account">
-              <Input type="text" v-model="searchContent.account" placeholder="请输入搜索账户"/>
-            </FormItem>
-            <FormItem prop="phone">
-              <Input type="text" v-model="searchContent.phone" placeholder="请输入搜索电话"/>
-            </FormItem>
-            <FormItem>
-              <Button type="primary" icon="ios-search" @click="handleSubmit('formInline')">搜索</Button>
-            </FormItem>
-          </Form>
-        </div>
+      <Button type="primary" icon="plus-round" @click="addMember" class="add">新增</Button>
+      <div class="search">
+        <Form ref="formInline" :model="searchContent" inline>
+          <FormItem prop="user">
+            <Input type="text" v-model="searchContent.id" placeholder="请输入ID"/>
+          </FormItem>
+          <FormItem prop="account">
+            <Input type="text" v-model="searchContent.account" placeholder="请输入搜索账户"/>
+          </FormItem>
+          <FormItem prop="phone">
+            <Input type="text" v-model="searchContent.phone" placeholder="请输入搜索电话"/>
+          </FormItem>
+          <FormItem>
+            <Button type="primary" icon="ios-search" @click="handleSubmit('formInline')">搜索</Button>
+          </FormItem>
+        </Form>
       </div>
+    </div>
       <Table :columns="columns" :data="listData" class="table" v-if="listData"></Table>
       <div class="pagination">
         <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize" placement="top" :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>

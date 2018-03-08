@@ -150,7 +150,6 @@
           console.log(this.editData)
         }
       }
-
     }
 </script>
 

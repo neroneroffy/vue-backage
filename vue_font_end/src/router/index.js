@@ -31,6 +31,7 @@ import panel from '@/containers/panel/panel'
 import commodity from '@/containers/base-data/commodity/commodity'//商品管理
 import editCommodity from '@/containers/base-data/commodity/edit-commodity/edit-commodity'//编辑商品
 import present from '@/containers/base-data/present/present'//赠品管理
+import editPresent from "@/containers/base-data/present/edit-present/edit-present" //编辑赠品
 import materiel from '@/containers/base-data/materiel/materiel'//物料管理
 import client from '@/containers/base-data/client/client'//客户管理
 import editClient from '@/containers/base-data/client/edit-client/edit-client'//编辑客户
@@ -148,6 +149,11 @@ const router = new Router({
           path: '/baseData/present',
           name:'present',
           component:present
+        },
+        {
+          path: '/baseData/present/edit-present',
+          name:'edit-present',
+          component:editPresent
         },
         {
           path: '/baseData/materiel',
