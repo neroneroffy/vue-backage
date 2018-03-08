@@ -15,6 +15,7 @@ var charts = require('./routes/charts');
 var commodity = require('./routes/commodity');
 var supplier = require('./routes/supplier');
 var warehouse = require('./routes/warehouse');
+var customer = require('./routes/customer');
 
 //连接mongodb数据库
 let mongoose = require('mongoose');
@@ -51,6 +52,7 @@ app.use('/charts', charts);
 app.use('/commodity', commodity);
 app.use('/supplier', supplier);
 app.use('/warehouse', warehouse);
+app.use('/customer', customer);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

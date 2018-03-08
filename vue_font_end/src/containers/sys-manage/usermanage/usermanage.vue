@@ -67,8 +67,8 @@
 
   import { Table,Page,Form,Input,Select,Modal,Row,Col,Upload,Avatar } from 'iview';
     export default {
-        name: "usermanage",
-        data(){
+      name: "usermanage",
+      data(){
             return {
               pageSizeList:[30,50,100],
               pageSize:30,

@@ -130,6 +130,20 @@
                     }
                   }, '编辑'),
                   h('Button', {
+                    props: {
+                      type: 'error',
+                      size: 'small'
+                    },
+                    style: {
+                      marginRight: '5px'
+                    },
+                    on: {
+                      click: () => {
+                        this.remove(params)
+                      }
+                    }
+                  }, '删除'),
+                  h('Button', {
                       props: {
                         size: 'small'
                       },
