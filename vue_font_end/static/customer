@@ -1,0 +1,77 @@
+{
+  "result":true,
+  "data":[
+    {
+      "customerName":"李老三",
+      "customerType":"大客户",
+      "mobilePhone":"18840846671",
+      "telephone":"43423432",
+      "wechat":"gj4324234",
+      "firstPurchaseTime":"2017年 8月 10号",
+      "status":"二次拜访",
+      "user":"张账户",
+      "address":"北京市朝阳区河西务镇包楼村",
+      "pic":"http://d.hiphotos.baidu.com/image/pic/item/43a7d933c895d1435eac3d047ff082025aaf073b.jpg"
+    },
+    {
+      "customerName":"李老三",
+      "customerType":"大客户",
+      "mobilePhone":"18840846671",
+      "telephone":"43423432",
+      "wechat":"gj4324234",
+      "firstPurchaseTime":"2017年 8月 10号",
+      "status":"二次拜访",
+      "user":"张账户",
+      "address":"北京市朝阳区河西务镇包楼村",
+      "pic":"http://d.hiphotos.baidu.com/image/pic/item/43a7d933c895d1435eac3d047ff082025aaf073b.jpg"
+    },
+    {
+      "customerName":"李老三",
+      "customerType":"大客户",
+      "mobilePhone":"18840846671",
+      "telephone":"43423432",
+      "wechat":"gj4324234",
+      "firstPurchaseTime":"2017年 8月 10号",
+      "status":"二次拜访",
+      "user":"张账户",
+      "address":"北京市朝阳区河西务镇包楼村",
+      "pic":"http://d.hiphotos.baidu.com/image/pic/item/43a7d933c895d1435eac3d047ff082025aaf073b.jpg"
+    },
+    {
+      "customerName":"李老三",
+      "customerType":"大客户",
+      "mobilePhone":"18840846671",
+      "telephone":"43423432",
+      "wechat":"gj4324234",
+      "firstPurchaseTime":"2017年 8月 10号",
+      "status":"二次拜访",
+      "user":"张账户",
+      "address":"北京市朝阳区河西务镇包楼村",
+      "pic":"http://d.hiphotos.baidu.com/image/pic/item/43a7d933c895d1435eac3d047ff082025aaf073b.jpg"
+    },
+    {
+      "customerName":"李老三",
+      "customerType":"大客户",
+      "mobilePhone":"18840846671",
+      "telephone":"43423432",
+      "wechat":"gj4324234",
+      "firstPurchaseTime":"2017年 8月 10号",
+      "status":"二次拜访",
+      "user":"张账户",
+      "address":"北京市朝阳区河西务镇包楼村",
+      "pic":"http://d.hiphotos.baidu.com/image/pic/item/43a7d933c895d1435eac3d047ff082025aaf073b.jpg"
+    },
+    {
+      "customerName":"李老三",
+      "customerType":"大客户",
+      "mobilePhone":"18840846671",
+      "telephone":"43423432",
+      "wechat":"gj4324234",
+      "firstPurchaseTime":"2017年 8月 10号",
+      "status":"二次拜访",
+      "user":"张账户",
+      "address":"北京市朝阳区河西务镇包楼村",
+      "pic":"http://d.hiphotos.baidu.com/image/pic/item/43a7d933c895d1435eac3d047ff082025aaf073b.jpg"
+    }
+  ]
+}

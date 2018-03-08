@@ -33,6 +33,7 @@ import editCommodity from '@/containers/base-data/commodity/edit-commodity/edit-
 import present from '@/containers/base-data/present/present'//赠品管理
 import materiel from '@/containers/base-data/materiel/materiel'//物料管理
 import client from '@/containers/base-data/client/client'//客户管理
+import editClient from '@/containers/base-data/client/edit-client/edit-client'//编辑客户
 import supplier from '@/containers/base-data/supplier/supplier'//供货商管理
 import editSupplier from '@/containers/base-data/supplier/edit-supplier/edit-supplier'//编辑供货商
 import warehouse from '@/containers/base-data/warehouse/warehouse'//仓库管理
@@ -157,6 +158,11 @@ const router = new Router({
           path: '/baseData/client',
           name:'client',
           component:client
+        },
+        {
+          path: '/baseData/client/edit-client',
+          name:'edit-client',
+          component:editClient
         },
         {
           path: '/baseData/supplier',
