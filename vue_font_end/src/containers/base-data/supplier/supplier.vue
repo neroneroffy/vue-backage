@@ -11,7 +11,7 @@
               <Input type="text" v-model="searchContent.account" placeholder="请输入搜索账户"/>
             </FormItem>
             <FormItem prop="phone">
-              <Input type="text" v-model="searchContent.phone" placeholder="请输入搜索电话"/>
+              <Input type="text" v-model="searchContent.mobilePhone" placeholder="请输入搜索电话"/>
             </FormItem>
 
             <FormItem>
@@ -65,8 +65,8 @@
       name: "supplier",
       data(){
         return {
-          pageSizeList:[30,50,100],
-          pageSize:30,
+          pageSizeList:[10,50,100],
+          pageSize:10,
           total:0,
           currentPage:1,
           visible:false,
@@ -74,20 +74,10 @@
           searchContent: {
             id: '',
             account: '',
-            phone:"",
-            role:""
+            mobilePhone:""
           },
           columns: [
-            {
-              type: 'selection',
-              width: 60,
-              align: 'center'
-            },
-            {
-              title: 'ID',
-              key: 'id',
-              width:180
-            },
+
             {
               title: '供货商名称',
               key: 'supplierName',
@@ -114,10 +104,7 @@
               title: '税率',
               key: 'taxRate',
             },
-            {
-              title: '地址',
-              key: 'addressId',
-            },
+
             {
               title: '备注',
               key: 'mark',
@@ -126,6 +113,7 @@
               title: '操作',
               key: 'action',
               align: 'center',
+              width:"180",
               render: (h, params) => {
                 return h('div', [
 
@@ -157,23 +145,7 @@
                         this.remove(params)
                       }
                     }
-                  }, '删除'),
-                  h('Button', {
-                      props: {
-                        size: 'small'
-                      },
-                      class:"status",
-                      style:{
-                        background:params.row.status?"#13D149":"#ccc",
-                        color:"#fff"
-                      },
-                      on: {
-                        click: () => {
-                          this.statusEdit(params)
-                        }
-                      }
-                    },
-                    params.row.status?"禁用": '启用')
+                  }, '删除')
                 ]);
               }
             }
@@ -189,14 +161,14 @@
           imgName: '',
           uploadList: [],
           listData:"",
-          api:"http://192.168.31.65:8080"
+          api:"http://192.168.31.222:8080"
         }
       },
       mounted(){
         //初始请求分页
         let params = {
-          pageNum:this.currentPage,
-          pageSize:this.pageSize
+          currentPage:`${this.currentPage}`,
+          pageSize:`${this.pageSize}`
         };
         this.pagination(params)
       },
@@ -212,18 +184,18 @@
         },
         //提交搜索
         handleSubmit() {
-          console.log(this.searchContent)
-          /*
-                    this.$http.post(`${this.$api}/search`,{data:this.searchContent}).then(response=>{
-                      let res = response.data;
-                      this.listData = res.data;
-                    })
-          */
+          console.log(this.searchContent);
+          this.searchContent.mobilePhone = `${this.searchContent.mobilePhone}`
+            this.$http.post(`${this.api}/base/supplier/findBySupplierPhone`,{mobilePhone:this.searchContent.mobilePhone}).then(response=>{
+              let res = response.data;
+              console.log(res)
+              this.listData = res.data;
+            })
         },
         //切换状态
         statusEdit(params){
           //更新供货商状态
-          this.$http.post(`${this.$api}/supplier/update`,{id:params.row.id,status:params.row.status}).then(response=>{
+          this.$http.post(`${this.api}/supplier/update`,{id:params.row.id,status:params.row.status}).then(response=>{
             let res = response.data;
             if(res.result){
               console.log(res);
@@ -245,9 +217,9 @@
             loading: true,
             onOk: () => {
               this.$store.dispatch('modalLoading');
-              console.log(this)
-              this.$http.post(`${this.$api}/supplier/delete`,{id}).then(response=>{
+              this.$http.get(`${this.api}/base/supplier/delSupplier`,{params:{ id }}).then(response=>{
                 let res = response.data;
+                console.log(res);
                 if(res.result){
                   this.pagination();
                   this.$Modal.remove();
@@ -263,17 +235,17 @@
         //分页函数
         pagination(customsParams){
           let defaultParams = {
-            pageNum :1,
-            pageSize : 30
+            currentPage :"1",
+            pageSize : "10"
           };
           let params = customsParams || defaultParams;
-          this.$http.get(`${this.$api}/base/supplier/supplierFindAll`,{params}).then(response=>{
+          this.$http.get(`${this.api}/base/supplier/supplierFindAll`,{params}).then(response=>{
             let res = response.data;
             console.log(res);
-            if(res.result){
-              this.listData = res.list;
-              this.total = res.total;
-            }
+
+              this.listData = res.supplierList;
+              this.total = res.count;
+
           })
         },
         //点击分页

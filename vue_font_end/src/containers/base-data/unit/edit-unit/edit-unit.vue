@@ -118,6 +118,10 @@
             baseUnit:this.editData.baseUnit,
             unitsType:this.editData.unitsType
           };
+          this.$http.post(`${this.$api}/base/units/add`,{...submitData}).then(response=>{
+            let res = response.data;
+            console.log(res)
+          });
           console.log(submitData)
 
         },

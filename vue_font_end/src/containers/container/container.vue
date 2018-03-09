@@ -133,10 +133,6 @@
                 uri:"/baseData/warehouse"
               },
               {
-                menuName:"联系人管理",
-                uri:"/baseData/contact"
-              },
-              {
                 menuName:"地址管理",
                 uri:"/baseData/address"
               },

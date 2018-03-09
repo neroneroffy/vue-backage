@@ -171,7 +171,6 @@
           this.setCascader("","block","")
         },
         dateChange(date){
-
           this.editData.firstPurchaseTime = date
         },
         submit(){
@@ -180,11 +179,11 @@
           }
           this.$http.post(`${this.$api}/base/customer/addCustomer`,this.editData).then(response=>{
             let res = response.data;
-            console.log(res)
+
             if(res.msg === "手机号已注册"){
               this.$Message.error('手机号已注册');
             }else if(res.msg === "成功"){
-              this.$Message.info('修改成功');
+              this.$Message.info('成功');
               this.$router.push('/baseData/client')
             }
           })

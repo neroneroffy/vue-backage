@@ -11,10 +11,8 @@
               <Input type="text" v-model="searchContent.mobilePhone" placeholder="请输入手机号"/>
             </FormItem>
             <FormItem >
-
               <Select v-model="searchContent.customerType" style="width:200px" placeholder="请选择客户类型">
                 <Option v-for="item in cuntomerType" :value="item.value" :key="item.value">{{ item.name }}</Option>
-
               </Select>
             </FormItem>
             <FormItem>
@@ -37,8 +35,8 @@
       name: "client",
       data(){
         return {
-          pageSizeList:[1,50,100],
-          pageSize:1,
+          pageSizeList:[30,50,100],
+          pageSize:30,
           total:0,
           currentPage:1,
           visible:false,
@@ -46,7 +44,7 @@
           cuntomerType: [
             {
               name:"请选择客户类型",
-              value:""
+              value:"DEFAULT"
             },
             {
               name:"门店",
@@ -154,7 +152,7 @@
           ],
           searchContent: {
             customerName: '',
-            customerType: '',
+            customerType: 'DEFAULT',
             mobilePhone:""
           },
           listData:""
@@ -181,24 +179,27 @@
         },
         //提交搜索
         handleSubmit() {
-          console.log(this.searchContent);
+
           //如果没有查询条件，查询所有
-          if(this.searchContent.customerName === "" &&this.searchContent.customerType===""&&this.searchContent.mobilePhone==="" ){
-            this.pagination()
+          if(this.searchContent.customerName === "" &&this.searchContent.customerType==="DEFAULT"&&this.searchContent.mobilePhone==="" ){
+            this.pagination();
+            return
           }
+
           //加上分页参数
-          this.searchContent.currentPage = this.pageNum;
-          this.searchContent.pageSize= this.pageSize;
-          this.$http.get(`${this.$api}/search`,{
-            params:{
-              data:this.searchContent
-            }
+
+          this.searchContent.currentPage = `${this.currentPage}`;
+          this.searchContent.pageSize= `${this.pageSize}`;
+          this.$http.post(`${this.$api}/base/customer/solrCustomer`,{
+            ...this.searchContent
           }).then(response=>{
             let res = response.data;
-            if(res.result){
-              this.listData = res.data;
+            console.log(res)
+
+              this.listData = res.customerList;
+              this.total = res.count;
               //记录总页数
-            }
+
           })
         },
         //查看信息
@@ -231,9 +232,6 @@
           });
         },
 
-        handleSelectAll (status) {
-          this.$refs.selection.selectAll(status);
-        },
         //分页函数
         pagination(customsParams){
           let defaultParams = {
@@ -244,7 +242,7 @@
           console.log(params)
           this.$http.get(`${this.$api}/base/customer/findCustomerAll`,{params}).then(response=>{
             let res = response.data;
-            console.log(res)
+
             this.listData = res;
             if(res.count === 0){
               this.listData = []
