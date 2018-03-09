@@ -41,6 +41,7 @@ import editWarehouse from '@/containers/base-data/warehouse/edit-warehouse/edit-
 import contact from '@/containers/base-data/contact/contact'//联系人管理
 import address from '@/containers/base-data/address/address'//地址管理
 import unit from '@/containers/base-data/unit/unit'//单位设置
+import editUnit from '@/containers/base-data/unit/edit-unit/edit-unit'//编辑单位
 import stockPrice from '@/containers/base-data/stock-price/stock-price'//进货价格设置
 
 Vue.use(Router);
@@ -198,6 +199,11 @@ const router = new Router({
           path: '/baseData/unit',
           name:'unit',
           component:unit
+        },
+        {
+          path: '/baseData/unit/edit-unit',
+          name:'edit-unit',
+          component:editUnit
         },
         {
           path: '/baseData/stock-price',

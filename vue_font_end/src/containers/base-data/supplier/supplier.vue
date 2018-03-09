@@ -87,25 +87,40 @@
               title: 'ID',
               key: 'id',
               width:180
+            },
+            {
+              title: '供货商名称',
+              key: 'supplierName',
 
             },
             {
-              title: '名称',
-              key: 'name',
+              title: '供货商编码',
+              key: 'supplierCode',
+            },
+            {
+              title: '电话',
+              key: 'mobilePhone',
+            },
+            {
+              title: '座机',
+              key: 'telephone',
+            },
+            {
+              title: '微信',
+              key: 'wechat',
 
             },
             {
-              title: '类型',
-              key: 'type',
+              title: '税率',
+              key: 'taxRate',
             },
             {
-              title: '地区',
-              key: 'area',
+              title: '地址',
+              key: 'addressId',
             },
             {
-              title: '欠款',
-              key: 'money',
-
+              title: '备注',
+              key: 'mark',
             },
             {
               title: '操作',
@@ -173,7 +188,8 @@
           },
           imgName: '',
           uploadList: [],
-          listData:""
+          listData:"",
+          api:"http://192.168.31.65:8080"
         }
       },
       mounted(){
@@ -206,7 +222,7 @@
         },
         //切换状态
         statusEdit(params){
-          //更新管理员状态
+          //更新供货商状态
           this.$http.post(`${this.$api}/supplier/update`,{id:params.row.id,status:params.row.status}).then(response=>{
             let res = response.data;
             if(res.result){
@@ -251,8 +267,9 @@
             pageSize : 30
           };
           let params = customsParams || defaultParams;
-          this.$http.get(`${this.$api}/supplier/getList`,{params}).then(response=>{
+          this.$http.get(`${this.$api}/base/supplier/supplierFindAll`,{params}).then(response=>{
             let res = response.data;
+            console.log(res);
             if(res.result){
               this.listData = res.list;
               this.total = res.total;

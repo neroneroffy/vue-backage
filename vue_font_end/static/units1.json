@@ -1,0 +1,21 @@
+{
+  "result":true,
+  "data": {
+          "unitsId":"1",
+          "baseUnit":"片",
+          "unitsType":{
+            "name":"复合单位",
+            "value":"DOUBLE"
+            }
+          },
+          "units":[
+            {
+              "viceUnit":"包",
+              "num":"50"
+            },
+            {
+              "viceUnit":"箱",
+              "num":"10"
+            }
+          ]
+}

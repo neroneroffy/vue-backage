@@ -10,6 +10,6 @@
     }
 </script>
 
-<style scoped>
-
+<style scoped lang="stylus">
+@import './address.styl'
 </style>

@@ -16,7 +16,8 @@ axios.create({
   headers: 'X-Auth-Token'
 });
 Vue.prototype.$http = axios;
-Vue.prototype.$api = '/api';
+Vue.prototype.$api = 'http://192.168.31.13:8080';
+//Vue.prototype.$api = '/api';
 Vue.prototype.$host = 'http://m1.baobaofarm.com';
 Vue.config.productionTip = false;
 

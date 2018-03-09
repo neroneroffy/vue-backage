@@ -11,8 +11,8 @@
               <Input type="text" v-model="searchContent.mobilePhone" placeholder="请输入手机号"/>
             </FormItem>
             <FormItem >
-              <Select v-model="searchContent.customerType" style="width:200px" placeholder="请选择客户状态">
-                <Option v-for="item in roleList" :value="item" :key="item">{{ item }}</Option>
+              <Select v-model="searchContent.customerType" style="width:200px" placeholder="请选择客户类型">
+                <Option v-for="item in cuntomerType" :value="item.value" :key="item.value">{{ item.name }}</Option>
               </Select>
             </FormItem>
             <FormItem>
@@ -35,13 +35,30 @@
       name: "client",
       data(){
         return {
-          pageSizeList:[30,50,100],
-          pageSize:30,
+          pageSizeList:[1,50,100],
+          pageSize:1,
           total:0,
           currentPage:1,
           visible:false,
           loading:true,
-          roleList: ["请选择客户状态","大客户","中客户","小客户"],
+          cuntomerType: [
+            {
+              name:"请选择客户类型",
+              value:""
+            },
+            {
+              name:"门店",
+              value:"STORE"
+            },
+            {
+              name:"代理商",
+              value:"AGENT"
+            },
+            {
+              name:"大客户",
+              value: "BIGCUSTOMER"
+            },
+          ],
           columns: [
             {
               title: '客户名称',
@@ -66,10 +83,15 @@
             {
               title: '首次成交时间',
               key: 'firstPurchaseTime',
+              width:130,
             },
             {
               title: '状态',
               key: 'status',
+            },
+            {
+              title: '进货价',
+              key: 'price',
             },
             {
               title: '关联系统账户',
@@ -79,7 +101,7 @@
               title: '操作',
               key: 'action',
               align: 'center',
-              width:200,
+              width:180,
               render: (h, params) => {
                 return h('div', [
                   h('Button', {
@@ -139,7 +161,7 @@
       mounted() {
         //初始请求分页
         let params = {
-          pageNum:this.currentPage,
+          currentPage:this.currentPage,
           pageSize:this.pageSize
         };
         this.pagination(params)
@@ -157,35 +179,46 @@
         },
         //提交搜索
         handleSubmit() {
-          if(this.searchContent.customerType === "请选择客户状态"){
-            this.searchContent.customerType = ""
+          console.log(this.searchContent);
+          //如果没有查询条件，查询所有
+          if(this.searchContent.customerName === "" &&this.searchContent.customerType===""&&this.searchContent.mobilePhone==="" ){
+            this.pagination()
           }
-          console.log(this.searchContent)
-          /*
-                    this.$http.post(`${this.$api}/search`,{data:this.searchContent}).then(response=>{
-                      let res = response.data;
-                      this.listData = res.data;
-                    })
-          */
+          //加上分页参数
+          this.searchContent.currentPage = this.pageNum;
+          this.searchContent.pageSize= this.pageSize;
+          this.$http.get(`${this.$api}/search`,{
+            params:{
+              data:this.searchContent
+            }
+          }).then(response=>{
+            let res = response.data;
+            if(res.result){
+              this.listData = res.data;
+              //记录总页数
+            }
+          })
         },
         //查看信息
         show (params) {
-          this.$router.push({path:'/baseData/client/edit-client',query:{id:params.row._id,checked:true}})
+          this.$router.push({path:'/baseData/client/edit-client',query:{id:params.row.id,checked:true}})
         },
         //编辑
         edit(params){
-          this.$router.push({path:'/baseData/client/edit-client',query:{id:params.row._id}})
+          this.$router.push({path:'/baseData/client/edit-client',query:{id:params.row.id}})
         },
         //删除
         remove (params) {
-          let id = params.row._id;
+          let id = params.row.id;
+          console.log(typeof id)
           this.$Modal.confirm({
             content: '<p>确认删除此条数据吗？</p>',
             loading: true,
             onOk: () => {
               this.$store.dispatch('modalLoading');
-              this.$http.post(`${this.$api}/customer/delete`,{id}).then(response=>{
+              this.$http.get(`${this.$api}/base/customer/delCustomer`,{params:{ id }}).then(response=>{
                 let res = response.data;
+                console.log(res)
                 if(res.result){
                   this.pagination();//请求列表数据
                   this.$Modal.remove();
@@ -202,35 +235,47 @@
         //分页函数
         pagination(customsParams){
           let defaultParams = {
-            pageNum :1,
+            currentPage :1,
             pageSize : 30
           };
           let params = customsParams || defaultParams;
-          this.$http.get(`${this.$api}/customer/getList`,{params}).then(response=>{
+          console.log(params)
+          this.$http.get(`${this.$api}/base/customer/findCustomerAll`,{params}).then(response=>{
             let res = response.data;
-            if(res.result){
-              this.listData = res.list;
-              this.total = res.total;
+            console.log(res)
+            this.listData = res;
+            if(res.count === 0){
+              this.listData = []
+            }else{
+              this.listData = res.customerList;
+              this.total = res.count;
             }
           })
+        },
+        searchPagination(pageParams){
+          let params={...pageParams,...this.searchContent}
+          console.log(params)
         },
         //点击分页
         changePage(currentPageNum){
           this.currentPage = currentPageNum;
           let params = {
-            pageNum:this.currentPage,
+            currentPage:this.currentPage,
             pageSize:this.pageSize
           };
-
+          if(this.searchContent.customerType!==""){
+            this.searchPagination(params);
+          }
           this.pagination(params)
         },
         changePageSize(currentPageSize){
           this.pageSize = currentPageSize;
           this.currentPage = 1;
           let params = {
-            pageNum:this.currentPage,
+            currentPage:this.currentPage,
             pageSize:this.pageSize
           };
+
 
           this.pagination(params)
         },

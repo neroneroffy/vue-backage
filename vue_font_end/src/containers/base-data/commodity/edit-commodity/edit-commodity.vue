@@ -1,6 +1,6 @@
 <template>
     <div class="edit-commodity">
-      <BastTitle :title="title"></BastTitle>
+      <BaseTitle :title="title"></BaseTitle>
 
       <Form ref="editData" :model="editData" :label-width="40" v-if="editData" label-position="left">
         <FormItem label="名称" prop="name">
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-  import BastTitle from "@/components/base-title";
+  import BaseTitle from "@/components/base-title";
   import { Form,Select,Upload,Avatar,Button } from 'iview'
     export default {
       name: "edit-commodity",
@@ -44,7 +44,7 @@
         }
       },
       components:{
-        BastTitle
+        BaseTitle
       },
       mounted(){
         if(this.$route.query.id){

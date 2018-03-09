@@ -1,0 +1,27 @@
+{
+  "result":true,
+  "data":[
+    {
+      "unitsId":"1",
+      "baseUnit":"片",
+      "units":"包",
+      "unitsType":"复合单位"
+    },
+    {
+      "unitsId":"2",
+      "baseUnit":"袋",
+      "units":"箱",
+      "unitsType":"复合单位"
+    },
+    {
+      "unitsId":"3",
+      "baseUnit":"克",
+      "unitsType":"单单位"
+    },
+    {
+      "unitsId":"4",
+      "baseUnit":"斤",
+      "unitsType":"单单位"
+    }
+  ]
+}

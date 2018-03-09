@@ -3,7 +3,6 @@ import store from './store';
 import router from './router'
 axios.interceptors.request.use((config)=>{
   let xAuthToken = localStorage.getItem('xAuthToken');
-
   if(xAuthToken){
     config.headers['token'] = xAuthToken
   }else{
