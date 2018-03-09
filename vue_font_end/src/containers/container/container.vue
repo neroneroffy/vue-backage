@@ -208,7 +208,17 @@
           {
             menuName:"进货管理",
             uri:"/stock",
-            icon:"archive"
+            icon:"archive",
+            children:[
+              {
+                menuName:"采购单管理",
+                uri:"/stock/stock-order"
+              },
+                 {
+                   menuName:"采购单明细管理",
+                     uri:"/stock/stock-order-detail"
+                 },
+            ]
           }
         ]
       }
