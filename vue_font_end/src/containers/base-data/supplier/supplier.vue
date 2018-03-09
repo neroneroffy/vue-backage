@@ -226,7 +226,7 @@
           this.$http.post(`${this.$api}/supplier/update`,{id:params.row.id,status:params.row.status}).then(response=>{
             let res = response.data;
             if(res.result){
-              console.log(res)
+              console.log(res);
               this.$Message.info('修改成功');
               //更新成功后重新获取表格数据
               this.pagination()
