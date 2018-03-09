@@ -12,7 +12,7 @@
             </FormItem>
             <FormItem >
               <Select v-model="searchContent.customerType" style="width:200px" placeholder="请选择客户状态">
-                <Option v-for="item in roleList" :value="item" :key="item">{{ item }}</Option>
+              <Option v-for="item in roleList" :value="item" :key="item">{{ item }}</Option>
               </Select>
             </FormItem>
             <FormItem>
