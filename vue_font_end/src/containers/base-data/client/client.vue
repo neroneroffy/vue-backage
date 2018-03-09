@@ -11,8 +11,10 @@
               <Input type="text" v-model="searchContent.mobilePhone" placeholder="请输入手机号"/>
             </FormItem>
             <FormItem >
+
               <Select v-model="searchContent.customerType" style="width:200px" placeholder="请选择客户类型">
                 <Option v-for="item in cuntomerType" :value="item.value" :key="item.value">{{ item.name }}</Option>
+
               </Select>
             </FormItem>
             <FormItem>
