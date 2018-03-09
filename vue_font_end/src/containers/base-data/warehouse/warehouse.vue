@@ -1,4 +1,15 @@
 <template>
+  <!--
+    {
+     warehouseName仓库名称
+     contacts负责人
+     mobilePhone电话
+     telephone座机
+     wechat微信
+     acreage仓库面积
+     addressld仓库地址
+    }
+  -->
   <div class="warehouse">
     <div class="search-wrapper">
       <Button type="primary" icon="plus-round" @click="addMember" class="add">新增</Button>
@@ -7,13 +18,15 @@
           <FormItem prop="user">
             <Input type="text" v-model="searchContent.id" placeholder="请输入ID"/>
           </FormItem>
+          <FormItem prop="user">
+            <Input type="text" v-model="searchContent.contacts" placeholder="请输入负责人"/>
+          </FormItem>
           <FormItem prop="account">
-            <Input type="text" v-model="searchContent.account" placeholder="请输入搜索账户"/>
+            <Input type="text" v-model="searchContent.warehouseName" placeholder="请输入搜索仓库名称"/>
           </FormItem>
           <FormItem prop="phone">
-            <Input type="text" v-model="searchContent.phone" placeholder="请输入搜索电话"/>
+            <Input type="text" v-model="searchContent.mobilePhone" placeholder="请输入搜索电话"/>
           </FormItem>
-
           <FormItem>
             <Button type="primary" icon="ios-search" @click="handleSubmit('formInline')">搜索</Button>
           </FormItem>
@@ -24,37 +37,6 @@
     <div class="pagination">
       <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize" placement="top" :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
     </div>
-    <Modal
-      v-model="visible"
-      title="查看详情"
-      :loading="loading"
-      @on-cancel = "cancel"
-      @on-ok="done">
-      <div class="edit-wrapper">
-        <Form ref="formValidate" :model="formValidate" :label-width="80">
-          <FormItem label="ID" prop="id">
-            <Input v-model="formValidate.id" disabled placeholder="请输入ID" />
-          </FormItem>
-          <FormItem label="账户" prop="account">
-            <Input v-model="formValidate.account" disabled placeholder="请输入账户"/>
-          </FormItem>
-          <FormItem label="角色" prop="role">
-            <Input v-model="formValidate.roleName" disabled />
-          </FormItem>
-          <FormItem label="头像">
-            <FormItem prop="date">
-              <Avatar shape="square" icon="person" size="large" :src="formValidate.avatar" class="avatar-edit-display"/>
-            </FormItem>
-          </FormItem>
-          <FormItem label="电话" prop="phone">
-            <Input v-model="formValidate.phone" disabled placeholder="请输入电话"/>
-          </FormItem>
-          <FormItem label="备注" prop="remark">
-            <Input v-model="formValidate.remark" disabled type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请填写备注"/>
-          </FormItem>
-        </Form>
-      </div>
-    </Modal>
 
   </div>
 </template>
@@ -69,13 +51,11 @@
         pageSize:30,
         total:0,
         currentPage:1,
-        visible:false,
-        loading:true,
         searchContent: {
           id: '',
-          account: '',
-          phone:"",
-          role:""
+          contacts:'',
+          warehouseName:'',
+          mobilePhone:''
         },
         columns: [
           {
@@ -91,28 +71,24 @@
           },
           {
             title: '名称',
-            key: 'name',
+            key: 'warehouseName',
 
           },
           {
-            title: '最大库存',
-            key: 'max',
+            title: '负责人',
+            key: 'contacts',
           },
           {
-            title: '预警库存',
-            key: 'min',
+            title: '电话',
+            key: 'mobilePhone',
           },
           {
-            title: '联系人',
-            key: 'contact',
+            title: '座机',
+            key: 'telephone',
           },
           {
-            title: '联系人电话',
-            key: 'phone',
-          },
-          {
-            title: '仓库地址',
-            key: 'address',
+            title: '微信',
+            key: 'wechat ' ,
           },
           {
             title: '操作',
@@ -156,17 +132,8 @@
             }
           }
         ],
-        formValidate: {
-          id: '',
-          account: '',
-          roleId:"",
-          phone: '',
-          avatarUrl:"",
-          remark:""
-        },
-        imgName: '',
-        uploadList: [],
-        listData:""
+        listData:"",
+        api:'http://192.168.31.222:8080'
       }
     },
     mounted(){
@@ -178,14 +145,8 @@
       this.pagination(params)
     },
     methods:{
-      done(){
-        this.visible = false
-      },
       addMember(){
         this.$router.push('/baseData/warehouse/edit-warehouse')
-      },
-      cancel(){
-
       },
       //提交搜索
       handleSubmit() {
@@ -244,7 +205,8 @@
           pageSize : 30
         };
         let params = customsParams || defaultParams;
-        this.$http.get(`${this.$api}/warehouse/getList`,{params}).then(response=>{
+        this.$http.get('http://192.168.31.222:8080/base/warehouse/warehouseFindAll').then(response=>{
+          console.log(response)
           let res = response.data;
           if(res.result){
             this.listData = res.list;

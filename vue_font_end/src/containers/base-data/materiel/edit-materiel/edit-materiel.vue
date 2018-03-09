@@ -34,13 +34,13 @@
         data(){
           return{
             title:this.$route.query.id?this.$route.query.checked?'查看赠品':'编辑赠品':'新增赠品',
-            editData:{
-              materielName:"",
-              materielCode:"",
-              barCode:"",
-              category:"",
-              mark:""
-            },
+              editData:{
+                materielName:"",
+                materielCode:"",
+                barCode:"",
+                category:"",
+                mark:""
+              },
             cityList:[
               {
                 label:"请选择物料类型",
@@ -63,12 +63,14 @@
           }
         },
         mounted(){
-          if(this.$route.query.id!==""){
-            /*this.$http.get("",{
-              params:{ id:this.$route.query.id }
+          if(this.$route.query.id){
+            console.log(this.$route.query.id)
+            //{id:this.$route.query.id}
+            this.$http.get(`http://192.168.31.34:8080/base/materiel/materielInfo`,{
+              params:{id:this.$route.query.id}
             }).then(response =>{
-              this.editData = response.data.data;
-            })*/
+              this.editData = response.data;
+            })
           }
         },
         components:{
@@ -77,11 +79,28 @@
         methods:{
           submit(){
             console.log(this.editData)
+            //物料添加接口/base/materiel/addMateriel
+            //更新物料/base/materiel/updateMateriel
+            let url='/base/materiel/addMateriel';
+            let data=this.editData;
+            if(this.$route.query.id){
+              url = '/base/materiel/updateMateriel';
+            }
+            this.$http.post(`http://192.168.31.34:8080${url}`,data).then(response=>{
+              let res = response.data;
+              console.log(res)
+              if(res.msg === "手机号已注册"){
+                this.$Message.error('手机号已注册');
+              }else if(res.msg === "成功"){
+                this.$Message.info('修改成功');
+                this.$router.push('/baseData/client')
+              }
+            })
           }
         }
     }
 </script>
 
-<style scoped>
-
+<style scoped lang="stylus">
+  @import "edit-materiel.styl";
 </style>
