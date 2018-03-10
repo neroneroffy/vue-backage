@@ -45,8 +45,8 @@
     name: "present",
     data() {
       return {
-        pageSizeList: [30, 50, 100],
-        pageSize: 30,
+        pageSizeList: [5, 10, 20],
+        pageSize: 5,
         total: 0,
         currentPage: 1,
         searchContent: {
@@ -140,14 +140,10 @@
     mounted() {
       //base/gift/giftInfo查询某一条
       //
-      this.$http.get(`http://192.168.31.34:8080/base/gift/deleteGift`,{
-        params:{ id:2}
-      }).then(response=>{
-        console.log(response)
-      })
+      /**/
       //初始请求分页
       let params = {
-        pageNum: this.currentPage,
+        currentPage: this.currentPage,
         pageSize: this.pageSize
       };
       this.pagination(params)
@@ -181,15 +177,16 @@
           loading: true,
           onOk: () => {
           this.$store.dispatch('modalLoading');
-        console.log(this)
-        this.$http.post(`${this.$api}/present/delete`, {id}).then(response => {
-          let res = response.data;
-        if (res.result) {
-          this.pagination();
-          this.$Modal.remove();
-          this.$Message.info('删除成功');
-        }
-      })
+          this.$http.get(`http://192.168.31.34:8080/base/gift/deleteGift`,{
+            params:{ id:params.row.id}
+          }).then(response=>{
+            console.log(response)
+            if (res.result) {
+              this.pagination();
+              this.$Modal.remove();
+              this.$Message.info('删除成功');
+            }
+          })
       }
       })
         ;
@@ -200,27 +197,23 @@
       //分页函数
       pagination(customsParams) {
         let defaultParams = {
-          pageNum: 1,
-          pageSize: 30
+          currentPage: 1,
+          pageSize: 5
         };
         let params = customsParams || defaultParams;
-        /*`${this.$api}/present/getList`*/
-        this.$http.get("http://localhost:8080/static/present.json", {params}).then(response => {
+        /*/base/gift/findAllGift*/
+        this.$http.get("http://192.168.31.34:8080/base/gift/findAllGift", {params}).then(response => {
           let data = response.data;
-          console.log(typeof data.list)
-          this.listData = data.list;
-          /*let res = response.data;
-        if (res.result) {
-          this.listData = res.list;
-          this.total = res.total;
-        }*/
-      })
+          console.log(response)
+          this.listData = data.customerList;
+          this.total = data.count;
+          })
       },
       //点击分页
       changePage(currentPageNum) {
         this.currentPage = currentPageNum;
         let params = {
-          pageNum: this.currentPage,
+          currentPage: this.currentPage,
           pageSize: this.pageSize
         };
 
@@ -230,7 +223,7 @@
         this.pageSize = currentPageSize;
         this.currentPage = 1;
         let params = {
-          pageNum: this.currentPage,
+          currentPage: this.currentPage,
           pageSize: this.pageSize
         };
         this.pagination(params)
