@@ -133,17 +133,9 @@
                 uri:"/baseData/warehouse"
               },
               {
-                menuName:"地址管理",
-                uri:"/baseData/address"
-              },
-              {
                 menuName:"单位设置",
                 uri:"/baseData/unit"
-              },
-              {
-                menuName:"进货价格设置",
-                uri:"/baseData/stock-price"
-              },
+              }
             ]
           },
           {
