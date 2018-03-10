@@ -1,5 +1,5 @@
 <template>
-    <div class="stcok-order">
+    <div class="stock-order">
       <div class="materiel">
         <!--新增 表单搜索部分-->
         <div class="search-wrapper">
@@ -27,14 +27,41 @@
             </Form>
           </div>
         </div>
-        <!--表格数据获取-->
-        <Table :columns="columns" :data="listData" class="table" v-if="listData"></Table>
-        <!--listData数据
-        changePage回调页码 changePageSize回调条数 page-size每页条数 page-size-opts:每页条数配置 total:数据总数-->
-        <div class="pagination">
-          <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize" placement="top"
-                :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
-        </div>
+        <Tabs value="name1">
+          <TabPane label="商品" name="name1">
+
+            <!--表格数据获取-->
+            <Table :columns="columns" :data="listData" class="table" v-if="listData"></Table>
+            <!--listData数据
+            changePage回调页码 changePageSize回调条数 page-size每页条数 page-size-opts:每页条数配置 total:数据总数-->
+            <div class="pagination">
+              <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize" placement="top"
+                    :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
+            </div>
+          </TabPane>
+          <TabPane label="赠品" name="name2">
+
+            <!--表格数据获取-->
+            <Table :columns="columns" :data="listData" class="table" v-if="listData"></Table>
+            <!--listData数据
+            changePage回调页码 changePageSize回调条数 page-size每页条数 page-size-opts:每页条数配置 total:数据总数-->
+            <div class="pagination">
+              <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize" placement="top"
+                    :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
+            </div>
+          </TabPane>
+          <TabPane label="物料" name="name3">
+
+            <!--表格数据获取-->
+            <Table :columns="columns" :data="listData" class="table" v-if="listData"></Table>
+            <!--listData数据
+            changePage回调页码 changePageSize回调条数 page-size每页条数 page-size-opts:每页条数配置 total:数据总数-->
+            <div class="pagination">
+              <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize" placement="top"
+                    :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
+            </div>
+          </TabPane>
+        </Tabs>
       </div>
     </div>
 
@@ -54,30 +81,62 @@
           currentPage:1,
           columns:[
             {
-              type: 'selection',
-              width: 60,
-              align: 'center'
+              title: '采购单编号',
+              key: 'orderNo',
+              width:120,
             },
             {
-              title: '采购名称',
-              key: 'materielName',
-              width: 180
+              title: '供货商唯一标识',
+              key: 'units'
             },
             {
-              title: '采购编号',
-              key: 'materielName'
+              title: '采购员唯一标识',
+              key: 'purchasePrice'
             },
             {
-              title: '条形码',
-              key: 'barCode'
+              title: '采购总价',
+              key: 'totalP',
+              width:120,
             },
             {
-              title: '采购分类',
-              key: 'category'
+              title: '采购单含税总价',
+              key: 'totalTaxPrice'
+            },
+            {
+              title: '折扣率',
+              key: 'discountRate'
+            },
+            {
+              title: '优惠金额',
+              key: 'discountAmount'
+            },
+            {
+              title: '实际采购总金额',
+              key: 'realTotalPrice'
+            },
+            {
+              title: '交货日期',
+              key: 'receiveTime'
+            },
+            {
+              title: '采购类型',
+              key: 'purchaseType',
+              width:120,
+            },
+            {
+              title: '采购单状态',
+              key: 'status',
+              width:120,
+            },
+            {
+              title: '采购单审核状态',
+              key: 'auditStatus',
+              width:120,
             },
             {
               title: '操作',
               key: 'action',
+              width:200,
               align: 'center',
               render: (h, params) => {
                 return h('div', [
@@ -207,7 +266,7 @@
             pageSize:30
           };
           let params = customsParams || defaultParams;
-          this.$http.get("/static/materiel.json").then(response => {
+          this.$http.get("/static/meterieltwo.json").then(response => {
 
             let data = response.data;
             console.log(typeof data.list)
