@@ -47,13 +47,17 @@ import stockPrice from '@/containers/base-data/stock-price/stock-price';//进货
 
 
 //进货管理
-import stockOrder from "@/containers/stock/stock-order/stock-order";
+import stockOrder from "@/containers/stock/stock-order/stock-order";//采购单管理
 import editStockOrder from "@/containers/stock/stock-order/edit-stock-order/edit-stock-order";
+
 
 
 //库存管理
 import stockTaking from "@/containers/repertory/stock-taking/stock-taking"//库存盘点
 
+
+
+//import stockInOrder from "@/containers/stock/stock-in-order/stock-in-order";//入库单管理
 
 Vue.use(Router);
 
@@ -246,6 +250,12 @@ const router = new Router({
           name:'stock-taking',
           component:stockTaking
         },
+/*        {
+          path: '/stock/stock-in-order',
+          name:'stock-in-order',
+          component:stockInOrder
+        },*/
+
 
       ]
     },

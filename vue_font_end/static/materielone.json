@@ -1,0 +1,51 @@
+{
+  "list":[
+    {
+    "id":"250",
+    "inboundOrder":"纸尿裤",
+    "warehouseId":"432589",
+    "units":"123456",
+    "price":"A",
+    "num":"B型",
+      "total":"200$"
+    },
+    {
+      "id":"520",
+      "inboundOrder":"就是这么强",
+      "warehouseId":"432589",
+      "units":"123456",
+      "price":"B",
+      "num":"A型",
+      "total":"200$"
+
+
+    },
+    {
+      "id":"440",
+      "inboundOrder":"没有什么不可能",
+      "warehouseId":"432589",
+      "units":"123456",
+      "price":"B",
+      "num":"B型",
+      "total":"200$"
+    },
+    {
+      "id":"520",
+      "inboundOrder":"我说是吧",
+      "warehouseId":"432589",
+      "units":"123456",
+      "price":"A",
+      "num":"B型",
+      "total":"200$"
+    },
+    {
+      "id":"520",
+      "inboundOrder":"没有什么不可能",
+      "warehouseId":"432589",
+      "units":"123456",
+      "price":"C",
+      "num":"B型",
+      "total":"200$"
+    }
+  ]
+}

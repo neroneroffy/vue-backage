@@ -202,10 +202,10 @@
                 menuName:"采购单管理",
                 uri:"/stock/stock-order"
               },
-                 {
-                   menuName:"采购单明细管理",
-                     uri:"/stock/stock-order-detail"
-                 },
+              {
+                menuName:"入库单管理",
+                uri:"/stock/stock-in-order"
+              },
             ]
           }
         ]
