@@ -15,7 +15,9 @@
         <Button type="primary" icon="plus-round" @click="addMember" class="add">新增</Button>
         <div class="search">
           <Form ref="formInline" :model="searchContent" inline>
-
+            <FormItem prop="user">
+            <Checkbox v-model="searchContent.isHidden" >是否隐藏</Checkbox>
+            </FormItem>
             <FormItem prop="user">
               <Input type="text" v-model="searchContent.materielName" placeholder="请输入名称"/>
             </FormItem>
@@ -53,8 +55,8 @@
         name: "materiel",
         data(){
           return{
-            pageSizeList:[30,50,100],
-            pageSize:30,
+            pageSizeList:[5,10,20],
+            pageSize:5,
             total:0,
             listData:"",
             loading:false,
@@ -72,7 +74,7 @@
               },
               {
                 title: '物料编号',
-                key: 'materielName'
+                key: 'materielCode'
               },
               {
                 title: '条形码',
@@ -138,7 +140,8 @@
               materielName:"",
               materielCode:"",
               barCode:"",
-              category:""
+              category:"",
+              isHidden:false
             },
             cityList: [
               {
@@ -159,8 +162,9 @@
         mounted(){
           //初始请求分页
           let params = {
-            pageNum: this.currentPage,
-            pageSize: this.pageSize
+            currentPage: this.currentPage,
+            pageSize: this.pageSize,
+            isHidden:this.searchContent.isHidden
           };
           this.pagination(params)
         },
@@ -194,7 +198,7 @@
               loading:true,
               onOk:()=>{
                 this.$store.dispatch('modalLoading');
-                this.$http.post(`${this.$api}/materiel/delete`,{id}).then(response  => {
+                this.$http.get("http://192.168.31.34:8080/base/materiel/deleteMateriel",{params:{id:id}}).then(response  => {
                   let res = response.data;
 
                   if(res.result){
@@ -209,15 +213,20 @@
           //分页函数
           pagination(customsParams) {
               let defaultParams = {
-                pageNum:1,
-                pageSize:30
+                currentPage:1,
+                pageSize:5,
+                isHidden:false
               };
               let params = customsParams || defaultParams;
-              this.$http.get("/static/materiel.json").then(response => {
-
+              //
+              //查询单条get http://192.168.31.34:8080/base/materiel/materielInfo
+              //删除数据 post "http://192.168.31.34:8080/base/materiel/deleteMateriel 数组形式
+              //
+              this.$http.get("http://192.168.31.34:8080/base/materiel/finaAllMateriel",{params}).then(response => {
+                console.log(response.data)
                 let data = response.data;
-                console.log(typeof data.list)
-                this.listData = data.list;
+                this.listData = data.customerList;
+                this.total=data.count
               })
           },
           //点击分页
@@ -225,7 +234,8 @@
             this.currentPage = currentPageNum;
             let params = {
               pageNum: this.currentPage,
-              pageSize: this.pageSize
+              pageSize: this.pageSize,
+              isHidden:this.searchContent.isHidden
             };
 
             this.pagination(params)
@@ -235,7 +245,8 @@
             this.currentPage = 1;
             let params = {
               pageNum: this.currentPage,
-              pageSize: this.pageSize
+              pageSize: this.pageSize,
+              isHidden:this.searchContent.isHidden
             };
             this.pagination(params)
           },

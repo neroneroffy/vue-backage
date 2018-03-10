@@ -1,4 +1,15 @@
 <template>
+  <!--
+    {
+     warehouseName仓库名称
+     contacts负责人
+     mobilePhone电话
+     telephone座机
+     wechat微信
+     acreage仓库面积
+     addressld仓库地址
+    }
+  -->
   <div class="warehouse">
     <div class="search-wrapper">
       <Button type="primary" icon="plus-round" @click="addMember" class="add">新增</Button>
@@ -7,13 +18,15 @@
           <FormItem prop="user">
             <Input type="text" v-model="searchContent.id" placeholder="请输入ID"/>
           </FormItem>
+          <FormItem prop="user">
+            <Input type="text" v-model="searchContent.contacts" placeholder="请输入负责人"/>
+          </FormItem>
           <FormItem prop="account">
-            <Input type="text" v-model="searchContent.account" placeholder="请输入搜索账户"/>
+            <Input type="text" v-model="searchContent.warehouseName" placeholder="请输入搜索仓库名称"/>
           </FormItem>
           <FormItem prop="phone">
-            <Input type="text" v-model="searchContent.phone" placeholder="请输入搜索电话"/>
+            <Input type="text" v-model="searchContent.mobilePhone" placeholder="请输入搜索电话"/>
           </FormItem>
-
           <FormItem>
             <Button type="primary" icon="ios-search" @click="handleSubmit('formInline')">搜索</Button>
           </FormItem>
@@ -33,13 +46,12 @@
     data(){
       return {
 
-        visible:false,
-        loading:true,
+
         searchContent: {
           id: '',
-          account: '',
-          phone:"",
-          role:""
+          contacts:'',
+          warehouseName:'',
+          mobilePhone:''
         },
         columns: [
           {
@@ -71,6 +83,19 @@
             title: '仓库地址',
             key: 'addressId',
           },
+          {
+            title: '负责人',
+            key: 'contacts',
+          },
+          {
+            title: '电话',
+            key: 'mobilePhone',
+          },
+          {
+            title: '座机',
+            key: 'telephone',
+          },
+
           {
             title: '操作',
             key: 'action',
@@ -122,14 +147,8 @@
       this.getList()
     },
     methods:{
-      done(){
-        this.visible = false
-      },
       addMember(){
         this.$router.push('/baseData/warehouse/edit-warehouse')
-      },
-      cancel(){
-
       },
       //提交搜索
       handleSubmit() {
@@ -178,17 +197,11 @@
           }
         });
       },
+
       //请求函数
       getList(){
-        this.$http.get(`${this.api}/base/warehouse/warehouseFindAll`).then(response=>{
-          let res = response.data;
-          console.log(res);
-          if(res.result){
-            this.listData = res.data;
-          }
-        })
-      }
-
+        this.$http.get(`${this.api}/base/warehouse/warehouseFindAll`).then(response=> {
+        })},
     },
     computed:{
 
