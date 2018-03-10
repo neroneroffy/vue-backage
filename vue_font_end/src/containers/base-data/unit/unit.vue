@@ -127,10 +127,10 @@
 
         //请求数据
         getUnits(){
-          this.$http.get(`/static/units.json`).then(response=>{
+          this.$http.get(`${this.$api}/base/units/findUnitsAll`).then(response=>{
             let res = response.data;
-            if(res.result){
-              this.listData = res.data;
+            if(res){
+              this.listData = res;
             }
             console.log(this.listData)
           })

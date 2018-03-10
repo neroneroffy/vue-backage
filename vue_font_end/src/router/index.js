@@ -15,7 +15,6 @@ import auth from '@/containers/sys-manage/role/auth/auth'
 import usermanage from '@/containers/sys-manage/usermanage/usermanage'
 import editmember from '@/containers/sys-manage/usermanage/edit-member/edit-member'
 
-
 //组织管理
 import organization from '@/containers/sys-manage/organization/organization'
 import editOrganization from '@/containers/sys-manage/organization/edit-organization/edit-organization'
@@ -46,6 +45,10 @@ import unit from '@/containers/base-data/unit/unit'//单位设置
 import editUnit from '@/containers/base-data/unit/edit-unit/edit-unit'//编辑单位
 import stockPrice from '@/containers/base-data/stock-price/stock-price'//进货价格设置
 
+
+//进货管理
+import stockOrder from "@/containers/stock/stock-order/stock-order";
+import editStockOrder from "@/containers/stock/stock-order/edit-stock-order/edit-stock-order";
 Vue.use(Router);
 
 const router = new Router({
@@ -222,6 +225,17 @@ const router = new Router({
           name:'stock-price',
           component:stockPrice
         },
+        {
+          path: '/stock/stock-order',
+          name:'stock-order',
+          component:stockOrder
+        },
+        {
+          path: '/stock/stock-order/edit-stock-order',
+          name:'edit-stock-order',
+          component:editStockOrder
+        },
+
 
       ]
     },

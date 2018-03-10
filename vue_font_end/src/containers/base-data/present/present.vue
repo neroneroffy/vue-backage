@@ -30,7 +30,6 @@
     </div>
     <Table :columns="columns" :data="listData" class="table" v-if="listData"></Table>
     <div class="pagination">
-      // @on-change回调返回页码 @on-page-size-change回调返回函数
       <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize" placement="top"
             :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
     </div>

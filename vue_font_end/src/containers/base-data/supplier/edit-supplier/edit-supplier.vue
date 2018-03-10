@@ -2,21 +2,30 @@
     <div class="edit-supplier">
       <BastTitle :title="title"></BastTitle>
 
-      <Form ref="editData" :model="editData" :label-width="80" v-if="editData">
-        <FormItem label="供货商名称" prop="name">
-          <Input v-model="editData.name" placeholder="请输入ID" />
+      <Form ref="editData" :model="editData" :label-width="100" v-if="editData">
+        <FormItem label="供货商名称" prop="supplierName">
+          <Input v-model="editData.supplierName" placeholder="请输入供货商名称" />
         </FormItem>
-        <FormItem label="类型" prop="unit">
-          <Input v-model="editData.type" placeholder="请输入单位"/>
+        <FormItem label="供货商编码" prop="supplierCode">
+          <Input v-model="editData.supplierCode" placeholder="请输入供货商编码"/>
         </FormItem>
-        <FormItem label="地区" prop="area">
-          <Input v-model="editData.area" placeholder="请输入价格"/>
+        <FormItem label="供货商电话" prop="mobilePhone">
+          <Input v-model="editData.mobilePhone" placeholder="请输入供货商电话"/>
         </FormItem>
-        <FormItem label="欠款" prop="money">
-          <Input v-model="editData.money" placeholder="请输入价格"/>
+        <FormItem label="座机" prop="telephone">
+          <Input v-model="editData.telephone" placeholder="请输入座机"/>
         </FormItem>
-        <FormItem label="备注" prop="remark">
-          <Input v-model="editData.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请填写备注"/>
+        <FormItem label="微信" prop="wechat">
+          <Input v-model="editData.wechat" placeholder="请输入微信"/>
+        </FormItem>
+        <FormItem label="税率" prop="taxRate">
+          <Input v-model="editData.taxRate" placeholder="请输入税率"/>
+        </FormItem>
+        <FormItem label="地址" prop="addressId">
+          <Input v-model="editData.addressId" placeholder="请输入地址"/>
+        </FormItem>
+        <FormItem label="备注" prop="mark">
+          <Input v-model="editData.mark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请填写备注"/>
         </FormItem>
         <FormItem>
           <Button type="primary" @click="submit">提交</Button>
@@ -35,11 +44,16 @@
         return {
           title:this.$route.query.id?'编辑供货商':'新增供货商',
           editData:{
-            name:"",
-            type:"",
-            money:"",
-            area:""
-          }
+            supplierName:"",
+            supplierCode:"",
+            mobilePhone:"",
+            telephone:"",
+            taxRate:"",
+            addressId:"",
+            mark:"",
+            wechat:""
+          },
+          api:"http://192.168.31.222:8080"
 
         }
       },
@@ -48,13 +62,13 @@
       },
       mounted(){
         if(this.$route.query.id){
-          this.$http.get(`${this.$api}/supplier/query`,{
+          this.$http.get(`${this.api}/base/supplier/SupplierfindById`,{
             params:{ id:this.$route.query.id }
           }).then(response=>{
             let res = response.data;
 
-            if(res.result){
-              this.editData = res.data;
+            if(res){
+              this.editData = res
             }
           });
         }
@@ -63,6 +77,14 @@
       },
       methods:{
         submit(){
+          this.$http.post(`${this.api}/base/supplier/saveSupplier`,{...this.editData}).then(response=>{
+            let res = response.data;
+            console.log(res);
+            if(res.result){
+              this.$Message.info('修改成功');
+              this.$router.push('/baseData/supplier')
+            }
+          });
           console.log(this.editData)
         }
       }

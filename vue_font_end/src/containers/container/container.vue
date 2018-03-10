@@ -133,21 +133,9 @@
                 uri:"/baseData/warehouse"
               },
               {
-                menuName:"联系人管理",
-                uri:"/baseData/contact"
-              },
-              {
-                menuName:"地址管理",
-                uri:"/baseData/address"
-              },
-              {
                 menuName:"单位设置",
                 uri:"/baseData/unit"
-              },
-              {
-                menuName:"进货价格设置",
-                uri:"/baseData/stock-price"
-              },
+              }
             ]
           },
           {
@@ -208,7 +196,17 @@
           {
             menuName:"进货管理",
             uri:"/stock",
-            icon:"archive"
+            icon:"archive",
+            children:[
+              {
+                menuName:"采购单管理",
+                uri:"/stock/stock-order"
+              },
+                 {
+                   menuName:"采购单明细管理",
+                     uri:"/stock/stock-order-detail"
+                 },
+            ]
           }
         ]
       }

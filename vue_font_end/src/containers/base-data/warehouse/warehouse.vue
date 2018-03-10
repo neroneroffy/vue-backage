@@ -34,9 +34,7 @@
       </div>
     </div>
     <Table :columns="columns" :data="listData" class="table" v-if="listData"></Table>
-    <div class="pagination">
-      <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize" placement="top" :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
-    </div>
+
 
   </div>
 </template>
@@ -47,10 +45,8 @@
     name: "warehouse",
     data(){
       return {
-        pageSizeList:[30,50,100],
-        pageSize:30,
-        total:0,
-        currentPage:1,
+
+
         searchContent: {
           id: '',
           contacts:'',
@@ -59,20 +55,33 @@
         },
         columns: [
           {
-            type: 'selection',
-            width: 60,
-            align: 'center'
-          },
-          {
-            title: 'ID',
-            key: 'id',
-            width:180
-
-          },
-          {
-            title: '名称',
+            title: '仓库名称',
             key: 'warehouseName',
 
+          },
+          {
+            title: '联系人',
+            key: 'contacts',
+          },
+          {
+            title: '联系电话',
+            key: 'mobilePhone',
+          },
+          {
+            title: '座机',
+            key: 'telephone',
+          },
+          {
+            title: '微信',
+            key: 'wechat',
+          },
+          {
+            title: '仓库面积',
+            key: 'acreage',
+          },
+          {
+            title: '仓库地址',
+            key: 'addressId',
           },
           {
             title: '负责人',
@@ -86,10 +95,7 @@
             title: '座机',
             key: 'telephone',
           },
-          {
-            title: '微信',
-            key: 'wechat ' ,
-          },
+
           {
             title: '操作',
             key: 'action',
@@ -133,16 +139,12 @@
           }
         ],
         listData:"",
-        api:'http://192.168.31.222:8080'
+        api:"http://192.168.31.222:8080"
       }
     },
     mounted(){
-      //初始请求分页
-      let params = {
-        pageNum:this.currentPage,
-        pageSize:this.pageSize
-      };
-      this.pagination(params)
+      //初始请求数据
+      this.getList()
     },
     methods:{
       addMember(){
@@ -161,13 +163,13 @@
       //切换状态
       statusEdit(params){
         //更新仓库状态
-        this.$http.post(`${this.$api}/warehouse/update`,{id:params.row.id,status:params.row.status}).then(response=>{
+        this.$http.post(`${this.api}/warehouse/update`,{id:params.row.id,status:params.row.status}).then(response=>{
           let res = response.data;
           if(res.result){
             console.log(res)
             this.$Message.info('修改成功');
             //更新成功后重新获取表格数据
-            this.pagination()
+            this.getList()
           }
         })
       },
@@ -183,11 +185,11 @@
           loading: true,
           onOk: () => {
             this.$store.dispatch('modalLoading');
-            console.log(this)
+
             this.$http.post(`${this.$api}/warehouse/delete`,{id}).then(response=>{
               let res = response.data;
               if(res.result){
-                this.pagination();
+                this.getList();
                 this.$Modal.remove();
                 this.$Message.info('删除成功');
               }
@@ -195,44 +197,11 @@
           }
         });
       },
-      handleSelectAll (status) {
-        this.$refs.selection.selectAll(status);
-      },
-      //分页函数
-      pagination(customsParams){
-        let defaultParams = {
-          pageNum :1,
-          pageSize : 30
-        };
-        let params = customsParams || defaultParams;
-        this.$http.get('http://192.168.31.222:8080/base/warehouse/warehouseFindAll').then(response=>{
-          console.log(response)
-          let res = response.data;
-          if(res.result){
-            this.listData = res.list;
-            this.total = res.total;
-          }
-        })
-      },
-      //点击分页
-      changePage(currentPageNum){
-        this.currentPage = currentPageNum;
-        let params = {
-          pageNum:this.currentPage,
-          pageSize:this.pageSize
-        };
-        this.pagination(params)
-      },
-      changePageSize(currentPageSize){
-        this.pageSize = currentPageSize;
-        this.currentPage = 1;
-        let params = {
-          pageNum:this.currentPage,
-          pageSize:this.pageSize
-        };
-        this.pagination(params)
-      },
 
+      //请求函数
+      getList(){
+        this.$http.get(`${this.api}/base/warehouse/warehouseFindAll`).then(response=> {
+        })},
     },
     computed:{
 
