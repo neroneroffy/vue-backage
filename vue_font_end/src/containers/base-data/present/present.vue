@@ -138,6 +138,13 @@
     }
     },
     mounted() {
+      //base/gift/giftInfo查询某一条
+      //
+      this.$http.get(`http://192.168.31.34:8080/base/gift/deleteGift`,{
+        params:{ id:2}
+      }).then(response=>{
+        console.log(response)
+      })
       //初始请求分页
       let params = {
         pageNum: this.currentPage,
