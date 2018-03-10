@@ -123,7 +123,6 @@
             console.log(res)
           });
           console.log(submitData)
-
         },
         addUnit(){
           this.units.push({
