@@ -49,7 +49,7 @@ import stockPrice from '@/containers/base-data/stock-price/stock-price'//进货�
 //进货管理
 import stockOrder from "@/containers/stock/stock-order/stock-order";//采购单管理
 import editStockOrder from "@/containers/stock/stock-order/edit-stock-order/edit-stock-order";
-import stockInOrder from "@/containers/stock/stock-in-order/stock-in-order";//入库单管理
+//import stockInOrder from "@/containers/stock/stock-in-order/stock-in-order";//入库单管理
 Vue.use(Router);
 
 const router = new Router({
@@ -236,11 +236,11 @@ const router = new Router({
           name:'edit-stock-order',
           component:editStockOrder
         },
-        {
+/*        {
           path: '/stock/stock-in-order',
           name:'stock-in-order',
           component:stockInOrder
-        },
+        },*/
 
 
       ]
