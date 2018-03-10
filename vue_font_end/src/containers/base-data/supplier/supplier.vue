@@ -4,11 +4,8 @@
         <Button type="primary" icon="plus-round" @click="addMember" class="add">新增</Button>
         <div class="search">
           <Form ref="formInline" :model="searchContent" inline>
-            <FormItem prop="user">
-              <Input type="text" v-model="searchContent.id" placeholder="请输入ID"/>
-            </FormItem>
             <FormItem prop="account">
-              <Input type="text" v-model="searchContent.account" placeholder="请输入搜索账户"/>
+              <Input type="text" v-model="searchContent.supplierCode" placeholder="请输入供货商编码"/>
             </FormItem>
             <FormItem prop="phone">
               <Input type="text" v-model="searchContent.mobilePhone" placeholder="请输入搜索电话"/>
@@ -24,37 +21,7 @@
       <div class="pagination">
         <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize" placement="top" :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
       </div>
-      <Modal
-        v-model="visible"
-        title="查看详情"
-        :loading="loading"
-        @on-cancel = "cancel"
-        @on-ok="done">
-        <div class="edit-wrapper">
-          <Form ref="formValidate" :model="formValidate" :label-width="80">
-            <FormItem label="ID" prop="id">
-              <Input v-model="formValidate.id" disabled placeholder="请输入ID" />
-            </FormItem>
-            <FormItem label="账户" prop="account">
-              <Input v-model="formValidate.account" disabled placeholder="请输入账户"/>
-            </FormItem>
-            <FormItem label="角色" prop="role">
-              <Input v-model="formValidate.roleName" disabled />
-            </FormItem>
-            <FormItem label="头像">
-              <FormItem prop="date">
-                <Avatar shape="square" icon="person" size="large" :src="formValidate.avatar" class="avatar-edit-display"/>
-              </FormItem>
-            </FormItem>
-            <FormItem label="电话" prop="phone">
-              <Input v-model="formValidate.phone" disabled placeholder="请输入电话"/>
-            </FormItem>
-            <FormItem label="备注" prop="remark">
-              <Input v-model="formValidate.remark" disabled type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请填写备注"/>
-            </FormItem>
-          </Form>
-        </div>
-      </Modal>
+
 
     </div>
 </template>
@@ -72,8 +39,7 @@
           visible:false,
           loading:true,
           searchContent: {
-            id: '',
-            account: '',
+            supplierCode: '',
             mobilePhone:""
           },
           columns: [
@@ -81,7 +47,6 @@
             {
               title: '供货商名称',
               key: 'supplierName',
-
             },
             {
               title: '供货商编码',
@@ -150,14 +115,6 @@
               }
             }
           ],
-          formValidate: {
-            id: '',
-            account: '',
-            roleId:"",
-            phone: '',
-            avatarUrl:"",
-            remark:""
-          },
           imgName: '',
           uploadList: [],
           listData:"",
@@ -185,11 +142,10 @@
         //提交搜索
         handleSubmit() {
           console.log(this.searchContent);
-          this.searchContent.mobilePhone = `${this.searchContent.mobilePhone}`
-            this.$http.post(`${this.api}/base/supplier/findBySupplierPhone`,{mobilePhone:this.searchContent.mobilePhone}).then(response=>{
+
+            this.$http.post(`${this.api}/base/supplier/findmobilePhone`,{...this.searchContent}).then(response=>{
               let res = response.data;
-              console.log(res)
-              this.listData = res.data;
+              this.listData = res.supplierList;
             })
         },
         //切换状态

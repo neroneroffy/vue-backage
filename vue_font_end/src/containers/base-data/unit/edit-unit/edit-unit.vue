@@ -6,14 +6,13 @@
           <Input v-model="editData.baseUnit" placeholder="请输入单位名称" style="width: 200px"/>
         </FormItem>
         <FormItem label="类型" prop="units">
-          <Select :value="defaultType.value" style="width:200px" @on-change="typeSelectDone">
+          <Select :value="defaultType.value" v-model="editData.unitsType" style="width:200px" @on-change="typeSelectDone">
             <Option v-for="item in type" :value="item.value" :key="item.value">{{ item.name }}</Option>
           </Select>
           <Button type="primary" @click="addUnit" style="margin-left: 75px" v-if="editData.unitsType === 'DOUBLE'">添加单位</Button>
 
         </FormItem>
       </Form>
-
       <div  v-if="editData.unitsType === 'DOUBLE'">
         <Form inline :label-width="100" v-for="(v,i) in units">
           <FormItem label="副单位名称" prop="units">
@@ -71,11 +70,23 @@
       },
       mounted(){
         if(this.$route.query.id){
-          this.$http.get(`/static/units${this.$route.query.id}.json`).then(res=>{
-            if(res.data.result){
-              this.editData = res.data.data;
-              this.defaultType = this.editData.unitsType;
-              this.units = res.data.units
+          this.$http.get(`${this.$api}/base/units/info`,{
+            params:{
+              id:this.$route.query.id
+            }
+          }).then(res=>{
+            this.editData = res.data;
+            //转化复合单位
+            if(this.editData.unitsType === "DOUBLE"){
+              let rate = this.editData.units.match(/[^\(\)]+(?=\))/g)[0].split(",");
+              let viceName = this.editData.units.slice(0,this.editData.units.indexOf("(")).split(",");
+              viceName.forEach((v,i)=>{
+                let singleUnit = {
+                  viceUnit:v,
+                  num:rate[i]
+                };
+                this.units.push(singleUnit)
+              });
             }
           })
         }else{
@@ -95,6 +106,9 @@
               viceUnit:"",
               num:""
             })
+          }
+          if(data === "SINGLE"){
+            this.editData.units = ""
           }
         },
         submit(){
@@ -116,11 +130,18 @@
           let submitData = {
             units:unit,
             baseUnit:this.editData.baseUnit,
-            unitsType:this.editData.unitsType
+            unitsType:this.editData.unitsType,
+            id:this.$route.query.id
           };
           this.$http.post(`${this.$api}/base/units/add`,{...submitData}).then(response=>{
             let res = response.data;
-            console.log(res)
+
+            if(res.result){
+              this.$Message.info('成功');
+              this.$router.push('/baseData/unit')
+            }else{
+              this.$Message.info(`${res.msg}`);
+            }
           });
           console.log(submitData)
         },

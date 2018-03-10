@@ -13,7 +13,7 @@
   <div class="warehouse">
     <div class="search-wrapper">
       <Button type="primary" icon="plus-round" @click="addMember" class="add">新增</Button>
-      <div class="search">
+     <!-- <div class="search">
         <Form ref="formInline" :model="searchContent" inline>
           <FormItem prop="user">
             <Input type="text" v-model="searchContent.id" placeholder="请输入ID"/>
@@ -31,7 +31,7 @@
             <Button type="primary" icon="ios-search" @click="handleSubmit('formInline')">搜索</Button>
           </FormItem>
         </Form>
-      </div>
+      </div>-->
     </div>
     <Table :columns="columns" :data="listData" class="table" v-if="listData"></Table>
 
@@ -45,8 +45,6 @@
     name: "warehouse",
     data(){
       return {
-
-
         searchContent: {
           id: '',
           contacts:'',
@@ -99,6 +97,7 @@
           {
             title: '操作',
             key: 'action',
+            width:180,
             align: 'center',
             render: (h, params) => {
               return h('div', [
@@ -119,12 +118,27 @@
                   }
                 }, '编辑'),
                 h('Button', {
+                  props: {
+                    type:"warning",
+                    size: 'small'
+                  },
+                  style: {
+                    color:"#fff",
+                    marginRight: '5px'
+                  },
+                  on: {
+                    click: () => {
+                      this.show(params)
+                    }
+                  }
+                }, '查看'),
+                h('Button', {
                     props: {
                       size: 'small'
                     },
                     class:"status",
                     style:{
-                      background:params.row.status?"#13D149":"#ccc",
+                      background:params.row.del?"#13D149":"#ccc",
                       color:"#fff"
                     },
                     on: {
@@ -133,12 +147,12 @@
                       }
                     }
                   },
-                  params.row.status?"禁用": '启用')
+                  params.row.del?"禁用": '启用')
               ]);
             }
           }
         ],
-        listData:"",
+        listData:[],
         api:"http://192.168.31.222:8080"
       }
     },
@@ -163,7 +177,11 @@
       //切换状态
       statusEdit(params){
         //更新仓库状态
-        this.$http.post(`${this.api}/warehouse/update`,{id:params.row.id,status:params.row.status}).then(response=>{
+        this.$http.get(`${this.api}/base/warehouse/updateID`,{
+          params:{
+            id:params.row.id
+          }
+        }).then(response=>{
           let res = response.data;
           if(res.result){
             console.log(res)
@@ -177,30 +195,19 @@
       edit(params){
         this.$router.push({path:'/baseData/warehouse/edit-warehouse',query:{id:params.row.id}})
       },
-      //删除
-      remove (params) {
-        let id = params.row.id;
-        this.$Modal.confirm({
-          content: '<p>确认删除此条数据吗？</p>',
-          loading: true,
-          onOk: () => {
-            this.$store.dispatch('modalLoading');
 
-            this.$http.post(`${this.$api}/warehouse/delete`,{id}).then(response=>{
-              let res = response.data;
-              if(res.result){
-                this.getList();
-                this.$Modal.remove();
-                this.$Message.info('删除成功');
-              }
-            })
-          }
-        });
+      //查看
+      show(params){
+        this.$router.push({path:'/baseData/warehouse/edit-warehouse',query:{id:params.row.id,checked:true}})
       },
-
       //请求函数
       getList(){
         this.$http.get(`${this.api}/base/warehouse/warehouseFindAll`).then(response=> {
+          console.log(response.data)
+          let res = response.data;
+          if(res.result){
+            this.listData = res.data
+          }
         })},
     },
     computed:{

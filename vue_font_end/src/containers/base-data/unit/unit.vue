@@ -22,8 +22,8 @@
           },
           columns: [
             {
-              title: '基本单位',
-              key: 'baseUnit'
+              title: '计量单位',
+              key: 'units'
             },
             {
               title: '操作',
@@ -103,7 +103,7 @@
         },
         //编辑
         edit(params){
-          this.$router.push({path:'/baseData/unit/edit-unit',query:{id:params.row.unitsId}})
+          this.$router.push({path:'/baseData/unit/edit-unit',query:{id:params.row.id}})
         },
         //删除
         remove (params) {
@@ -113,8 +113,13 @@
             loading: true,
             onOk: () => {
               this.$store.dispatch('modalLoading');
-              this.$http.post(`${this.$api}/commodity/delete`,{id}).then(response=>{
+              this.$http.get(`${this.$api}/base/units/delUnits`,{
+                params:{
+                  id:id
+                }
+              }).then(response=>{
                 let res = response.data;
+                console.log(res)
                 if(res.result){
                   this.getUnits();
                   this.$Modal.remove();
@@ -132,7 +137,7 @@
             if(res){
               this.listData = res;
             }
-            console.log(this.listData)
+
           })
         }
       },

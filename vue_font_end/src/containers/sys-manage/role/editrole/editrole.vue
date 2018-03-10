@@ -8,8 +8,8 @@
       <FormItem label="角色编码" prop="roleCode">
         <Input type="text" v-model="formCustom.roleCode"/>
       </FormItem>
-      <FormItem label="备注">
-        <Input type="textarea" v-model="formCustom.remark"/>
+      <FormItem label="备注" prop="mark">
+        <Input type="textarea" v-model="formCustom.mark"/>
       </FormItem>
       <FormItem>
         <Button type="primary" @click="submit('formCustom')">提交</Button>
@@ -47,8 +47,9 @@
         formCustom: {
           roleName: '',
           roleCode: '',
-          remark: ''
+          mark: ''
         },
+        api:"http://192.168.31.174:8080",
         ruleCustom: {
           roleName: [
             { validator: validateName, trigger: 'blur' }
@@ -62,15 +63,15 @@
     },
     created(){
       if(this.$route.query.id){
-        this.$http.get(`${this.$api}/role/info`,{
+        this.$http.get(`${this.api}/sys/role/updatePre`,{
           params:{
             id:this.$route.query.id
           }
         }).then(response=>{
           let res = response.data;
           if(res.result){
-            this.formCustom = res.data.roleInfo;
-            console.log(this.formCustom)
+            this.formCustom = res.data;
+
           }
         });
       }
@@ -78,22 +79,33 @@
     },
     methods:{
       submit(name){
-        this.$refs[name].validate((valid) => {
+/*        this.$refs[name].validate((valid) => {
           if (valid) {
-            this.$Message.success('成功!');
+
           } else {
-            this.$Message.error('失败!');
+
+            return
+          }
+        });*/
+        if(this.formCustom.roleName === "" ||this.formCustom.roleCode === ""){
+/*          this.$Modal.warning({
+            title: "提交失败",
+            content: "角色名称或者角色编码不能为空"
+          });*/
+          this.$Message.error('角色名称或者角色编码不能为空!');
+          return
+
+        };
+        this.$http.post(`${this.api}/sys/role/update`,{...this.formCustom}).then(response=>{
+          let res = response.data;
+          console.log(res);
+          if(res.result){
+            this.$Message.success('编辑成功!');
+            this.$router.push('/sys/role')
+          }else{
+            this.$Message.error("编辑失败");
           }
         })
-        /*
-                  if(this.formCustom.roleName === "" ||this.formCustom.roleCode === ""){
-                    this.$Modal.warning({
-                      title: "提交失败",
-                      content: "角色名称或者角色编码不能为空"
-                    });
-                    return
-                  }
-        */
 
       },
       handleReset(name){

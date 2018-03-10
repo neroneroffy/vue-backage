@@ -5,63 +5,7 @@
     </div>
 
     <Table v-if="listData" :columns="columns" :data="listData" class="table"></Table>
-    <Modal
-      v-model="visible"
-      title="查看权限"
-      :loading="loading"
-      @on-cancel = "cancel"
-      @on-ok="done">
 
-      <div class=" first-level" v-for="v in authInfo">
-        <div class="first-level-title">
-          <Checkbox
-            :value="v.status"
-            :key="v.id"
-            disabled
-          >
-            {{v.name}}
-          </Checkbox>
-        </div>
-        <div v-model="secondCheckGroup" class="second-level">
-          <div class="second-level-title">
-            <Checkbox
-              v-for="(item,k) in v.children"
-              :label="item.id"
-              :value="item.status"
-              :key="item.id"
-              disabled
-            >
-              {{item.name}}
-              <div class="third-level">
-                <Checkbox v-for="m in item.children" :value="m.status" disabled :key="m.id">
-                  {{m.name}}
-                </Checkbox>
-              </div>
-            </Checkbox>
-          </div>
-        </div>
-      </div>
-
-
-    </Modal>
-    <Modal
-      v-model="editVisible"
-      title="编辑成员"
-      @on-cancel="cancel"
-      @on-ok="editDone"
-    >
-      <Form :model="formItem" :label-width="40">
-        <FormItem label="名称">
-          <Input v-model="formItem.name" placeholder="请填写名称"></Input>
-        </FormItem>
-        <FormItem label="编码">
-          <Input v-model="formItem.code" placeholder="请输入编码"></Input>
-        </FormItem>
-        <FormItem label="备注">
-          <Input v-model="formItem.remark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请填写备注信息"></Input>
-        </FormItem>
-      </Form>
-    </Modal>
   </div>
 </template>
 
@@ -72,20 +16,15 @@
     name: "role",
     data(){
       return {
+        api:"http://192.168.31.174:8080",
         formItem:{
           id:"",
           name:"",
           code:"",
           remark:""
         },
-        visible:false,
         loading:true,
-        editVisible:false,
         columns: [
-          {
-            title: 'ID',
-            key: 'roleId',
-          },
           {
             title: '名称',
             key: 'roleName',
@@ -97,7 +36,7 @@
           },
           {
             title: '备注',
-            key: 'remark',
+            key: 'mark',
           },
           {
             title: '操作',
@@ -158,12 +97,12 @@
         on: {
           click: () => {
             this.remove(params)
+          }
+        }
+          }, '删除')
+        ]);
       }
-    }
-    }, '删除')
-    ]);
-    }
-    }
+      }
     ],
         indeterminate: true,
         firstCheckAll: false,
@@ -179,7 +118,7 @@
     },
     created(){
       //请求角色列表
-      this.$http.get(`${this.$api}/role/list`).then(response=>{
+      this.$http.get(`${this.api}/sys/role/list`).then(response=>{
         let res = response.data;
         if(res.result){
           this.listData = res.data;
@@ -188,16 +127,14 @@
     },
     methods:{
       showAuth(params){
-        this.$router.push({path:"/sys/role/auth",query:{id:params.row.roleId,checked:true}});
+        this.$router.push({path:"/sys/role/auth",query:{id:params.row.id,checked:true}});
       },
       addRole(){
         this.$router.push("/sys/role/edit-role")
       },
-      editDone(){
-        this.editVisible = false;
-      },
+
       auth(params){
-        this.$router.push({path:"/sys/role/auth",query:{id:params.row.roleId}});
+        this.$router.push({path:"/sys/role/auth",query:{id:params.row.id}});
       },
       edit(params){
         //this.$router.push("/sys/role/edit-role")
@@ -206,15 +143,37 @@
         this.formItem.code = params.row.roleCode;
         this.formItem.remark = params.row.remark;*/
 
-        this.$router.push({path:"/sys/role/edit-role",query:{id:params.row.roleId}})
+        this.$router.push({path:"/sys/role/edit-role",query:{id:params.row.id}})
       },
-      cancel(){
-        this.visible = false;
-        this.editVisible = false;
-      },
-      done(){
-        this.visible = false;
-      },
+      remove(params){
+        this.$Modal.confirm({
+          title: '警告',
+          content: '<p>确认删除该角色吗</p>',
+          loading: true,
+          onOk: () => {
+            this.$store.dispatch("modalLoading");
+            this.$http.get(`${this.api}/sys/role/del`,{
+              params:{id:params.row.id}
+            }).then(response=>{
+              let res = response.data;
+
+              this.$http.get(`${this.api}/sys/role/list`).then(response=>{
+                let res = response.data;
+                if(res.result){
+                  this.$Modal.remove();
+                  this.$Message.info('删除成功');
+                  this.listData = res.data;
+                }else{
+                  this.$Message.info(res.msg);
+                }
+              })
+
+            })
+
+          }
+        });
+
+      }
     },
     computed:{
 

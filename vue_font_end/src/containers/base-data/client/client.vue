@@ -35,8 +35,8 @@
       name: "client",
       data(){
         return {
-          pageSizeList:[30,50,100],
-          pageSize:30,
+          pageSizeList:[10,50,100],
+          pageSize:10,
           total:0,
           currentPage:1,
           visible:false,
@@ -83,7 +83,7 @@
             {
               title: '首次成交时间',
               key: 'firstPurchaseTime',
-              width:130,
+              width:110,
             },
             {
               title: '状态',
@@ -197,8 +197,9 @@
             console.log(res)
 
               this.listData = res.customerList;
+            //记录总页数
               this.total = res.count;
-              //记录总页数
+
 
           })
         },
@@ -236,10 +237,10 @@
         pagination(customsParams){
           let defaultParams = {
             currentPage :1,
-            pageSize : 30
+            pageSize : 10
           };
           let params = customsParams || defaultParams;
-          console.log(params)
+
           this.$http.get(`${this.$api}/base/customer/findCustomerAll`,{params}).then(response=>{
             let res = response.data;
 
@@ -247,9 +248,10 @@
             if(res.count === 0){
               this.listData = []
             }else{
-              this.listData = res.customerList;
+              this.listData = res.pageList;
               this.total = res.count;
             }
+            console.log(res)
           })
         },
         searchPagination(pageParams){
