@@ -7,7 +7,7 @@
       <div class="search">
         <Form ref="formInline" :model="searchContent" inline>
           <FormItem prop="user">
-            <Input type="text" v-model="searchContent.giftName" placeholder="请输入ID"/>
+            <Input type="text" v-model="searchContent.giftName" placeholder="请输入名称"/>
           </FormItem>
           <FormItem prop="account">
             <Input type="text" v-model="searchContent.giftCode" placeholder="请输入搜索账户"/>
@@ -204,7 +204,7 @@
         this.$http.get("http://192.168.31.34:8080/base/gift/findAllGift", {params}).then(response => {
           let data = response.data;
           console.log(response)
-          this.listData = data.customerList;
+          this.listData = data.pageList;
           this.total = data.count;
           })
       },

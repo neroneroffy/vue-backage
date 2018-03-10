@@ -1,17 +1,34 @@
 <template>
     <div class="commodity">
+      <!--
+        {
+          productName:名称
+          productCode:编号
+          barCode:条形码
+          category分类
+          modelSize型号
+          mark备注
+         }
+      -->
       <div class="search-wrapper">
       <Button type="primary" icon="plus-round" @click="addMember" class="add">新增</Button>
       <div class="search">
         <Form ref="formInline" :model="searchContent" inline>
-          <FormItem prop="user">
-            <Input type="text" v-model="searchContent.id" placeholder="请输入ID"/>
+          <FormItem prop="productName">
+            <Input type="text" v-model="searchContent.productName" placeholder="请输入名称"/>
           </FormItem>
-          <FormItem prop="account">
-            <Input type="text" v-model="searchContent.account" placeholder="请输入搜索账户"/>
+          <FormItem prop="productCode">
+            <Input type="text" v-model="searchContent.productCode" placeholder="请输入编号"/>
           </FormItem>
-          <FormItem prop="phone">
-            <Input type="text" v-model="searchContent.phone" placeholder="请输入搜索电话"/>
+          <FormItem prop="category">
+            <Select v-model="searchContent.category" style="width:200px" placeholder="请选择类型">
+              <Option v-for="item in roleList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
+          </FormItem>
+          <FormItem prop="modelSize">
+            <Select v-model="searchContent.modelSize" style="width:200px" placeholder="请选择型号">
+              <Option v-for="item in roleList2" :value="item.value" :key="item.value">{{ item .label}}</Option>
+            </Select>
           </FormItem>
           <FormItem>
             <Button type="primary" icon="ios-search" @click="handleSubmit('formInline')">搜索</Button>
@@ -65,46 +82,83 @@
       name: "commodity",
       data(){
           return {
-            pageSizeList:[30,50,100],
-            pageSize:30,
+            pageSizeList:[5,10,20],
+            pageSize:5,
             total:0,
             currentPage:1,
             visible:false,
             loading:true,
             searchContent: {
-              id: '',
-              account: '',
-              phone:"",
-              role:""
+              productName:'',
+              productCode:'',
+              category:'',
+              modelSize:''
              },
+            roleList:[
+              {
+                value: '23',
+                label: 'A型'
+              },
+              {
+                value: '24',
+                label: 'B型'
+              },
+              {
+                value: '25',
+                label: 'C型'
+              }
+            ],
+            roleList2:[
+              {
+                value: 'NB',
+                label: 'NB'
+              },
+              {
+                value: 'S',
+                label: 'S'
+              },
+              {
+                value: 'M',
+                label: 'M'
+              },
+              {
+                value: 'L',
+                label: 'L'
+              },
+              {
+                value: 'XL',
+                label: 'XL'
+              },
+              {
+                value: 'XXL',
+                label: 'XXL'
+              },
+              {
+                value: 'XXXL',
+                label: 'XXXL'
+              }
+            ],
             columns: [
               {
-                type: 'selection',
-                width: 60,
-                align: 'center'
-              },
-              {
-                title: 'ID',
-                key: 'id',
-                width:180
-
-              },
-              {
                 title: '名称',
-                key: 'name',
+                key: 'productName',
 
               },
               {
-                title: '单位',
-                key: 'unit',
+                title: '编号',
+                key: 'productCode',
               },
               {
-                title: '价格',
-                key: 'price',
+                title: '条形码',
+                key: 'barCode',
               },
               {
-                title: '重量',
-                key: 'weight',
+                title: '分类',
+                key: 'category',
+              },
+              {
+                title: '型号',
+                key: 'modelSize',
 
               },
               {
@@ -113,7 +167,20 @@
                 align: 'center',
                 render: (h, params) => {
                   return h('div', [
-
+                    h('Button', {
+                      props: {
+                        type: 'primary',
+                        size: 'small'
+                      },
+                      style: {
+                        marginRight: '5px'
+                      },
+                      on: {
+                        click: () => {
+                          this.show(params)
+                        }
+                      }
+                    }, '查看'),
                     h('Button', {
                       props: {
 
@@ -164,7 +231,7 @@
       mounted(){
         //初始请求分页
         let params = {
-          pageNum:this.currentPage,
+          currentPage:this.currentPage,
           pageSize:this.pageSize
         };
         this.pagination(params)
@@ -182,12 +249,14 @@
         //提交搜索
         handleSubmit() {
           console.log(this.searchContent)
-          /*
-                    this.$http.post(`${this.$api}/search`,{data:this.searchContent}).then(response=>{
-                      let res = response.data;
-                      this.listData = res.data;
-                    })
-          */
+          this.$http.post(`http://192.168.31.34:8080/base/product/findAllProduct`,this.searchContent).then(response=>{
+            console.log(response)
+            let res = response.data;
+            this.listData = res.data;
+          })
+        },//查看
+        show(params){
+          this.$router.push({path:'/baseData/commodity/edit-commodity',query:{id:params.row.id,checked:true}})
         },
         //编辑
         edit(params){
@@ -195,20 +264,16 @@
         },
         //删除
         remove (params) {
-          let id = params.row.id;
+          ///base/product/deleteProduct删除接口
           this.$Modal.confirm({
             content: '<p>确认删除此条数据吗？</p>',
             loading: true,
             onOk: () => {
               this.$store.dispatch('modalLoading');
               console.log(this)
-              this.$http.post(`${this.$api}/commodity/delete`,{id}).then(response=>{
-                let res = response.data;
-                if(res.result){
+              this.$http.get(`http://192.168.31.34:8080/base/product/deleteProduct`,{params:{id:params.row.id}}).then(response=>{
+                  let res = response.data;
                   this.pagination();
-                  this.$Modal.remove();
-                  this.$Message.info('删除成功');
-                }
               })
             }
           });
@@ -219,23 +284,23 @@
         //分页函数
         pagination(customsParams){
           let defaultParams = {
-            pageNum :1,
-            pageSize : 30
+            currentPage :1,
+            pageSize : 5
           };
           let params = customsParams || defaultParams;
-          this.$http.get(`${this.$api}/commodity/getList`,{params}).then(response=>{
+          ///base/product/findAllProduct  查询所有产品
+          this.$http.get(`http://192.168.31.34:8080/base/product/findAllProduct`,{params}).then(response=>{
+            console.log(response.data)
             let res = response.data;
-            if(res.result){
-              this.listData = res.list;
-              this.total = res.total;
-            }
+              this.listData = res.pageList;
+              this.total = res.count;
           })
         },
         //点击分页
         changePage(currentPageNum){
           this.currentPage = currentPageNum;
           let params = {
-            pageNum:this.currentPage,
+            currentPage:this.currentPage,
             pageSize:this.pageSize
           };
 
@@ -245,7 +310,7 @@
           this.pageSize = currentPageSize;
           this.currentPage = 1;
           let params = {
-            pageNum:this.currentPage,
+            currentPage:this.currentPage,
             pageSize:this.pageSize
           };
           this.pagination(params)
