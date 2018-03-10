@@ -27,28 +27,34 @@ import yearGrow from '@/containers/data-analyze/year-grow/year-grow'
 import panel from '@/containers/panel/panel'
 
 //基础信息管理
-import commodity from '@/containers/base-data/commodity/commodity'//商品管理
-import editCommodity from '@/containers/base-data/commodity/edit-commodity/edit-commodity'//编辑商品
-import present from '@/containers/base-data/present/present'//赠品管理
-import editPresent from "@/containers/base-data/present/edit-present/edit-present" //编辑赠品
-import materiel from '@/containers/base-data/materiel/materiel'//物料管理
-import editMateriel from '@/containers/base-data/materiel/edit-materiel/edit-materiel'//编辑物料
-import client from '@/containers/base-data/client/client'//客户管理
-import editClient from '@/containers/base-data/client/edit-client/edit-client'//编辑客户
-import supplier from '@/containers/base-data/supplier/supplier'//供货商管理
-import editSupplier from '@/containers/base-data/supplier/edit-supplier/edit-supplier'//编辑供货商
-import warehouse from '@/containers/base-data/warehouse/warehouse'//仓库管理
-import editWarehouse from '@/containers/base-data/warehouse/edit-warehouse/edit-warehouse'//编辑仓库
-import contact from '@/containers/base-data/contact/contact'//联系人管理
-import address from '@/containers/base-data/address/address'//地址管理
-import unit from '@/containers/base-data/unit/unit'//单位设置
-import editUnit from '@/containers/base-data/unit/edit-unit/edit-unit'//编辑单位
-import stockPrice from '@/containers/base-data/stock-price/stock-price'//进货价格设置
+import commodity from '@/containers/base-data/commodity/commodity';//商品管理
+import editCommodity from '@/containers/base-data/commodity/edit-commodity/edit-commodity';//编辑商品
+import present from '@/containers/base-data/present/present';//赠品管理
+import editPresent from "@/containers/base-data/present/edit-present/edit-present"; //编辑赠品
+import materiel from '@/containers/base-data/materiel/materiel';//物料管理
+import editMateriel from '@/containers/base-data/materiel/edit-materiel/edit-materiel';//编辑物料
+import client from '@/containers/base-data/client/client';//客户管理
+import editClient from '@/containers/base-data/client/edit-client/edit-client';//编辑客户
+import supplier from '@/containers/base-data/supplier/supplier';//供货商管理
+import editSupplier from '@/containers/base-data/supplier/edit-supplier/edit-supplier';//编辑供货商
+import warehouse from '@/containers/base-data/warehouse/warehouse';//仓库管理
+import editWarehouse from '@/containers/base-data/warehouse/edit-warehouse/edit-warehouse';//编辑仓库
+import contact from '@/containers/base-data/contact/contact';//联系人管理
+import address from '@/containers/base-data/address/address';//地址管理
+import unit from '@/containers/base-data/unit/unit';//单位设置
+import editUnit from '@/containers/base-data/unit/edit-unit/edit-unit';//编辑单位
+import stockPrice from '@/containers/base-data/stock-price/stock-price';//进货价格设置
 
 
 //进货管理
 import stockOrder from "@/containers/stock/stock-order/stock-order";
 import editStockOrder from "@/containers/stock/stock-order/edit-stock-order/edit-stock-order";
+
+
+//库存管理
+import stockTaking from "@/containers/repertory/stock-taking/stock-taking"//库存盘点
+
+
 Vue.use(Router);
 
 const router = new Router({
@@ -235,7 +241,11 @@ const router = new Router({
           name:'edit-stock-order',
           component:editStockOrder
         },
-
+        {
+          path: '/repertory/stock-taking',
+          name:'stock-taking',
+          component:stockTaking
+        },
 
       ]
     },

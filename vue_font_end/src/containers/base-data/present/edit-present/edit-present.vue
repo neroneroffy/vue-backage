@@ -72,16 +72,32 @@
             id:""
           },
           {
-            name:"A型号",
-            id:"788768"
+            name:"NB",
+            id:"NB"
           },
           {
-            name:"B型号",
-            id:"7878989"
+            name:"S",
+            id:"S"
           },
           {
-            name:"C型号",
-            id:"3213121"
+            name:"M",
+            id:"M"
+          },
+          {
+            name:"L",
+            id:"L"
+          },
+          {
+            name:"XL",
+            id:"XL"
+          },
+          {
+            name:"XXl",
+            id:"XXL"
+          },
+          {
+            name:"XXXL",
+            id:"XXXl"
           },
         ],
         isChecked:this.$route.query.checked?true:false
@@ -90,24 +106,46 @@
       BastTitle
     },
     mounted() {
-      //console.log(this.$route.query.id)
-      if(this.$route.query.id!==""){
-        this.$http.get(`/static/present123.json`,{
-          params:{ id:this.$route.query.id }
+      //console.log(this.$route.query.id)this.$route.query.id
+      this.$http.get(`http://192.168.31.34:8080/base/gift/giftInfo`,{
+        params:{ id:2}
+      }).then(response=>{
+        console.log(response)
+        this.editData = response.data;
+        /*let res = response.data;
+        if(res.result){
+          this.editData = res.data;
+          console.log(this.editData.customerType)
+        }*/
+      });
+      /*if(this.$route.query.id!==""){
+        this.$http.get(`http://192.168.31.34:8080/base/gift/giftInfo`,{
+          params:{ id:2}
         }).then(response=>{
           this.editData = response.data.data;
           console.log(this.editData);
-          /*let res = response.data;
+          /!*let res = response.data;
           if(res.result){
             this.editData = res.data;
             console.log(this.editData.customerType)
-          }*/
+          }*!/
         });
-      }
+      }*/
     },
     methods:{
       submit(){
-        console.log(this.editData)
+        ///base/gift/addGift添加赠品
+        ///base/gift/updateGift 更新赠品
+        this.$http.post(`http://192.168.31.34:8080/base/gift/updateGift`,this.editData).then(response=>{
+          let res = response.data;
+          console.log(response)
+          if(res.msg === "手机号已注册"){
+            this.$Message.error('手机号已注册');
+          }else if(res.msg === "成功"){
+            this.$Message.info('修改成功');
+            this.$router.push('/baseData/client')
+          }
+        })
       }
     }
 
