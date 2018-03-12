@@ -1,6 +1,22 @@
 <template>
   <div class="edit-stock-in-order">
     <BastTitle :title="title"></BastTitle>
+    <div class="search-wrapper">
+      <div class="search">
+        <Form ref="formInline"  inline>
+          <FormItem prop="user">
+            <DatePicker type="date" placeholder="单据日期" style="width: 200px"></DatePicker>
+          </FormItem>
+          <FormItem prop="user">
+            <DatePicker type="date" placeholder="交货日期" style="width: 200px"></DatePicker>
+          </FormItem>
+        </Form>
+      </div>
+      <div>
+        <Button type="primary" icon="plus-round" @click="save">保存入库单</Button>
+      </div>
+
+    </div>
     <Table :columns="columns" :data="data"></Table>
   </div>
 </template>
@@ -31,7 +47,8 @@
                   },
                   on:{
                     click:()=>{
-                      this.addRow(params.index)
+
+                      this.addRow(params)
                     }
                   }
                 }),
@@ -63,14 +80,14 @@
             title:"仓库",
             key:"warehouseId",
             render:(h,params)=>{
-
               return h('Select',{
                 props:{
-                  value:params.row.warehouseId
+                  value:this.data[params.index].warehouseId,
+                  placeholder:"选择仓库"
                 },
                 on:{
-                  input(e){
-                    console.log(e)
+                  input:(e)=>{
+                    params.row.warehouseId = e;
                   }
                 }
               },this.warehouse.map((item)=>{
@@ -79,12 +96,7 @@
                       value:item.value,
                       label:item.name,
                     },
-                    on:{
-                      input:(e)=>{
-                        console.log(999);
-                        this.selectWarahouse(e,params.index)
-                      }
-                    }
+
                   })
               }))
             }
@@ -93,52 +105,145 @@
             title:"货物名称",
             key:"goodsId",
             render:(h,params)=>{
-              return h("Input",{
-                props:{
-                  type:"text"
+              return h("div",{
+                style:{
+                  padding:"3px 5px",
+                  cursor:"pointer",
+                  background:"#f0f0f0",
+                  borderRadius:"3px",
+                  float:"left"
                 },
+
                 on:{
-                  change:()=>{
-                    this.inputValue(params.index)
+                  click:()=>{
+                    console.log(432432)
                   },
                 }
-              },"新增")
+              },this.data[params.index].goodsId?this.data[params.index].goodsId:"请选择商品")
             }
 
           },
           {
             title:"单位",
-            key:"unitsId"
+            key:"unitsId",
+            render:(h,params)=>{
+              return h('Select',{
+                props:{
+                  value:this.data[params.index].unitsId,
+                  placeholder:"选择单位"
+                },
+                on:{
+                  input:(e)=>{
+
+                    params.row.unitsId = e
+
+                  }
+                }
+              },this.units.map((item)=>{
+                return h('Option',{
+                  props:{
+                    value:item.value,
+                    label:item.name,
+                  }
+                })
+              }))
+            }
           },
           {
             title:"入库单价",
-            key:"price"
+            key:"price",
+            render:(h,params)=>{
+              return h('Input',{
+                props:{
+                  value:params.row.price,
+                  placeholder:"入库单价"
+                },
+
+                on:{
+                  input:(v)=>{
+                    params.row.price = v
+                  }
+                }
+              })
+            }
           },
           {
             title:"入库数量",
-            key:"num"
+            key:"num",
+            render:(h,params)=>{
+              return h('Input',{
+                props:{
+                  value:params.row.num,
+                  placeholder:"入库数量"
+                },
+                on:{
+                  input:(v)=>{
+                    params.row.num = v;
+                    params.row.total = params.row.num * params.row.price
+                  }
+                }
+              })
+            }
           },
           {
             title:"总金额",
-            key:"total"
+            key:"total",
+            render:(h,params)=>{
+              return h('Input',{
+                props:{
+                  value:params.row.total,
+                  placeholder:"总金额"
+                },
+
+                on:{
+                  input:(v)=>{
+                    params.row.total = v
+                  }
+                }
+              })
+            }
           },
           {
             title:"备注",
-            key:"mark"
+            key:"mark",
+            render:(h,params)=>{
+              return h('Input',{
+                props:{
+                  value:this.data[params.index].mark,
+                  placeholder:"备注"
+                },
+
+                on:{
+                  input:(v)=>{
+                    params.row.mark = v
+                  }
+                }
+              })
+            }
+
           },
         ],
+        inputStyle:{
+          width:"100%",
+          height:"32px",
+          lineHeightr:"34px",
+          border:"1px solid #e4e4e4",
+          borderRadius:"5px"
+        },
         data:[
           {
             inboundOrderId:"454132456412314",
-            warehouseId:"2",
+            warehouseId:"1",
             goodsId:"",
-            unitsId:"",
+            unitsId:"1",
             price:"",
             num:"",
-            total:"",
+            total:"78",
             mark:""
           }
         ],
+        num:"",
+        price:"",
         warehouse:[
           {
             name:"仓库1",
@@ -146,6 +251,16 @@
           },
           {
             name:"仓库2",
+            value:"2"
+          },
+        ],
+        units:[
+          {
+            name:"单位1",
+            value:"1"
+          },
+          {
+            name:"单位2",
             value:"2"
           },
         ]
@@ -168,12 +283,15 @@
        // this.data[index].
       },
       //新增一行
-      addRow(){
-        this.data.push(          {
+      addRow(params){
+        console.log(params);
+        this.data[params.index] = params.row
+        this.data.push(
+          {
             inboundOrderId:"454132456412314",
-            warehouseId:"",
+            warehouseId:"1",
             goodsId:"",
-            unitsId:"",
+            unitsId:"1",
             price:"",
             num:"",
             total:"",
@@ -190,6 +308,10 @@
         console.log(e.target.value);
         console.log(i);
       },
+      //保存入库单
+      save(){
+        console.log(this.data)
+      },
       submit(){
         console.log(this.editData)
       }
@@ -197,7 +319,7 @@
   }
 </script>
 
-<style scoped>
-
+<style scoped lang="stylus">
+@import './edit-stock-in-order.styl'
 </style>
 
