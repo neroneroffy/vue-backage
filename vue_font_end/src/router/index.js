@@ -48,16 +48,13 @@ import stockPrice from '@/containers/base-data/stock-price/stock-price';//进货
 
 //进货管理
 import stockOrder from "@/containers/stock/stock-order/stock-order";//采购单管理
-import editStockOrder from "@/containers/stock/stock-order/edit-stock-order/edit-stock-order";
-
+import editStockOrder from "@/containers/stock/stock-order/edit-stock-order/edit-stock-order";//编辑采购单
+import stockInOrder from "@/containers/stock/stock-in-order/stock-in-order";//入库单管理
+import editStockInOrder from "@/containers/stock/stock-in-order/edit-stock-in-order/edit-stock-in-order";//编辑入库单
 
 
 //库存管理
 import stockTaking from "@/containers/repertory/stock-taking/stock-taking"//库存盘点
-
-
-
-//import stockInOrder from "@/containers/stock/stock-in-order/stock-in-order";//入库单管理
 
 Vue.use(Router);
 
@@ -236,6 +233,11 @@ const router = new Router({
           component:stockPrice
         },
         {
+          path: '/repertory/stock-taking',
+          name:'stock-taking',
+          component:stockTaking
+        },
+        {
           path: '/stock/stock-order',
           name:'stock-order',
           component:stockOrder
@@ -245,16 +247,17 @@ const router = new Router({
           name:'edit-stock-order',
           component:editStockOrder
         },
+
         {
-          path: '/repertory/stock-taking',
-          name:'stock-taking',
-          component:stockTaking
-        },
-/*        {
           path: '/stock/stock-in-order',
           name:'stock-in-order',
           component:stockInOrder
-        },*/
+        },
+        {
+          path: '/stock/stock-in-order/edit-stock-in-order',
+          name:'edit-stock-in-order',
+          component:editStockInOrder
+        },
 
 
       ]
