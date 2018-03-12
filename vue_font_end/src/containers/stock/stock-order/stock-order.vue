@@ -87,11 +87,13 @@
             },
             {
               title: '供货商唯一标识',
-              key: 'supplierId'
+              key: 'supplierId',
+              width:120,
             },
             {
               title: '采购员唯一标识',
-              key: 'purchaseId'
+              key: 'purchaseId',
+              width:120,
             },
             {
               title: '采购总价',
