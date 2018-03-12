@@ -57,7 +57,7 @@ import stockTaking from "@/containers/repertory/stock-taking/stock-taking"//库�
 
 
 
-//import stockInOrder from "@/containers/stock/stock-in-order/stock-in-order";//入库单管理
+import stockInOrder from "@/containers/stock/stock-in-order/stock-in-order";//入库单管理
 
 Vue.use(Router);
 
@@ -250,11 +250,11 @@ const router = new Router({
           name:'stock-taking',
           component:stockTaking
         },
-/*        {
+     {
           path: '/stock/stock-in-order',
           name:'stock-in-order',
           component:stockInOrder
-        },*/
+        },
 
 
       ]
