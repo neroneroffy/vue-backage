@@ -193,10 +193,10 @@
           this.$http.post(`${this.$api}/base/customer/solrCustomer`,{
             ...this.searchContent
           }).then(response=>{
+
             let res = response.data;
             console.log(res)
-
-              this.listData = res.customerList;
+              this.listData = res.pageList;
             //记录总页数
               this.total = res.count;
 
@@ -243,15 +243,13 @@
 
           this.$http.get(`${this.$api}/base/customer/findCustomerAll`,{params}).then(response=>{
             let res = response.data;
-
-            this.listData = res;
             if(res.count === 0){
               this.listData = []
             }else{
               this.listData = res.pageList;
               this.total = res.count;
             }
-            console.log(res)
+
           })
         },
         searchPagination(pageParams){

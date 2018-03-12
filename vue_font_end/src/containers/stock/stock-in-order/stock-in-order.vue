@@ -68,7 +68,7 @@
 <script>
   import {Table, Page, Form, Input, Select, Modal, Row, Col, Upload, Avatar} from 'iview';
   export default {
-    name: "stock-in-order.vue",
+    name: "stock-in-order",
     data(){
       return{
         pageSizeList:[30,50,100],
@@ -79,31 +79,27 @@
         currentPage:1,
         columns:[
           {
-            title: '入库单唯一标识',
-            key: 'inboundOrder',
+            title: '单据编码',
+            key: 'orderNo',
 
           },
           {
-            title: '仓库唯一标识',
-            key: 'warehouseId'
+            title: '关联采购单',
+            key: 'purchaseOrderNo'
           },
           {
-            title: '计量单位唯一标识',
-            key: 'units'
+            title: '入库类型',
+            key: 'inboundType'
           },
           {
-            title: '入库单价',
-            key: 'price',
-            width:120,
+            title: '入库人员',
+            key: 'operatorId',
           },
           {
-            title: '入库数量',
-            key: 'num'
+            title: '备注',
+            key: 'mark'
           },
-          {
-            title: '总金额',
-            key: 'total'
-          },
+
           {
             title: '操作',
             key: 'action',
@@ -191,7 +187,7 @@
       //新增
       addMember(){
         console.log(21522552)
-        this.$router.push({path:'/stock/stock-order/edit-stock-order'})
+        this.$router.push({path:'/stock/stock-in-order/edit-stock-in-order'})
       },
       //提交搜索
       handleSubmit() {
@@ -203,11 +199,11 @@
       },
       //查看
       show(params){
-        this.$router.push({path:'/stock/stock-order/edit-stock-order',query:{id:params.row.id,checked:true}})
+        this.$router.push({path:'/stock/stock-in-order/edit-stock-in-order',query:{id:params.row.id,checked:true}})
       },
       //编辑
       edit(params){
-        this.$router.push({path:'/stock/stock-order/edit-stock-order',query:{id:params.row.id}})
+        this.$router.push({path:'/stock/stock-in-order/edit-stock-in-order',query:{id:params.row.id}})
       },
       //删除
       remove(params){
@@ -240,7 +236,7 @@
         this.$http.get("/static/materielone.json").then(response => {
 
           let data = response.data;
-          console.log(typeof data.list)
+          console.log(data.list)
           this.listData = data.list;
         })
       },
