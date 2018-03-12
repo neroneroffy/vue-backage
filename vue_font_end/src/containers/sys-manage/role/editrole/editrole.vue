@@ -49,7 +49,7 @@
           roleCode: '',
           mark: ''
         },
-        api:"/api",
+        api:"http://192.168.31.174:8080",
         ruleCustom: {
           roleName: [
             { validator: validateName, trigger: 'blur' }
@@ -96,14 +96,15 @@
           return
 
         };
-        this.$http.post(`${this.api}/sys/role/update`,{...this.formCustom}).then(response=>{
+        let url = this.$route.query.id?`${this.api}/sys/role/update`:`${this.api}/sys/role/add`
+        this.$http.post(url,{...this.formCustom}).then(response=>{
           let res = response.data;
           console.log(res);
           if(res.result){
             this.$Message.success('编辑成功!');
             this.$router.push('/sys/role')
           }else{
-            this.$Message.error("编辑失败");
+            this.$Message.error(res.msg);
           }
         })
 

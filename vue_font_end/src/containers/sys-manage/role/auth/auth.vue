@@ -77,7 +77,8 @@
             }
           ],
           api:"http://192.168.31.174:8080",
-          checkedId:[]
+          checkedId:[],
+          isChecked:false
         }
       },
       created(){
@@ -88,7 +89,7 @@
         }).then(response=>{
           let res = response.data;
           if(res.result){
-            console.log(res.data);
+
             this.roleInfo.roleId = res.data.id;
             this.roleInfo.roleName = res.data.roleName;
             this.roleInfo.roleCode = res.data.roleCode;
@@ -140,13 +141,13 @@
                     i.children.forEach(k=>{
                       k.title = k.resourceName
                       if(res.data.resourceIdList.indexOf(k.id)>=0){
-                        console.log(k.id);
+
                         k.checked = true;
                       }
                     })
                   }else{
                     if(res.data.resourceIdList.indexOf(i.id)>=0){
-                      console.log(i.id);
+
                       i.checked = true;
                     }
                   }
@@ -166,8 +167,8 @@
       methods:{
 
         check(data){
-
-          this.checked = data
+          this.isChecked = true
+          this.checked = data;
           this.authInfo.forEach(v=>{
             if(v.children){
               v.children.forEach(k=>{
@@ -189,14 +190,34 @@
            this.checked.forEach(v=>{
              checkedId.push(v.id)
            });
+          }else{
+            //没有点选直接点提交的情况
+            if(!this.isChecked){
+              checkedId = this.checkedId;
+              this.$router.push(`/sys/role`);
+              return
+            }
           }
+
+/*
           checkedId = checkedId.concat(this.checkedId);
           checkedId = Array.from(new Set(checkedId));
+*/
+
 
           let submitData = {
-            roleId:this.$route.query.id,
-            checkedId
+            id:this.$route.query.id,
+            resourceIdList:checkedId
           };
+
+          this.$http.post(`${this.api}/sys/role/auth`,{...submitData}).then(response=>{
+            let res = response.data;
+
+            if(res.result){
+              this.$router.push(`/sys/role`);
+              this.$Message.success(res.msg)
+            }
+          });
           console.log(submitData)
         }
       },
