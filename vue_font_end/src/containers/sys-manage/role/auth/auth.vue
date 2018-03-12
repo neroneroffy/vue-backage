@@ -75,11 +75,12 @@
                 }
               ]
             }
-          ]
+          ],
+          api:"http://192.168.31.174:8080",
         }
       },
       created(){
-        this.$http.get(`${this.$api}/role/info`,{
+        this.$http.get(`${this.api}/role/info`,{
           params:{
             id:this.$route.query.id
           }
