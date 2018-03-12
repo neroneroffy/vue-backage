@@ -118,8 +118,6 @@
               this.editData = res;
           });
         }
-
-
       },
       methods:{
         submit(){

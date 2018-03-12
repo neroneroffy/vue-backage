@@ -289,10 +289,10 @@
           };
           let params = customsParams || defaultParams;
           ///base/product/findAllProduct  查询所有产品
-          this.$http.get(`http://192.168.31.34:8080/base/product/findAllProduct`,{params}).then(response=>{
+          this.$http.post(`http://192.168.31.34:8080/base/product/findAllProduct`,{params}).then(response=>{
             console.log(response.data)
             let res = response.data;
-              this.listData = res.pageList;
+              this.listData = res.content;
               this.total = res.count;
           })
         },

@@ -18,11 +18,19 @@
 
     </div>
     <Table :columns="columns" :data="data"></Table>
+    <Modal
+      v-model="goodsPicker"
+      title="选择商品"
+      @on-ok="selectDone"
+      @on-cancel="cancel">
+      <CommodityPicker type="goods"/>
+    </Modal>
   </div>
 </template>
 
 <script>
   import BastTitle from  "@/components/base-title";
+  import CommodityPicker from '@/components/commodity-picker/commodity-picker'
   import { Form,Select,Upload,Avatar,Button,DatePicker,Cascader } from 'iview'
   export default {
     name: "edit-stock-in-order",
@@ -116,7 +124,46 @@
 
                 on:{
                   click:()=>{
-                    console.log(432432)
+                    this.goodsData = [
+                      {
+                        name:"纸尿裤1",
+                        id:"1"
+                      },
+                      {
+                        name:"纸尿裤2",
+                        id:"2"
+                      },
+                      {
+                        name:"纸尿裤3",
+                        id:"3"
+                      },
+                      {
+                        name:"纸尿裤4",
+                        id:"4"
+                      },
+                      {
+                        name:"纸尿裤5",
+                        id:"5"
+                      },
+                      {
+                        name:"纸尿裤6",
+                        id:"6"
+                      },
+                      {
+                        name:"纸尿裤7",
+                        id:"7"
+                      },
+                      {
+                        name:"纸尿裤8",
+                        id:"8"
+                      },
+                      {
+                        name:"纸尿裤9",
+                        id:"9"
+                      },
+                    ];
+                    this.currentRow = params.index
+                    this.goodsPicker = true
                   },
                 }
               },this.data[params.index].goodsId?this.data[params.index].goodsId:"请选择商品")
@@ -134,7 +181,6 @@
                 },
                 on:{
                   input:(e)=>{
-
                     params.row.unitsId = e
 
                   }
@@ -212,7 +258,6 @@
                   value:this.data[params.index].mark,
                   placeholder:"备注"
                 },
-
                 on:{
                   input:(v)=>{
                     params.row.mark = v
@@ -234,7 +279,7 @@
           {
             inboundOrderId:"454132456412314",
             warehouseId:"1",
-            goodsId:"",
+            goodsId:"7",
             unitsId:"1",
             price:"",
             num:"",
@@ -242,8 +287,8 @@
             mark:""
           }
         ],
-        num:"",
-        price:"",
+        currentRow:0,
+        goodsPicker:false,
         warehouse:[
           {
             name:"仓库1",
@@ -263,7 +308,8 @@
             name:"单位2",
             value:"2"
           },
-        ]
+        ],
+        goodsData:""
       }
     },
     mounted(){
@@ -276,13 +322,20 @@
       }
     },
     components:{
-      BastTitle
+      BastTitle,
+      CommodityPicker
     },
     methods:{
       inputValue(index){
        // this.data[index].
       },
       //新增一行
+      selectDone(){
+        this.goodsPicker = false
+      },
+      cancel(){
+        this.goodsPicker = false
+      },
       addRow(params){
         console.log(params);
         this.data[params.index] = params.row
