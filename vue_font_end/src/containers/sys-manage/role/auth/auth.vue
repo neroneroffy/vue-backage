@@ -12,11 +12,11 @@
         <Input v-model="roleInfo.roleCode" disabled />
       </FormItem>
       <FormItem label="备注">
-        <Input v-model="roleInfo.remark" disabled type="textarea" :autosize="{minRows: 2,maxRows: 5}" />
+        <Input v-model="roleInfo.mark" disabled type="textarea" :autosize="{minRows: 2,maxRows: 5}" />
       </FormItem>
     </Form>
     <div class="auth-wrapper">
-      <Tree v-if="authInfo" :data="authInfo" show-checkbox @select-change="select"  @on-check-change="check" multiple></Tree>
+      <Tree v-if="authInfo" :data="authInfo" show-checkbox  @on-check-change="check" multiple></Tree>
     </div>
     <div class="submit-button" v-if="authInfo" v-show="!this.$route.query.checked">
       <Button type="primary" @click="submit">提交</Button>
@@ -37,13 +37,13 @@
             roleId:"",
             roleName:"",
             roleCode:"",
-            remark:""
+            mark:""
           },
           authInfo:"",
           checkedInfo:[],
           noCheck:[],
           test:["9976332783"],
-          checked:"",
+          checked:[],
           data2: [
             {
               title: 'parent 1',
@@ -77,53 +77,85 @@
             }
           ],
           api:"http://192.168.31.174:8080",
+          checkedId:[]
         }
       },
       created(){
-        this.$http.get(`${this.api}/role/info`,{
+        this.$http.get(`${this.api}/sys/role/authPre`,{
           params:{
             id:this.$route.query.id
           }
         }).then(response=>{
           let res = response.data;
           if(res.result){
-
-            this.roleInfo = res.data.roleInfo;
-            this.authInfo = res.data.authInfo;
+            console.log(res.data);
+            this.roleInfo.roleId = res.data.id;
+            this.roleInfo.roleName = res.data.roleName;
+            this.roleInfo.roleCode = res.data.roleCode;
+            this.roleInfo.mark = res.data.mark;
+            this.checkedId = res.data.resourceIdList
+            this.authInfo = res.data.resourceList;
             if(this.$route.query.checked){
               this.authInfo.forEach(v=>{
-                if(v.children){
+                v.title = v.resourceName;
+                v.disabled = true;
+                if(v.children.length!==0){
                   v.expand=true;
-                  v.disabled = true;
+
                   v.children.forEach(i=>{
-                    if(i.children){
+                    i.title = i.resourceName;
+                    i.disabled = true;
+                    if(i.children.length!==0){
+
                       i.expand = true;
-                      i.disabled = true;
                       i.children.forEach(k=>{
+                        k.title = k.resourceName;
                         k.disabled = true;
-                        if(res.data.alreadyAuth.indexOf(k.id)>0){
+                        if(res.data.resourceIdList.indexOf(k.id)>=0){
                           k.checked = true;
                         }
                       })
+                    }else{
+                      if(res.data.resourceIdList.indexOf(i.id)>=0){
+                        i.checked = true;
+                      }
                     }
                   })
+                }else{
+                  if(res.data.resourceIdList.indexOf(v.id)>=0){
+                    v.checked = true;
+                  }
                 }
               });
               return
             }
             this.authInfo.forEach(v=>{
-              if(v.children){
+              v.title = v.resourceName
+              if(v.children.length!==0){
                 v.expand=true;
                 v.children.forEach(i=>{
-                  if(i.children){
+                  i.title = i.resourceName
+                  if(i.children.length!==0){
                     i.expand = true;
                     i.children.forEach(k=>{
-                      if(res.data.alreadyAuth.indexOf(k.id)>0){
+                      k.title = k.resourceName
+                      if(res.data.resourceIdList.indexOf(k.id)>=0){
+                        console.log(k.id);
                         k.checked = true;
                       }
                     })
+                  }else{
+                    if(res.data.resourceIdList.indexOf(i.id)>=0){
+                      console.log(i.id);
+                      i.checked = true;
+                    }
                   }
                 })
+              }else{
+                if(res.data.resourceIdList.indexOf(v.id)>=0){
+                  console.log(v.id);
+                  v.checked = true;
+                }
               }
             });
           }
@@ -132,53 +164,10 @@
 
       },
       methods:{
-        selectAll(i){
-          if(!this.checkAll[i]){
-            this.authInfo[i].children.forEach((v,k)=>{
-              this.checkedInfo[i][k] = [];
-              let tempArr = [];
-              v.children.forEach(m=>{
-                tempArr.push(m.id);
-                this.$set(this.checkedInfo[i],k,tempArr)
-              })
 
-            });
-            this.checkAll[i] = true;
-            this.noCheck[i] = false;
-            console.log(this.checkAll[i])
-          }else{
-            this.authInfo[i].children.forEach((v,k)=>{
-              this.checkedInfo[i][k] = [];
-              let tempArr = [];
-              v.children.forEach(m=>{
-                tempArr.push(m.id);
-                //console.log();
-                this.$set(this.checkedInfo[i],k,[])
-              })
-
-            });
-            this.checkAll[i] = false;
-
-
-          }
-
-
-          console.log(this.authInfo);
-/*
-          this.authInfo[i].forEach((j,k)=>{
-            console.log(j);
-            //this.checkedInfo[i][k].push(j.id)
-          })
-*/
-
-
-        },
-        select(data){
-          console.log(`选择${JSON.stringify(data)}`);
-        },
         check(data){
-          this.checked = data
 
+          this.checked = data
           this.authInfo.forEach(v=>{
             if(v.children){
               v.children.forEach(k=>{
@@ -194,7 +183,21 @@
           });
         },
         submit(){
-          console.log(this.checked)
+
+          let checkedId = [];
+          if(this.checked.length!==0){
+           this.checked.forEach(v=>{
+             checkedId.push(v.id)
+           });
+          }
+          checkedId = checkedId.concat(this.checkedId);
+          checkedId = Array.from(new Set(checkedId));
+
+          let submitData = {
+            roleId:this.$route.query.id,
+            checkedId
+          };
+          console.log(submitData)
         }
       },
       computed:{
