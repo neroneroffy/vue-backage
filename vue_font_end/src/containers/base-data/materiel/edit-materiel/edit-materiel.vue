@@ -33,7 +33,7 @@
         name: "edit-materiel",
         data(){
           return{
-            title:this.$route.query.id?this.$route.query.checked?'查看赠品':'编辑赠品':'新增赠品',
+            title:this.$route.query.id?this.$route.query.checked?'查看物料':'编辑物料':'新增物料',
               editData:{
                 materielName:"",
                 materielCode:"",
@@ -66,7 +66,7 @@
           if(this.$route.query.id){
             console.log(this.$route.query.id)
             //{id:this.$route.query.id}
-            this.$http.get(`http://192.168.31.34:8080/base/materiel/materielInfo`,{
+            this.$http.get(`http://192.168.31.34:8080/base/materiel/updatePre`,{
               params:{id:this.$route.query.id}
             }).then(response =>{
               this.editData = response.data;
