@@ -50,7 +50,9 @@ import stockPrice from '@/containers/base-data/stock-price/stock-price';//进货
 import stockOrder from "@/containers/stock/stock-order/stock-order";//采购单管理
 import editStockOrder from "@/containers/stock/stock-order/edit-stock-order/edit-stock-order";//编辑采购单
 import stockInOrder from "@/containers/stock/stock-in-order/stock-in-order";//入库单管理
-import editStockInOrder from "@/containers/stock/stock-in-order/edit-stock-in-order/edit-stock-in-order";//编辑入库单
+import editStockInOrder from "@/containers/stock/stock-in-order/edit-stock-in-order/edit-stock-in-order";//编辑商品入库单
+import editStockInOrderPresent from "@/containers/stock/stock-in-order/edit-stock-in-order-present/edit-stock-in-order-present";//编辑赠品入库单
+import editStockInOrderMaterial from "@/containers/stock/stock-in-order/edit-stock-in-order-material/edit-stock-in-order-material";//编辑物料入库单
 
 
 //库存管理
@@ -69,7 +71,6 @@ const router = new Router({
       name:"login",
       component:login
     },
-
     {
       path:'/',
       name:"container",
@@ -270,6 +271,16 @@ const router = new Router({
           path: '/stock/stock-in-order/edit-stock-in-order',
           name:'edit-stock-in-order',
           component:editStockInOrder
+        },
+        {
+          path: '/stock/stock-in-order/edit-stock-in-order-present',
+          name:'edit-stock-in-order-present',
+          component:editStockInOrderPresent
+        },
+        {
+          path: '/stock/stock-in-order/edit-stock-in-order-material',
+          name:'edit-stock-in-order-material',
+          component:editStockInOrderMaterial
         },
 
 

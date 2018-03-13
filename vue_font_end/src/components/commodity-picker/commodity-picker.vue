@@ -1,24 +1,65 @@
 <template>
+  <Modal
+    :value="showPicker"
+    title="选择商品"
+    width="630"
+    @on-ok="selectDone"
+    @on-cancel="cancel">
     <div class="commody-picker">
+      <div class="loading">
+        <Spin size="large" v-if="!data"></Spin>
+      </div>
+      <div class="search">
+        <Form :model="goodsSearch" inline class="search-box">
+          <div class="input-box">
+            <FormItem prop="productName">
+              <Input type="text" size="small" v-model="goodsSearch.productName" placeholder="请输入名称"/>
+            </FormItem>
+            <FormItem prop="productCode">
+              <Input type="text" size="small" v-model="goodsSearch.productCode" placeholder="请输入编号"/>
+            </FormItem>
+            <FormItem prop="category">
+              <Select size="small" v-model="goodsSearch.modelSize"  style="width:150px" placeholder="请选择型号">
+                <Option v-for="item in goodsSearch.goodsType" :value="item.name" :key="item.name">{{ item.name }}</Option>
+              </Select>
+            </FormItem>
 
-      <Table v-if="data" :data="data" :columns="this.type.column"></Table>
+          </div>
+          <FormItem>`
+            <Button type="primary" icon="ios-search" size="small" @click="search">搜索</Button>
+          </FormItem>
+        </Form>
+      </div>
+      <Table
+        v-if="data"
+        :loading="loading"
+        :data="data"
+        height="500"
+        width="600"
+        :columns="this[this.type].column"
+        highlight-row
+        @on-row-click="selectItem"
+        @on-row-dblclick="selectDone"
+      ></Table>
+      <div class="page" v-if="data">
+        <Page :total="total" :current="currentPage" :page-size="pageSize"  @on-change="changePage"></Page>
+      </div>
+
     </div>
+  </Modal>
 </template>
 
 <script>
     export default {
       name: "commody-picker",
-      props:["type"],
+      props:["type","showPicker"],
       data(){
         return {
-          api:"http://192.168.31.34:8080",
+          loading:true,
+          currentPage:1,
           goods:{
             column:[
-              {
-                type: 'selection',
-                width: 60,
-                align: 'center'
-              },
+
               {
                 title: '名称',
                 key: 'productName',
@@ -41,7 +82,7 @@
 
               }
             ],
-            url:`${this.api}/base/product/findAllProduct`
+            url:`http://192.168.31.34:8080/base/product/findAllProduct`
           },
           present:{
             column:[
@@ -73,7 +114,7 @@
 
               }
             ],
-            url:`${this.api}/base/gift/findAllGift`
+            url:this.url
           },
           material:{
             column:[
@@ -105,30 +146,107 @@
 
               }
             ],
-            url:`${this.api}/base/materiel/finaAllMateriel`
+            url:this.url
           },
           data:"",
-          matchData:"",
-          currentPage:1,
-          pageSize:30
+          pageSize:10,
+          total:0,
+          selection:[],
+          goodsSearch:{
+            productName:"",
+            productCode:"",
+            modelSize:"",
+            currentPage:1,
+            pageSize:10,
+            goodsType:[
+              {
+                name:"请选择产品型号"
+              },
+              {
+                name:"NB"
+              },
+              {
+                name:"S"
+              }
+            ]
+          }
         }
       },
       mounted(){
+        this.pagination()
+      },
+      methods:{
+        changePage(data){
+          this.currentPage = data;
+          let newPage = {
+            currentPage:this.currentPage,
+            pageSize:this.pageSize
+          };
+          this.pagination(newPage)
+        },
+        selectDone(){
+          this.$emit("selectDone",this.selection)
+        },
+        cancel(){
+          this.$emit("cancel")
+        },
+        search(){
+          this.$store.dispatch('modalLoading');
+          if(this.goodsSearch.modelSize === "请选择产品型号"){
+            delete this.goodsSearch.modelSize
+          }
+          this.$http.post(`${this[this.type].url}`,{...this.goodsSearch}).then(response=>{
+            let res = response.data;
+            this.data = res.content;
+            console.log(this.data);
+            /*            this.data.forEach((v,index)=>{
+                          this.selection.forEach(i=>{
+                            if(v.id === i.id){
+                              v._checked = true
+                              this.$refs.table.objData[index]._isChecked = true;
+                              console.log(this.$refs.table.objData[index]);
+                            }
+                          })
+                        })*/
+            this.loading = false;
+            this.total = res.totalElements;
+          })
 
-        this.matchData = this.type;
-        let params = {
-          currentPage:this.currentPage,
-          pageSize:this.pageSize
+        },
+
+        pagination(customerParams){
+          let defaultParams = {
+            currentPage:1,
+            pageSize:this.pageSize
+          };
+
+          let params = customerParams || defaultParams;
+          this.$store.dispatch('modalLoading');
+          this.$http.post(`${this[this.type].url}`,{...params}).then(response=>{
+            let res = response.data;
+            this.data = res.content;
+            console.log(this.data);
+/*            this.data.forEach((v,index)=>{
+              this.selection.forEach(i=>{
+                if(v.id === i.id){
+                  v._checked = true
+                  this.$refs.table.objData[index]._isChecked = true;
+                  console.log(this.$refs.table.objData[index]);
+                }
+              })
+            })*/
+            this.loading = false;
+            this.total = res.totalElements;
+          })
+        },
+        selectItem(selection,index){
+          this.selection = selection;
+
         }
-/*        this.$http.post(`${this.matchData}.url`,{...params}).then(response=>{
-          let res = response.data;
-          console.log(res);
-
-        })*/
       }
     }
 </script>
 
-<style scoped>
-
+<style scoped lang="stylus">
+@import './commodity-picker.styl'
 </style>

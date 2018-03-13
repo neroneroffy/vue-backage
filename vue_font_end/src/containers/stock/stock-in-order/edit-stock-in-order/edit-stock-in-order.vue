@@ -4,10 +4,15 @@
     <div class="search-wrapper">
       <div class="search">
         <Form ref="formInline"  inline>
-          <FormItem prop="user">
+          <FormItem>
+            <Select v-model="baseData.supplier" style="width:200px" placeholder="请选择供货商">
+              <Option v-for="item in supplierList" :value="item.id" :key="item.name">{{ item.name }}</Option>
+            </Select>
+          </FormItem>
+          <FormItem>
             <DatePicker type="date" placeholder="单据日期" style="width: 200px"></DatePicker>
           </FormItem>
-          <FormItem prop="user">
+          <FormItem>
             <DatePicker type="date" placeholder="交货日期" style="width: 200px"></DatePicker>
           </FormItem>
         </Form>
@@ -17,14 +22,10 @@
       </div>
 
     </div>
-    <Table :columns="columns" :data="data"></Table>
-    <Modal
-      v-model="goodsPicker"
-      title="选择商品"
-      @on-ok="selectDone"
-      @on-cancel="cancel">
-      <CommodityPicker type="goods"/>
-    </Modal>
+    <Table :columns="columns" :data="data" ref="table"></Table>
+
+      <CommodityPicker type="goods" :showPicker="goodsPicker" @selectDone="selectDone" @cancel="cancel"/>
+
   </div>
 </template>
 
@@ -166,7 +167,7 @@
                     this.goodsPicker = true
                   },
                 }
-              },this.data[params.index].goodsId?this.data[params.index].goodsId:"请选择商品")
+              },this.selectedGood[params.index].goodsName?this.selectedGood[params.index].goodsName:"请选择商品")
             }
 
           },
@@ -279,12 +280,13 @@
           {
             inboundOrderId:"454132456412314",
             warehouseId:"1",
-            goodsId:"7",
+            goodsId:"78",
+            goodsName:"产品",
             unitsId:"1",
-            price:"",
-            num:"",
+            price:"1",
+            num:"2",
             total:"78",
-            mark:""
+            mark:"号北九水"
           }
         ],
         currentRow:0,
@@ -309,11 +311,29 @@
             value:"2"
           },
         ],
-        goodsData:""
+        goodsData:"",
+        selectedGood:[{
+          goodsName:"产品1",
+          goodsId:"1"
+        }],
+        supplierList:[
+          {
+            name:"供货商1",
+            id:"12"
+          },
+          {
+            name:"供货商2",
+            id:"13"
+          }
+        ],
+
+        baseData:{
+          supplier:""
+        }
       }
     },
     mounted(){
-      if(this.$route.query.id!==""){
+      if(this.$route.query.id){
         /*this.$http.get("",{
           params:{ id:this.$route.query.id }
         }).then(response =>{
@@ -329,8 +349,13 @@
       inputValue(index){
        // this.data[index].
       },
-      //新增一行
-      selectDone(){
+      //选择商品完毕
+      selectDone(data){
+        console.log(data);
+        this.selectedGood[this.currentRow].goodsName = data.productName;
+        this.selectedGood[this.currentRow].goodsId = data.id;
+        this.$refs.table.rebuildData[this.currentRow].goodsName = data.productName;
+        this.$refs.table.rebuildData[this.currentRow].goodsId = data.id;
         this.goodsPicker = false
       },
       cancel(){
@@ -338,7 +363,7 @@
       },
       addRow(params){
         console.log(params);
-        this.data[params.index] = params.row
+        this.data[params.index] = params.row;
         this.data.push(
           {
             inboundOrderId:"454132456412314",
@@ -350,11 +375,16 @@
             total:"",
             mark:""
           }
-        )
+        );
+        this.selectedGood.push({
+          goodsName:"",
+          goodsId:""
+        })
       },
       //删除一行
       closeRow(i){
-        this.data.splice(i,1)
+        this.data.splice(i,1);
+        this.selectedGood.splice(i,1)
       },
       //选择仓库
       selectWarahouse(e,i){
@@ -363,10 +393,11 @@
       },
       //保存入库单
       save(){
+        this.data = this.$refs.table.rebuildData;
         console.log(this.data)
       },
       submit(){
-        console.log(this.editData)
+
       }
     }
   }
