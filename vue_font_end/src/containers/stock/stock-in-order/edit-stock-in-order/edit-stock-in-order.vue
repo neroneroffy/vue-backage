@@ -4,10 +4,15 @@
     <div class="search-wrapper">
       <div class="search">
         <Form ref="formInline"  inline>
-          <FormItem prop="user">
+          <FormItem>
+            <Select v-model="baseData.supplier" style="width:200px" placeholder="请选择供货商">
+              <Option v-for="item in supplierList" :value="item.id" :key="item.name">{{ item.name }}</Option>
+            </Select>
+          </FormItem>
+          <FormItem>
             <DatePicker type="date" placeholder="单据日期" style="width: 200px"></DatePicker>
           </FormItem>
-          <FormItem prop="user">
+          <FormItem>
             <DatePicker type="date" placeholder="交货日期" style="width: 200px"></DatePicker>
           </FormItem>
         </Form>
@@ -310,11 +315,25 @@
         selectedGood:[{
           goodsName:"产品1",
           goodsId:"1"
-        }]
+        }],
+        supplierList:[
+          {
+            name:"供货商1",
+            id:"12"
+          },
+          {
+            name:"供货商2",
+            id:"13"
+          }
+        ],
+
+        baseData:{
+          supplier:""
+        }
       }
     },
     mounted(){
-      if(this.$route.query.id!==""){
+      if(this.$route.query.id){
         /*this.$http.get("",{
           params:{ id:this.$route.query.id }
         }).then(response =>{

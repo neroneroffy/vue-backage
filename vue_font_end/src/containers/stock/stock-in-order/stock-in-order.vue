@@ -7,16 +7,16 @@
         <div class="search">
           <Form ref="formInline" :model="searchContent" inline>
 
-            <FormItem prop="user">
+            <FormItem>
               <Input type="text" v-model="searchContent.materielName" placeholder="请输入名称"/>
             </FormItem>
-            <FormItem prop="user">
+            <FormItem>
               <Input type="text" v-model="searchContent.materielCode" placeholder="请输入编号"/>
             </FormItem>
-            <FormItem prop="user">
+            <FormItem>
               <Input type="text" v-model="searchContent.barCode" placeholder="请输入条形码"/>
             </FormItem>
-            <FormItem prop="user">
+            <FormItem>
               <Select v-model="searchContent.category" style="width:200px">
                 <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
               </Select>
@@ -186,7 +186,6 @@
     methods:{
       //新增
       addMember(){
-        console.log(21522552)
         this.$router.push({path:'/stock/stock-in-order/edit-stock-in-order'})
       },
       //提交搜索
@@ -199,6 +198,7 @@
       },
       //查看
       show(params){
+        console.log(params.row);
         this.$router.push({path:'/stock/stock-in-order/edit-stock-in-order',query:{id:params.row.id,checked:true}})
       },
       //编辑
