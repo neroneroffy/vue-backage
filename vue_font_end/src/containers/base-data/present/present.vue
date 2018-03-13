@@ -170,7 +170,6 @@
       },
       //删除
       remove(params) {
-        let id = params.row.id;
         this.$Modal.confirm({
           content: '<p>确认删除此条数据吗？</p>',
           loading: true,
@@ -200,7 +199,7 @@
           pageSize: 5
         };
         let params = customsParams || defaultParams;
-        /*/base/gift/findAllGift*/
+        /*/base/gift/findAllGift*/查询
         this.$http.get("http://192.168.31.34:8080/base/gift/findAllGift", {params}).then(response => {
           let data = response.data;
           console.log(response)

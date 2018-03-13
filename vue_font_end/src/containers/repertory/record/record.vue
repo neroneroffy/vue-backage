@@ -16,9 +16,7 @@
             </FormItem>
           </Form>
     </Row>
-    <ul>
-      <li><button> <!--跳到入库页面--> </button><button> <!--调到出库页面--> </button></li>
-    </ul>
+    <Table border :columns="commodityType" :data="commodity"></Table>
   </div>
 </template>
 
@@ -27,6 +25,12 @@
         name: "record",
         data(){
           return{
+            commodityType:[
+              {
+
+               }
+            ],
+            commodity:[],
             searchContent:{
               time:[new Date(new Date().getTime() - 86400000), new Date()],
               id:"",
@@ -37,7 +41,7 @@
           }
         },
         methods:{
-           
+
         }
     }
 </script>

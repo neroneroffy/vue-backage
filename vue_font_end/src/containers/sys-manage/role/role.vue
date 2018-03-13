@@ -28,7 +28,6 @@
           {
             title: '名称',
             key: 'roleName',
-
           },
           {
             title: '编码',
@@ -56,54 +55,54 @@
                   click: () => {
                   this.showAuth(params)
               }
-          }
-      }, '查看权限'),
-      h('Button', {
-        props: {
-          type: 'warning',
-          size: 'small'
-        },
-        style: {
-          marginRight: '5px'
-        },
-        on: {
-          click: () => {
-          this.edit(params)
-      }
-    }
-    }, '编辑'),
-      h('Button', {
-        props: {
-          type: 'success',
-          size: 'small'
-        },
-        style: {
-          marginRight: '5px'
-        },
-        on: {
-          click: () => {
-          this.auth(params)
-      }
-    }
-    }, '授权'),
-      h('Button', {
-        props: {
-          type: 'error',
-          size: 'small'
-        },
-        style: {
-          marginRight: '5px'
-        },
-        on: {
-          click: () => {
-            this.remove(params)
+              }
+          }, '查看权限'),
+          h('Button', {
+            props: {
+              type: 'warning',
+              size: 'small'
+            },
+            style: {
+              marginRight: '5px'
+            },
+            on: {
+              click: () => {
+              this.edit(params)
           }
         }
-          }, '删除')
-        ]);
-      }
-      }
-    ],
+        }, '编辑'),
+          h('Button', {
+            props: {
+              type: 'success',
+              size: 'small'
+            },
+            style: {
+              marginRight: '5px'
+            },
+            on: {
+              click: () => {
+              this.auth(params)
+          }
+        }
+        }, '授权'),
+          h('Button', {
+            props: {
+              type: 'error',
+              size: 'small'
+            },
+            style: {
+              marginRight: '5px'
+            },
+            on: {
+              click: () => {
+                this.remove(params)
+              }
+            }
+              }, '删除')
+            ]);
+          }
+          }
+        ],
         indeterminate: true,
         firstCheckAll: false,
         firstCheckGroup:[],
@@ -167,12 +166,9 @@
                   this.$Message.info(res.msg);
                 }
               })
-
             })
-
           }
         });
-
       }
     },
     computed:{
