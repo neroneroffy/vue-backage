@@ -10,16 +10,14 @@
             <Input type="text" v-model="searchContent.giftName" placeholder="请输入名称"/>
           </FormItem>
           <FormItem prop="account">
-            <Input type="text" v-model="searchContent.giftCode" placeholder="请输入搜索账户"/>
+            <Input type="text" v-model="searchContent.giftCode" placeholder="请输入编号"/>
+          </FormItem>
+          <FormItem prop="account">
+            <Input type="text" v-model="searchContent.barCode" placeholder="请输入条形码"/>
           </FormItem>
           <FormItem >
             <Select v-model="searchContent.category" style="width:200px" placeholder="请选择类型">
               <Option v-for="item in roleList" :value="item" :key="item">{{ item }}</Option>
-            </Select>
-          </FormItem>
-          <FormItem >
-            <Select v-model="searchContent.modelSize" style="width:200px" placeholder="请选择型号">
-              <Option v-for="item in roleList2" :value="item" :key="item">{{ item }}</Option>
             </Select>
           </FormItem>
           <FormItem>
@@ -51,8 +49,8 @@
         searchContent: {
           giftName: '',
           giftCode: '',
-          categpry: "",
-          modelSize: ""
+          category: "",
+          barCode: ""
         },
         roleList:["请选择赠品类型","A类","B类","C类"],
         roleList2:["请选择赠品型号","A型","B型","C型"],
@@ -176,7 +174,7 @@
           loading: true,
           onOk: () => {
           this.$store.dispatch('modalLoading');
-          this.$http.get(`http://192.168.31.34:8080/base/gift/deleteGift`,{
+          this.$http.get(`http://192.168.13.31:8080/base/gift/deleteGift`,{
             params:{ id:params.row.id}
           }).then(response=>{
             console.log(response)
@@ -201,12 +199,13 @@
         };
         let params = customsParams || defaultParams;
         /*/base/gift/findAllGift*/
-        this.$http.get("http://192.168.31.34:8080/base/gift/findAllGift", {params}).then(response => {
-          let data = response.data;
+        console.log(params)
+        this.$http.post("http://192.168.31.13:8080/base/gift/findAllGift", params).then(response => {
           console.log(response)
+          let data = response.data;
           this.listData = data.pageList;
           this.total = data.count;
-          })
+        })
       },
       //点击分页
       changePage(currentPageNum) {

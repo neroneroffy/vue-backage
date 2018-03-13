@@ -106,37 +106,24 @@
       BastTitle
     },
     mounted() {
-      //console.log(this.$route.query.id)this.$route.query.id
-      this.$http.get(`http://192.168.31.34:8080/base/gift/giftInfo`,{
-        params:{ id:2}
-      }).then(response=>{
-        console.log(response)
-        this.editData = response.data;
-        /*let res = response.data;
-        if(res.result){
-          this.editData = res.data;
-          console.log(this.editData.customerType)
-        }*/
-      });
-      /*if(this.$route.query.id!==""){
-        this.$http.get(`http://192.168.31.34:8080/base/gift/giftInfo`,{
-          params:{ id:2}
+      if(this.$route.query.id){
+        this.$http.get(`http://192.168.13.31:8080/base/gift/updatePre`,{
+          params:{ id:this.$route.query.id}
         }).then(response=>{
           this.editData = response.data.data;
           console.log(this.editData);
-          /!*let res = response.data;
-          if(res.result){
-            this.editData = res.data;
-            console.log(this.editData.customerType)
-          }*!/
         });
-      }*/
+      }
     },
     methods:{
       submit(){
         ///base/gift/addGift添加赠品
         ///base/gift/updateGift 更新赠品
-        this.$http.post(`http://192.168.31.34:8080/base/gift/updateGift`,this.editData).then(response=>{
+        let url='/base/gift/addGift';
+        if(this.$route.query.id){
+          url='/base/gift/updateGift'
+        }
+        this.$http.post(`http://192.168.13.31:8080${url}`,this.editData).then(response=>{
           let res = response.data;
           console.log(response)
           if(res.msg === "手机号已注册"){
