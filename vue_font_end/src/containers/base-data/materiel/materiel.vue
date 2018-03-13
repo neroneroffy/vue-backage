@@ -175,11 +175,22 @@
           },
           //提交搜索
           handleSubmit() {
-            console.log(this.searchContent)
-            /*this.$http.post(`${this.$api}/search`,{data:this.searchContent}).then(response=>{
-              let res = response.data;
-              this.listData = res.data;
-            })*/
+            let params = {
+              materielName:this.searchContent.materielName,
+              materielCode:this.searchContent.materielCode,
+              barCode:this.searchContent.barCode,
+              category:this.searchContent.category,
+              currentPage: this.currentPage,
+              pageSize: this.pageSize,
+              isDel:this.searchContent.isHidden
+            };
+            this.$http.post("http://192.168.31.34:8080/base/materiel/findAllMateriel",params).then(response => {
+              console.log(response.data)
+              let data = response.data;
+              this.listData = data.content;
+              this.total=data.totalElements;
+              this.currentPage=1;
+            })
           },
           //查看
           show(params){
@@ -213,6 +224,10 @@
           //分页函数
           pagination(customsParams) {
               let defaultParams = {
+                materielName:'',
+                materielCode:'',
+                barCode:'',
+                category:'',
                 currentPage:1,
                 pageSize:5,
                 isDel:false
@@ -234,6 +249,10 @@
           changePage(currentPageNum) {
             this.currentPage = currentPageNum;
             let params = {
+              materielName:this.searchContent.materielName,
+              materielCode:this.searchContent.materielCode,
+              barCode:this.searchContent.barCode,
+              category:this.searchContent.category,
               currentPage: this.currentPage,
               pageSize: this.pageSize,
               isDel:this.searchContent.isHidden
@@ -245,6 +264,10 @@
             this.pageSize = currentPageSize;
             this.currentPage = 1;
             let params = {
+              materielName:this.searchContent.materielName,
+              materielCode:this.searchContent.materielCode,
+              barCode:this.searchContent.barCode,
+              category:this.searchContent.category,
               currentPage: this.currentPage,
               pageSize: this.pageSize,
               isDel:this.searchContent.isHidden
