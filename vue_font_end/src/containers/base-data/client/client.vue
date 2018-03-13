@@ -190,7 +190,7 @@
 
           this.searchContent.currentPage = `${this.currentPage}`;
           this.searchContent.pageSize= `${this.pageSize}`;
-          this.$http.post(`${this.$api}/base/customer/solrCustomer`,{
+          this.$http.post(`${this.$api}/base/customer/search`,{
             ...this.searchContent
           }).then(response=>{
 
@@ -220,7 +220,7 @@
             loading: true,
             onOk: () => {
               this.$store.dispatch('modalLoading');
-              this.$http.get(`${this.$api}/base/customer/delCustomer`,{params:{ id }}).then(response=>{
+              this.$http.get(`${this.$api}/base/customer/del`,{params:{ id }}).then(response=>{
                 let res = response.data;
                 console.log(res)
                 if(res.result){
@@ -241,7 +241,7 @@
           };
           let params = customsParams || defaultParams;
 
-          this.$http.get(`${this.$api}/base/customer/findCustomerAll`,{params}).then(response=>{
+          this.$http.get(`${this.$api}/base/customer/findAll`,{params}).then(response=>{
             let res = response.data;
             if(res.count === 0){
               this.listData = []

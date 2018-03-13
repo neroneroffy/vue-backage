@@ -5,11 +5,6 @@
     <div class="search-wrapper">
       <div class="search">
         <Form ref="formInline"  inline>
-          <!--<FormItem prop="user">-->
-            <!--<span>供货商：</span>-->
-            <!--<DatePicker type="date" placeholder="供货商"   style="width: 200px"></DatePicker>-->
-          <!--</FormItem>-->
-            
             <span>供货商：</span>
             <Input v-model="value4" icon="more" placeholder="供货商" style="width: 200px"></Input>
 
@@ -23,16 +18,12 @@
           </FormItem>
         </Form>
       </div>
-      <RadioGroup v-model="animal">
-        <Radio label="购货"></Radio>
-        <Radio label="退货"></Radio>
-      </RadioGroup>
       <div>
         <Button type="primary" icon="plus-round" @click="save">保存采购单</Button>
       </div>
 
     </div>
-    <Table :columns="columns" :data="data"> </Table>
+    <Table :columns="columns" :data="data" > </Table>
   </div>
 </template>
 
@@ -45,7 +36,6 @@
       return{
         title:this.$route.query.id?this.$route.query.checked?'查看采购单':'编辑采购单':'新增采购单',
         isChecked:this.$route.query.checked?true:false,
-        animal: '购货',
         value4:"爸爸的选择",
         columns:[
           {
@@ -85,9 +75,64 @@
           }},
           {
             title:"货物名称",
+            key:"goodsId",
+            render:(h,params)=>{
+              return h("div",{
+                style:{
+                  padding:"3px 5px",
+                  cursor:"pointer",
+                  background:"#f0f0f0",
+                  borderRadius:"3px",
+                  float:"left"
+                },
 
-            key:"goodsName",
-            width:100,
+                on:{
+                  click:()=>{
+                    this.goodsData = [
+                      {
+                        name:"纸尿裤1",
+                        id:"1"
+                      },
+                      {
+                        name:"纸尿裤2",
+                        id:"2"
+                      },
+                      {
+                        name:"纸尿裤3",
+                        id:"3"
+                      },
+                      {
+                        name:"纸尿裤4",
+                        id:"4"
+                      },
+                      {
+                        name:"纸尿裤5",
+                        id:"5"
+                      },
+                      {
+                        name:"纸尿裤6",
+                        id:"6"
+                      },
+                      {
+                        name:"纸尿裤7",
+                        id:"7"
+                      },
+                      {
+                        name:"纸尿裤8",
+                        id:"8"
+                      },
+                      {
+                        name:"纸尿裤9",
+                        id:"9"
+                      },
+                    ];
+                    this.currentRow = params.index
+                    this.goodsPicker = true
+                  },
+                }
+              },this.data[params.index].goodsId?this.data[params.index].goodsId:"请选择商品")
+            }
+
           },
           {
             title:"计量单位唯一标识",
@@ -209,6 +254,27 @@
             title:"仓库唯一标识",
             key:"warehouseId",
             width:120,
+            render:(h,params)=>{
+              return h('Select',{
+                props:{
+                  value:this.data[params.index].warehouseId,
+                  placeholder:"选择仓库"
+                },
+                on:{
+                  input:(e)=>{
+                    params.row.warehouseId = e;
+                  }
+                }
+              },this.warehouse.map((item)=>{
+                return h('Option',{
+                  props:{
+                    value:item.value,
+                    label:item.name,
+                  },
+
+                })
+              }))
+            }
           },
         ],
         data:[
@@ -225,7 +291,18 @@
             totalTaxPrice:"frf",
             warehouseId:"22445"
           }
-        ]
+        ],
+        warehouse:[
+          {
+            name:"仓库1",
+            value:"1"
+          },
+          {
+            name:"仓库2",
+            value:"2"
+          },
+        ],
+        goodsData:""
       }
     },
     mounted(){
@@ -249,7 +326,18 @@
       remove(index){
         this.data.splice(index,1);
       },
-
+      //选择仓库
+      selectWarahouse(e,i){
+        console.log(e.target.value);
+        console.log(i);
+      },
+      //保存入库单
+      save(){
+        console.log(this.data)
+      },
+      submit(){
+        console.log(this.editData)
+      },
         //新增一行
         addRow() {
           this.data.push({

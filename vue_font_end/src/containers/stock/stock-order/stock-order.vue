@@ -14,7 +14,7 @@
                 <Input type="text" v-model="searchContent.materielCode" placeholder="请输入编号"/>
               </FormItem>
               <FormItem prop="user">
-                <Input type="text" v-model="searchContent.barCode" placeholder="请输入条形码"/>
+                <Input type="text" v-model="searchContent.barCode" placeholder="请输入状态"/>
               </FormItem>
               <FormItem prop="user">
                 <Select v-model="searchContent.category" style="width:200px">
@@ -83,53 +83,32 @@
             {
               title: '采购单编号',
               key: 'orderNo',
-              width:120,
+
             },
             {
               title: '供货商唯一标识',
               key: 'supplierId',
-              width:120,
+
             },
             {
               title: '采购员唯一标识',
               key: 'purchaseId',
-              width:120,
-            },
-            {
-              title: '采购总价',
-              key: 'totalPurchasePrice',
-            },
-            {
-              title: '采购单含税总价',
-              key: 'totalTaxPrice'
-            },
-            {
-              title: '折扣率',
-              key: 'discountRate'
-            },
-            {
-              title: '优惠金额',
-              key: 'discountAmount'
+
             },
             {
               title: '实际采购总金额',
-              key: 'realTotalPrice'
-            },
-            {
-              title: '交货日期',
-              key: 'receiveTime'
-            },
-            {
-              title: '采购类型',
-              key: 'purchaseType',
+              key: 'realTotalPrice',
+
             },
             {
               title: '采购单状态',
               key: 'status',
+
             },
             {
               title: '采购单审核状态',
               key: 'auditStatus',
+
             },
             {
               title: '操作',
