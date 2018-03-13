@@ -162,7 +162,7 @@
                     this.goodsPicker = true
                   },
                 }
-              },this.data[params.index].goodsName?this.data[params.index].goodsName:"请选择商品")
+              },this.selectedGood[params.index].goodsName?this.selectedGood[params.index].goodsName:"请选择商品")
             }
 
           },
@@ -275,13 +275,13 @@
           {
             inboundOrderId:"454132456412314",
             warehouseId:"1",
-            goodsId:"",
-            goodsName:"",
+            goodsId:"78",
+            goodsName:"产品",
             unitsId:"1",
-            price:"",
-            num:"",
+            price:"1",
+            num:"2",
             total:"78",
-            mark:""
+            mark:"号北九水"
           }
         ],
         currentRow:0,
@@ -306,7 +306,11 @@
             value:"2"
           },
         ],
-        goodsData:""
+        goodsData:"",
+        selectedGood:[{
+          goodsName:"产品1",
+          goodsId:"1"
+        }]
       }
     },
     mounted(){
@@ -329,8 +333,10 @@
       //选择商品完毕
       selectDone(data){
         console.log(data);
-        this.data[this.currentRow].goodsName = data.productName
-        this.data[this.currentRow].goodsId = data.id
+        this.selectedGood[this.currentRow].goodsName = data.productName;
+        this.selectedGood[this.currentRow].goodsId = data.id;
+        this.$refs.table.rebuildData[this.currentRow].goodsName = data.productName;
+        this.$refs.table.rebuildData[this.currentRow].goodsId = data.id;
         this.goodsPicker = false
       },
       cancel(){
@@ -350,11 +356,16 @@
             total:"",
             mark:""
           }
-        )
+        );
+        this.selectedGood.push({
+          goodsName:"",
+          goodsId:""
+        })
       },
       //删除一行
       closeRow(i){
-        this.data.splice(i,1)
+        this.data.splice(i,1);
+        this.selectedGood.splice(i,1)
       },
       //选择仓库
       selectWarahouse(e,i){
@@ -363,11 +374,11 @@
       },
       //保存入库单
       save(){
-        this.data = this.$refs.table.rebuildData
+        this.data = this.$refs.table.rebuildData;
         console.log(this.data)
       },
       submit(){
-        console.log(this.editData)
+
       }
     }
   }
