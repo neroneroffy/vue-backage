@@ -17,14 +17,10 @@
       </div>
 
     </div>
-    <Table :columns="columns" :data="data"></Table>
-    <Modal
-      v-model="goodsPicker"
-      title="选择商品"
-      @on-ok="selectDone"
-      @on-cancel="cancel">
-      <CommodityPicker type="goods"/>
-    </Modal>
+    <Table :columns="columns" :data="data" ref="table"></Table>
+
+      <CommodityPicker type="goods" :showPicker="goodsPicker" @selectDone="selectDone" @cancel="cancel"/>
+
   </div>
 </template>
 
@@ -166,7 +162,7 @@
                     this.goodsPicker = true
                   },
                 }
-              },this.data[params.index].goodsId?this.data[params.index].goodsId:"请选择商品")
+              },this.data[params.index].goodsName?this.data[params.index].goodsName:"请选择商品")
             }
 
           },
@@ -279,7 +275,8 @@
           {
             inboundOrderId:"454132456412314",
             warehouseId:"1",
-            goodsId:"7",
+            goodsId:"",
+            goodsName:"",
             unitsId:"1",
             price:"",
             num:"",
@@ -329,8 +326,11 @@
       inputValue(index){
        // this.data[index].
       },
-      //新增一行
-      selectDone(){
+      //选择商品完毕
+      selectDone(data){
+        console.log(data);
+        this.data[this.currentRow].goodsName = data.productName
+        this.data[this.currentRow].goodsId = data.id
         this.goodsPicker = false
       },
       cancel(){
@@ -338,7 +338,7 @@
       },
       addRow(params){
         console.log(params);
-        this.data[params.index] = params.row
+        this.data[params.index] = params.row;
         this.data.push(
           {
             inboundOrderId:"454132456412314",
@@ -363,6 +363,7 @@
       },
       //保存入库单
       save(){
+        this.data = this.$refs.table.rebuildData
         console.log(this.data)
       },
       submit(){
