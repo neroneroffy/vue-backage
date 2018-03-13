@@ -33,7 +33,7 @@
         name: "edit-materiel",
         data(){
           return{
-            title:this.$route.query.id?this.$route.query.checked?'查看赠品':'编辑赠品':'新增赠品',
+            title:this.$route.query.id?this.$route.query.checked?'查看物料':'编辑物料':'新增物料',
               editData:{
                 materielName:"",
                 materielCode:"",
