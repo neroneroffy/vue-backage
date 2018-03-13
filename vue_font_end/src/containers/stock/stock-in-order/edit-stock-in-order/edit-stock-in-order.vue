@@ -4,20 +4,22 @@
     <div class="search-wrapper">
       <div class="search">
         <Form ref="formInline"  inline>
+          <FormItem v-if="isNew">
+            <Tag type="dot">入库单编号：{{baseData.code}}</Tag>
+          </FormItem>
           <FormItem>
-            <Select v-model="baseData.supplier" style="width:200px" placeholder="请选择供货商">
+            <Tag type="dot">单据日期：{{baseData.date}}</Tag>
+          </FormItem>
+          <FormItem>
+            <Select v-model="baseData.supplier" style="width:200px" :disabled="isChecked" placeholder="请选择供货商">
               <Option v-for="item in supplierList" :value="item.id" :key="item.name">{{ item.name }}</Option>
             </Select>
           </FormItem>
-          <FormItem>
-            <DatePicker type="date" placeholder="单据日期" style="width: 200px"></DatePicker>
-          </FormItem>
-          <FormItem>
-            <DatePicker type="date" placeholder="交货日期" style="width: 200px"></DatePicker>
-          </FormItem>
+
+
         </Form>
       </div>
-      <div>
+      <div v-if="!isChecked">
         <Button type="primary" icon="plus-round" @click="save">保存入库单</Button>
       </div>
 
@@ -39,6 +41,7 @@
       return{
         title:this.$route.query.id?this.$route.query.checked?'查看入库单':'编辑入库单':'新增入库单',
         isChecked:this.$route.query.checked?true:false,
+        isNew:this.$route.query.id?true:false,
         columns:[
           {
             title:"新增",
@@ -49,7 +52,8 @@
                   props:{
                     type:"primary",
                     icon:"plus-round",
-                    size:"small"
+                    size:"small",
+                    disabled:this.isChecked
                   },
                   style:{
                     fontSize:"14px"
@@ -65,7 +69,8 @@
                   props:{
                     type:"error",
                     icon:"close-round",
-                    size:"small"
+                    size:"small",
+                    disabled:this.isChecked
                   },
                   style:{
                     marginLeft:"10px",
@@ -78,36 +83,6 @@
                   }
                 }),
               ])
-            }
-          },
-          {
-            title:"入库单",
-            key:"inboundOrderId",
-
-          },
-          {
-            title:"仓库",
-            key:"warehouseId",
-            render:(h,params)=>{
-              return h('Select',{
-                props:{
-                  value:this.data[params.index].warehouseId,
-                  placeholder:"选择仓库"
-                },
-                on:{
-                  input:(e)=>{
-                    params.row.warehouseId = e;
-                  }
-                }
-              },this.warehouse.map((item)=>{
-                  return h('Option',{
-                    props:{
-                      value:item.value,
-                      label:item.name,
-                    },
-
-                  })
-              }))
             }
           },
           {
@@ -125,6 +100,9 @@
 
                 on:{
                   click:()=>{
+                    if(this.isChecked){
+                      return
+                    }
                     this.goodsData = [
                       {
                         name:"纸尿裤1",
@@ -172,13 +150,41 @@
 
           },
           {
+            title:"仓库",
+            key:"warehouseId",
+            render:(h,params)=>{
+              return h('Select',{
+                props:{
+                  value:this.data[params.index].warehouseId,
+                  placeholder:"选择仓库",
+                  disabled:this.isChecked
+                },
+                on:{
+                  input:(e)=>{
+                    params.row.warehouseId = e;
+                  }
+                }
+              },this.warehouse.map((item)=>{
+                  return h('Option',{
+                    props:{
+                      value:item.value,
+                      label:item.name,
+                    },
+
+                  })
+              }))
+            }
+          },
+
+          {
             title:"单位",
             key:"unitsId",
             render:(h,params)=>{
               return h('Select',{
                 props:{
                   value:this.data[params.index].unitsId,
-                  placeholder:"选择单位"
+                  placeholder:"选择单位",
+                  disabled:this.isChecked
                 },
                 on:{
                   input:(e)=>{
@@ -203,7 +209,8 @@
               return h('Input',{
                 props:{
                   value:params.row.price,
-                  placeholder:"入库单价"
+                  placeholder:"入库单价",
+                  disabled:this.isChecked
                 },
 
                 on:{
@@ -221,7 +228,8 @@
               return h('Input',{
                 props:{
                   value:params.row.num,
-                  placeholder:"入库数量"
+                  placeholder:"入库数量",
+                  disabled:this.isChecked
                 },
                 on:{
                   input:(v)=>{
@@ -239,7 +247,8 @@
               return h('Input',{
                 props:{
                   value:params.row.total,
-                  placeholder:"总金额"
+                  placeholder:"总金额",
+                  disabled:this.isChecked
                 },
 
                 on:{
@@ -257,7 +266,8 @@
               return h('Input',{
                 props:{
                   value:this.data[params.index].mark,
-                  placeholder:"备注"
+                  placeholder:"备注",
+                  disabled:this.isChecked
                 },
                 on:{
                   input:(v)=>{
@@ -278,15 +288,14 @@
         },
         data:[
           {
-            inboundOrderId:"454132456412314",
-            warehouseId:"1",
-            goodsId:"78",
-            goodsName:"产品",
-            unitsId:"1",
-            price:"1",
-            num:"2",
-            total:"78",
-            mark:"号北九水"
+            warehouseId:"",
+            goodsId:"",
+            goodsName:"",
+            unitsId:"",
+            price:"",
+            num:"",
+            total:"",
+            mark:""
           }
         ],
         currentRow:0,
@@ -319,26 +328,39 @@
         supplierList:[
           {
             name:"供货商1",
-            id:"12"
+            id:"1"
           },
           {
             name:"供货商2",
-            id:"13"
+            id:"2"
           }
         ],
-
         baseData:{
-          supplier:""
+          supplier:"",
+          code:"",
+          date:new Date()
         }
       }
     },
     mounted(){
       if(this.$route.query.id){
-        /*this.$http.get("",{
+        this.$http.get(`/static/goodsStockShowBack${this.$route.query.id}.json`,{
           params:{ id:this.$route.query.id }
         }).then(response =>{
-          this.editData = response.data.data;
-        })*/
+          let res = response.data;
+          if(res.result){
+            this.baseData = res.data.baseData
+            this.data = res.data.orderData;
+            this.data.forEach((v,i)=>{
+              if(i>0){
+                this.selectedGood.push({
+                  goodsName:v.goodsName,
+                  goodsId:v.goodsId
+                })
+              }
+            })
+          }
+        })
       }
     },
     components:{
@@ -351,7 +373,6 @@
       },
       //选择商品完毕
       selectDone(data){
-        console.log(data);
         this.selectedGood[this.currentRow].goodsName = data.productName;
         this.selectedGood[this.currentRow].goodsId = data.id;
         this.$refs.table.rebuildData[this.currentRow].goodsName = data.productName;
@@ -361,12 +382,16 @@
       cancel(){
         this.goodsPicker = false
       },
+      //选择日期
+      dateSelect(date){
+        this.baseData.date = date
+      },
       addRow(params){
         console.log(params);
-        this.data[params.index] = params.row;
+        this.data = this.$refs.table.rebuildData;
+        //this.data[params.index] = params.row;
         this.data.push(
           {
-            inboundOrderId:"454132456412314",
             warehouseId:"1",
             goodsId:"",
             unitsId:"1",
@@ -394,7 +419,12 @@
       //保存入库单
       save(){
         this.data = this.$refs.table.rebuildData;
-        console.log(this.data)
+        let submitData = {
+          baseData:this.baseData,
+          orderData:this.data
+        }
+
+        console.log(submitData)
       },
       submit(){
 

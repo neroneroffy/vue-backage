@@ -1,6 +1,53 @@
 {
   "result":true,
   "data":{
-    
+    "supplier":[
+      {
+        "name":"供货商1",
+        "id":"1"
+      },
+      {
+        "name":"供货商2",
+        "id":"2"
+      }
+    ],
+    "baseData":{
+      "supplier":"1",
+      "code":"7894565645665",
+      "date":"2018-03-21"
+
+    },
+    "orderData":[
+      {
+        "warehouseId":"2",
+        "goodsId":"1",
+        "goodsName":"产品",
+        "unitsId":"1",
+        "price":"15",
+        "num":"2",
+        "total":"35",
+        "mark":"号北九水"
+      },
+      {
+        "warehouseId":"2",
+        "goodsId":"2",
+        "goodsName":"产品",
+        "unitsId":"2",
+        "price":"2",
+        "num":"50",
+        "total":"100",
+        "mark":"好的备注"
+      },
+      {
+        "warehouseId":"1",
+        "goodsId":"2",
+        "goodsName":"产品",
+        "unitsId":"2",
+        "price":"32",
+        "num":"2",
+        "total":"64",
+        "mark":"备注的备注的备注的"
+      }
+    ]
   }
 }
