@@ -1,28 +1,38 @@
+//新增采购单
 <template>
   <div class="edit-stock-order">
     <BastTitle :title="title"></BastTitle>
-    <Form ref="editData" :model="editData" :label-width="80" v-if="editData" >
-      <FormItem label="名称" prop="materielName">
-        <Input v-model="editData.materielName"  :disabled="isChecked" placeholder="请输入ID" />
-      </FormItem>
-      <FormItem label="编号" prop="materielCode">
-        <Input v-model="editData.materielCode"  :disabled="isChecked" placeholder="请输入单位"/>
-      </FormItem>
-      <FormItem label="条形码" prop="barCode">
-        <Input v-model="editData.barCode" :disabled="isChecked" placeholder="请输入价格"/>
-      </FormItem>
-      <FormItem label="物料分类" prop="category">
-        <Select v-model="editData.category" :value="editData.category" :disabled="isChecked" style="width:200px">
-          <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-        </Select>
-      </FormItem>
-      <FormItem label="备注" prop="mark">
-        <Input v-model="editData.mark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" :disabled="isChecked" placeholder="请填写备注"/>
-      </FormItem>
-      <FormItem>
-        <Button type="primary" v-if="!isChecked" @click="submit">提交</Button>
-      </FormItem>
-    </Form>
+    <div class="search-wrapper">
+      <div class="search">
+        <Form ref="formInline"  inline>
+          <!--<FormItem prop="user">-->
+            <!--<span>供货商：</span>-->
+            <!--<DatePicker type="date" placeholder="供货商"   style="width: 200px"></DatePicker>-->
+          <!--</FormItem>-->
+            
+            <span>供货商：</span>
+            <Input v-model="value4" icon="more" placeholder="供货商" style="width: 200px"></Input>
+
+          <FormItem prop="user">
+            <span>单据日期：</span>
+            <DatePicker type="date" placeholder="单据日期" style="width: 200px"></DatePicker>
+          </FormItem>
+          <FormItem prop="user">
+            <span>交货日期：</span>
+            <DatePicker type="date" placeholder="交货日期" style="width: 200px"></DatePicker>
+          </FormItem>
+        </Form>
+      </div>
+      <RadioGroup v-model="animal">
+        <Radio label="购货"></Radio>
+        <Radio label="退货"></Radio>
+      </RadioGroup>
+      <div>
+        <Button type="primary" icon="plus-round" @click="save">保存采购单</Button>
+      </div>
+
+    </div>
+    <Table :columns="columns" :data="data"> </Table>
   </div>
 </template>
 
@@ -33,55 +43,239 @@
     name: "edit-stock-order",
     data(){
       return{
-        title:this.$route.query.id?this.$route.query.checked?'查看赠品':'编辑赠品':'新增赠品',
-        editData:{
-          materielName:"",
-          materielCode:"",
-          barCode:"",
-          category:"",
-          mark:""
-        },
-        cityList:[
+        title:this.$route.query.id?this.$route.query.checked?'查看采购单':'编辑采购单':'新增采购单',
+        isChecked:this.$route.query.checked?true:false,
+        animal: '购货',
+        value4:"爸爸的选择",
+        columns:[
           {
-            label:"请选择物料类型",
-            value:""
+            title:"新增",
+            key:"add",
+            width:100,
+            render: (h, params) => {
+              return h('div', [
+                h('Button', {
+                  props: {
+                    type: 'primary',
+                    size: 'small',
+                    icon:"plus-round",
+                  },
+                  style: {
+                    marginRight: '5px',
+                  },
+                  on: {
+                    click: () => {
+                      this.addRow()
+                    }
+                  }
+                }),
+                h('Button', {
+                  props: {
+                    type: 'error',
+                    size: 'small',
+                    icon:"close-round",
+                  },
+                  on: {
+                    click: () => {
+                      this.remove(params.index)
+                    }
+                  }
+                })
+              ]);
+          }},
+          {
+            title:"货物名称",
+
+            key:"goodsName",
+            width:100,
           },
           {
-            value: '2654',
-            label: 'A类'
+            title:"计量单位唯一标识",
+            width:140,
+            key:"unitsId",
+            render:(h,params)=>{
+              return h("Input",{
+                props:{
+                  type:"text",
+                },
+                on:{
+                  change:()=>{
+                    this.inputValue(params.index)
+                  },
+                }
+              },"新增")
+            }
+
           },
           {
-            value: '2655',
-            label: 'B类'
+            title:"采购含税单价",
+            key:"taxPrice",
+            width:120,
+            render:(h,params)=>{
+              return h("Input",{
+                props:{
+                  type:"text"
+                },
+                on:{
+                  change:()=>{
+                    this.inputValue(params.index)
+                  },
+                }
+              },"新增")
+            }
           },
           {
-            value: '2656',
-            label: 'C类'
-          }
+            title:"折扣率",
+            key:"discountRate",
+            render:(h,params)=>{
+              return h("Input",{
+                props:{
+                  type:"text",
+                },
+                on:{
+                  change:()=>{
+                    this.inputValue(params.index)
+                  },
+                }
+              },"新增")
+            }
+          },
+          {
+            title:"优惠金额",
+            key:"discountAmount",
+            render:(h,params)=>{
+              return h("Input",{
+                props:{
+                  type:"text"
+                },
+                on:{
+                  change:()=>{
+                    this.inputValue(params.index)
+                  },
+                }
+              },"新增")
+            }
+          },
+          {
+            title:"采购数量",
+            key:"num",
+            render:(h,params)=>{
+              return h("Input",{
+                props:{
+                  type:"text"
+                },
+                on:{
+                  change:()=>{
+                    this.inputValue(params.index)
+                  },
+                }
+              },"新增")
+            }
+          },
+          {
+            title:"采购总价",
+            key:"totalPurchasePrice",
+            render:(h,params)=>{
+              return h("Input",{
+                props:{
+                  type:"text"
+                },
+                on:{
+                  change:()=>{
+                    this.inputValue(params.index)
+                  },
+                }
+              },"新增")
+            }
+          },
+          {
+            title:"采购单含税总价",
+            key:"totalTaxPrice",
+            width:120,
+            render:(h,params)=>{
+              return h("Input",{
+                props:{
+                  type:"text"
+                },
+                on:{
+                  change:()=>{
+                    this.inputValue(params.index)
+                  },
+                }
+              },"新增")
+            }
+          },
+          {
+            title:"仓库唯一标识",
+            key:"warehouseId",
+            width:120,
+          },
         ],
-        isChecked:this.$route.query.checked?true:false
+        data:[
+          {
+            goodsName:"没有的啊",
+            purchaseOrderId:"22",
+            goodsId:"22334",
+            unipurchasePricetsId:"4512314",
+            taxPrice:"222",
+            discountRate:"3333",
+            discountAmount:"434",
+            num:"1",
+            totalPurchasePrice:"33445",
+            totalTaxPrice:"frf",
+            warehouseId:"22445"
+          }
+        ]
       }
     },
     mounted(){
       if(this.$route.query.id!==""){
-        /*this.$http.get("",{
-          params:{ id:this.$route.query.id }
-        }).then(response =>{
-          this.editData = response.data.data;
-        })*/
+        // this.$http.get("",{
+        //   params:{ id:this.$route.query.id }
+        // }).then(response =>{
+        //   this.editData = response.data.data;
+        // })
       }
     },
     components:{
       BastTitle
     },
-    methods:{
-      submit(){
-        console.log(this.editData)
+    methods: {
+      //新增一行数据
+      inputValue(index) {
+        // this.data[index].
+      },
+      //删除一行数据
+      remove(index){
+        this.data.splice(index,1);
+      },
+
+        //新增一行
+        addRow() {
+          this.data.push({
+              goodsName: "就会",
+              purchaseOrderId: "22",
+              goodsId: "300",
+              unipurchasePricetsId: "jiudahs",
+              taxPrice: "222",
+              discountRate: "就嗲",
+              discountAmount: "434",
+              num: "1",
+              totalPurchasePrice: "2256",
+              totalTaxPrice: "frf",
+              warehouseId: "135"
+            }
+          )
+        },
+        submit() {
+          console.log(this.editData)
+        }
       }
     }
-  }
+
 </script>
 
-<style scoped>
-
+<style scoped lang="stylus">
+  @import "edit-stock-order.styl";
 </style>
+

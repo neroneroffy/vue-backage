@@ -87,16 +87,17 @@
             },
             {
               title: '供货商唯一标识',
-              key: 'units'
+              key: 'supplierId',
+              width:120,
             },
             {
               title: '采购员唯一标识',
-              key: 'purchasePrice'
+              key: 'purchaseId',
+              width:120,
             },
             {
               title: '采购总价',
-              key: 'totalP',
-              width:120,
+              key: 'totalPurchasePrice',
             },
             {
               title: '采购单含税总价',
@@ -121,23 +122,20 @@
             {
               title: '采购类型',
               key: 'purchaseType',
-              width:120,
             },
             {
               title: '采购单状态',
               key: 'status',
-              width:120,
             },
             {
               title: '采购单审核状态',
               key: 'auditStatus',
-              width:120,
             },
             {
               title: '操作',
               key: 'action',
-              width:200,
               align: 'center',
+              width:180,
               render: (h, params) => {
                 return h('div', [
                   h('Button', {
