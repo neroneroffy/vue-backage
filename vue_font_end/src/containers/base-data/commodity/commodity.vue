@@ -25,11 +25,6 @@
               <Option v-for="item in roleList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
           </FormItem>
-          <FormItem prop="modelSize">
-            <Select v-model="searchContent.modelSize" style="width:200px" placeholder="请选择型号">
-              <Option v-for="item in roleList2" :value="item.value" :key="item.value">{{ item .label}}</Option>
-            </Select>
-          </FormItem>
           <FormItem>
             <Button type="primary" icon="ios-search" @click="handleSubmit('formInline')">搜索</Button>
           </FormItem>
@@ -91,8 +86,7 @@
             searchContent: {
               productName:'',
               productCode:'',
-              category:'',
-              modelSize:''
+              category:''
              },
             roleList:[
               {
@@ -249,10 +243,18 @@
         //提交搜索
         handleSubmit() {
           console.log(this.searchContent)
-          this.$http.post(`http://192.168.31.34:8080/base/product/findAllProduct`,this.searchContent).then(response=>{
+          let data={
+            productName:this.searchContent.productName,
+            productCode:this.searchContent.productCode,
+            category:this.searchContent.category,
+            currentPage :1,
+            pageSize : 5
+          }
+          this.$http.post(`http://192.168.31.34:8080/base/product/findAllProduct`,data).then(response=>{
             console.log(response)
             let res = response.data;
-            this.listData = res.data;
+            this.listData = res.content;
+            this.total = res.totalElements;
           })
         },//查看
         show(params){
@@ -284,22 +286,28 @@
         //分页函数
         pagination(customsParams){
           let defaultParams = {
+            productName:this.searchContent.productName,
+            productCode:this.searchContent.productCode,
+            category:this.searchContent.category,
             currentPage :1,
             pageSize : 5
           };
           let params = customsParams || defaultParams;
           ///base/product/findAllProduct  查询所有产品
-          this.$http.post(`http://192.168.31.34:8080/base/product/findAllProduct`,{params}).then(response=>{
+          this.$http.post(`http://192.168.31.34:8080/base/product/findAllProduct`,params).then(response=>{
             console.log(response.data)
             let res = response.data;
               this.listData = res.content;
-              this.total = res.count;
+              this.total = res.totalElements;
           })
         },
         //点击分页
         changePage(currentPageNum){
           this.currentPage = currentPageNum;
           let params = {
+            productName:this.searchContent.productName,
+            productCode:this.searchContent.productCode,
+            category:this.searchContent.category,
             currentPage:this.currentPage,
             pageSize:this.pageSize
           };
@@ -310,6 +318,9 @@
           this.pageSize = currentPageSize;
           this.currentPage = 1;
           let params = {
+            productName:this.searchContent.productName,
+            productCode:this.searchContent.productCode,
+            category:this.searchContent.category,
             currentPage:this.currentPage,
             pageSize:this.pageSize
           };

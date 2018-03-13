@@ -107,10 +107,10 @@
     },
     mounted() {
       if(this.$route.query.id){
-        this.$http.get(`http://192.168.13.31:8080/base/gift/updatePre`,{
+        this.$http.get(`http://192.168.31.34:8080/base/gift/updatePre`,{
           params:{ id:this.$route.query.id}
         }).then(response=>{
-          this.editData = response.data.data;
+          this.editData = response.data;
           console.log(this.editData);
         });
       }
@@ -123,7 +123,7 @@
         if(this.$route.query.id){
           url='/base/gift/updateGift'
         }
-        this.$http.post(`http://192.168.13.31:8080${url}`,this.editData).then(response=>{
+        this.$http.post(`http://192.168.31.34:8080${url}`,this.editData).then(response=>{
           let res = response.data;
           console.log(response)
           if(res.msg === "手机号已注册"){

@@ -164,7 +164,7 @@
           let params = {
             currentPage: this.currentPage,
             pageSize: this.pageSize,
-            isHidden:this.searchContent.isHidden
+            isDel:this.searchContent.isHidden
           };
           this.pagination(params)
         },
@@ -215,27 +215,28 @@
               let defaultParams = {
                 currentPage:1,
                 pageSize:5,
-                isHidden:false
+                isDel:false
               };
               let params = customsParams || defaultParams;
               //
               //查询单条get http://192.168.31.34:8080/base/materiel/materielInfo
               //删除数据 post "http://192.168.31.34:8080/base/materiel/deleteMateriel 数组形式
               //
-              this.$http.get("http://192.168.31.34:8080/base/materiel/finaAllMateriel",{params}).then(response => {
+            console.log(params)
+              this.$http.post("http://192.168.31.34:8080/base/materiel/findAllMateriel",params).then(response => {
                 console.log(response.data)
                 let data = response.data;
-                this.listData = data.customerList;
-                this.total=data.count
+                this.listData = data.content;
+                this.total=data.totalElements
               })
           },
           //点击分页
           changePage(currentPageNum) {
             this.currentPage = currentPageNum;
             let params = {
-              pageNum: this.currentPage,
+              currentPage: this.currentPage,
               pageSize: this.pageSize,
-              isHidden:this.searchContent.isHidden
+              isDel:this.searchContent.isHidden
             };
 
             this.pagination(params)
@@ -244,9 +245,9 @@
             this.pageSize = currentPageSize;
             this.currentPage = 1;
             let params = {
-              pageNum: this.currentPage,
+              currentPage: this.currentPage,
               pageSize: this.pageSize,
-              isHidden:this.searchContent.isHidden
+              isDel:this.searchContent.isHidden
             };
             this.pagination(params)
           },

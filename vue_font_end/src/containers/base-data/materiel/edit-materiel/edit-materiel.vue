@@ -66,7 +66,7 @@
           if(this.$route.query.id){
             console.log(this.$route.query.id)
             //{id:this.$route.query.id}
-            this.$http.get(`http://192.168.31.34:8080/base/materiel/materielInfo`,{
+            this.$http.get(`http://192.168.31.34:8080/base/materiel/updatePre`,{
               params:{id:this.$route.query.id}
             }).then(response =>{
               this.editData = response.data;

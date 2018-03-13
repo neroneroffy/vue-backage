@@ -140,6 +140,10 @@
       /**/
       //初始请求分页
       let params = {
+        giftName: this.searchContent.giftName,
+        giftCode: this.searchContent.giftCode,
+        category: this.searchContent.category,
+        barCode: this.searchContent.barCode,
         currentPage: this.currentPage,
         pageSize: this.pageSize
       };
@@ -151,11 +155,19 @@
       },
       //提交搜索
       handleSubmit() {
-        console.log(this.searchContent)
-        /*this.$http.post(`${this.$api}/search`,{data:this.searchContent}).then(response=>{
-          let res = response.data;
-          this.listData = res.data;
-        })*/
+        let params={
+          giftName: this.searchContent.giftName,
+          giftCode: this.searchContent.giftCode,
+          category: this.searchContent.category,
+          barCode: this.searchContent.barCode,
+          currentPage: 1,
+          pageSize: 5
+        }
+        this.$http.post("http://192.168.31.34:8080/base/gift/findAllGift", params).then(response=>{
+          let data = response.data;
+          this.listData = data.content;
+          this.total = data.totalElements;
+        })
 
       },
       //查看
@@ -194,23 +206,31 @@
       //分页函数
       pagination(customsParams) {
         let defaultParams = {
+          giftName: '',
+          giftCode: '',
+          category: "",
+          barCode: "",
           currentPage: 1,
           pageSize: 5
         };
         let params = customsParams || defaultParams;
         /*/base/gift/findAllGift*/
         console.log(params)
-        this.$http.post("http://192.168.31.13:8080/base/gift/findAllGift", params).then(response => {
+        this.$http.post("http://192.168.31.34:8080/base/gift/findAllGift", params).then(response => {
           console.log(response)
           let data = response.data;
-          this.listData = data.pageList;
-          this.total = data.count;
+          this.listData = data.content;
+          this.total = data.totalElements;
         })
       },
       //点击分页
       changePage(currentPageNum) {
         this.currentPage = currentPageNum;
         let params = {
+          giftName: this.searchContent.giftName,
+          giftCode: this.searchContent.giftCode,
+          category: this.searchContent.category,
+          barCode: this.searchContent.barCode,
           currentPage: this.currentPage,
           pageSize: this.pageSize
         };
@@ -221,6 +241,10 @@
         this.pageSize = currentPageSize;
         this.currentPage = 1;
         let params = {
+          giftName: this.searchContent.giftName,
+          giftCode: this.searchContent.giftCode,
+          category: this.searchContent.category,
+          barCode: this.searchContent.barCode,
           currentPage: this.currentPage,
           pageSize: this.pageSize
         };
