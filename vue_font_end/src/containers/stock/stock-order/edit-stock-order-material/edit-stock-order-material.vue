@@ -1,6 +1,5 @@
-//新增采购单
 <template>
-  <div class="edit-stock-order">
+  <div class="edit-stock-in-order">
     <BastTitle :title="title"></BastTitle>
     <div class="search-wrapper">
       <div class="search">
@@ -27,17 +26,19 @@
     <Table :columns="columns" :data="data" ref="table"></Table>
 
     <CommodityPicker type="goods" :showPicker="goodsPicker" @selectDone="selectDone" @cancel="cancel"/>
+
   </div>
 </template>
 
 <script>
   import BastTitle from  "@/components/base-title";
   import CommodityPicker from '@/components/commodity-picker/commodity-picker'
+  import { Form,Select,Upload,Avatar,Button,DatePicker,Cascader } from 'iview'
   export default {
-    name: "edit-stock-order",
+    name: "edit-stock-in-order-material",
     data(){
       return{
-        title:this.$route.query.id?this.$route.query.checked?'查看商品采购单':'编辑商品采购单':'新增商品采购单',
+        title:this.$route.query.id?this.$route.query.checked?`查看物料采购单`:`编辑物料采购单`:`新增物料采购单`,
         isChecked:this.$route.query.checked?true:false,
         isNew:this.$route.query.id?true:false,
         columns:[
@@ -85,7 +86,7 @@
           },
           {
             title:"货物名称",
-            key:"goodsName",
+            key:"goodsId",
             render:(h,params)=>{
               return h("div",{
                 style:{
@@ -145,6 +146,7 @@
                 }
               },this.selectedGood[params.index].goodsName?this.selectedGood[params.index].goodsName:"请选择商品")
             }
+
           },
           {
             title:"仓库",
@@ -172,6 +174,7 @@
               }))
             }
           },
+
           {
             title:"单位",
             key:"unitsId",
@@ -199,66 +202,26 @@
             }
           },
           {
-            title:"采购含税单价",
-            key:"taxPrice",
-            width:120,
+            title:"入库单价",
+            key:"price",
             render:(h,params)=>{
               return h('Input',{
                 props:{
-                  value:params.row.taxPrice,
+                  value:params.row.price,
                   placeholder:"入库单价",
                   disabled:this.isChecked
                 },
 
                 on:{
                   input:(v)=>{
-                    params.row.taxPrice = v
+                    params.row.price = v
                   }
                 }
               })
             }
           },
           {
-            title:"折扣率",
-            key:"discountRate",
-            render:(h,params)=>{
-              return h('Input',{
-                props:{
-                  value:params.row.price,
-                  placeholder:"折扣率",
-                  disabled:this.isChecked
-                },
-
-                on:{
-                  input:(v)=>{
-                    params.row.discountRate = v
-                    params.row.discountAmount = params.row.discountRate * params.row.taxPrice
-                  }
-                }
-              })
-            }
-          },
-          {
-            title:"优惠金额",
-            key:"discountAmount",
-            render:(h,params)=>{
-              return h('Input',{
-                props:{
-                  value:params.row.discountAmount,
-                  placeholder:"优惠金额",
-                  disabled:this.isChecked
-                },
-
-                on:{
-                  input:(v)=>{
-                    params.row.discountAmount = v
-                  }
-                }
-              })
-            }
-          },
-          {
-            title:"采购数量",
+            title:"入库数量",
             key:"num",
             render:(h,params)=>{
               return h('Input',{
@@ -270,57 +233,51 @@
                 on:{
                   input:(v)=>{
                     params.row.num = v;
-                    params.row.totalPurchasePrice = params.row.num * params.row.discountAmount
-                    params.row.totalTaxPrice = params.row.num * params.row.taxPrice
+                    params.row.total = params.row.num * params.row.price
                   }
                 }
               })
             }
-            },
+          },
           {
-            title:"采购总价",
-            key:"totalPurchasePrice",
+            title:"总金额",
+            key:"total",
             render:(h,params)=>{
               return h('Input',{
                 props:{
-                  value:params.row.totalPurchasePrice,
-                  placeholder:"采购总价",
+                  value:params.row.total,
+                  placeholder:"总金额",
                   disabled:this.isChecked
                 },
 
                 on:{
                   input:(v)=>{
-                    params.row.totalPurchasePrice = v
+                    params.row.total = v
+                  }
+                }
+              })
+            }
+          },
+          {
+            title:"备注",
+            key:"mark",
+            render:(h,params)=>{
+              return h('Input',{
+                props:{
+                  value:this.data[params.index].mark,
+                  placeholder:"备注",
+                  disabled:this.isChecked
+                },
+                on:{
+                  input:(v)=>{
+                    params.row.mark = v
                   }
                 }
               })
             }
 
           },
-          {
-            title:"采购单含税总价",
-            key:"totalTaxPrice",
-            width:120,
-            render:(h,params)=>{
-              return h('Input',{
-                props:{
-                  value:params.row.totalTaxPrice,
-                  placeholder:"采购总价",
-                  disabled:this.isChecked
-                },
-
-                on:{
-                  input:(v)=>{
-                    params.row.totalTaxPrice = v
-                  }
-                }
-              })
-            }
-          },
-
         ],
-
-
         inputStyle:{
           width:"100%",
           height:"32px",
@@ -330,17 +287,14 @@
         },
         data:[
           {
-            goodsName:"",
-            purchaseOrderId:"",
+            warehouseId:"",
             goodsId:"",
-            unipurchasePricetsId:"",
-            taxPrice:"",
-            discountRate:"",
-            discountAmount:"",
+            goodsName:"",
+            unitsId:"",
+            price:"",
             num:"",
-            totalPurchasePrice:"",
-            totalTaxPrice:"",
-            warehouseId:""
+            total:"",
+            mark:""
           }
         ],
         currentRow:0,
@@ -386,9 +340,7 @@
           date:new Date()
         }
       }
-
-
-      },
+    },
     mounted(){
       if(this.$route.query.id){
         this.$http.get(`/static/goodsStockShowBack${this.$route.query.id}.json`,{
@@ -409,13 +361,12 @@
           }
         })
       }
-
     },
     components:{
       BastTitle,
       CommodityPicker
     },
-    methods: {
+    methods:{
       inputValue(index){
         // this.data[index].
       },
@@ -440,18 +391,15 @@
         //this.data[params.index] = params.row;
         this.data.push(
           {
-            goodsName:"",
-            purchaseOrderId:"",
+            warehouseId:"1",
             goodsId:"",
-            unipurchasePricetsId:"",
-            taxPrice:"",
-            discountRate:"",
-            discountAmount:"",
+            unitsId:"1",
+            price:"",
             num:"",
-            totalPurchasePrice:"",
-            totalTaxPrice:"",
-            warehouseId:""
-          }        );
+            total:"",
+            mark:""
+          }
+        );
         this.selectedGood.push({
           goodsName:"",
           goodsId:""
@@ -473,20 +421,18 @@
         let submitData = {
           baseData:this.baseData,
           orderData:this.data
-        }
+        };
 
         console.log(submitData)
       },
       submit(){
 
       }
-
-      }
     }
-
+  }
 </script>
 
 <style scoped lang="stylus">
-  @import "edit-stock-order.styl";
+  @import './edit-stock-order-material.styl'
 </style>
 

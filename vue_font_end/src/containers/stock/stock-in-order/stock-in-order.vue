@@ -3,10 +3,9 @@
     <div class="materiel">
       <!--新增 表单搜索部分-->
       <div class="search-wrapper">
-        <Button type="primary" icon="plus-round" @click="addMember" class="add">新增</Button>
+        <Button type="primary" icon="plus-round" @click="add" class="add">新增</Button>
         <div class="search">
           <Form ref="formInline" :model="searchContent" inline>
-
             <FormItem>
               <Input type="text" v-model="searchContent.materielName" placeholder="请输入名称"/>
             </FormItem>
@@ -27,46 +26,26 @@
           </Form>
         </div>
       </div>
-      <Tabs value="name1">
-        <TabPane label="商品" name="name1">
-
-          <!--表格数据获取-->
-          <Table :columns="columns" :data="listData" class="table" v-if="listData"></Table>
-          <!--listData数据
-          changePage回调页码 changePageSize回调条数 page-size每页条数 page-size-opts:每页条数配置 total:数据总数-->
-          <div class="pagination">
-            <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize" placement="top"
-                  :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
-          </div></TabPane>
-        <TabPane label="增品" name="name2">
-
-          <!--表格数据获取-->
-          <Table :columns="columns" :data="listData" class="table" v-if="listData"></Table>
-          <!--listData数据
-          changePage回调页码 changePageSize回调条数 page-size每页条数 page-size-opts:每页条数配置 total:数据总数-->
-          <div class="pagination">
-            <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize" placement="top"
-                  :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
-          </div>
+      <Tabs :value="currentTab" @on-click="tabChange">
+        <TabPane label="商品" name="goods">
+          <Table :columns="columns" :data="data" class="table" v-if="data"></Table>
         </TabPane>
-        <TabPane label="物料" name="name3">
-
-          <!--表格数据获取-->
-          <Table :columns="columns" :data="listData" class="table" v-if="listData"></Table>
-          <!--listData数据
-          changePage回调页码 changePageSize回调条数 page-size每页条数 page-size-opts:每页条数配置 total:数据总数-->
-          <div class="pagination">
-            <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize" placement="top"
-                  :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
-          </div></TabPane>
+        <TabPane label="赠品" name="present">
+          <Table :columns="columns" :data="data" class="table" v-if="data"></Table>
+        </TabPane>
+        <TabPane label="物料" name="material">
+          <Table :columns="columns" :data="data" class="table" v-if="data"></Table>
+        </TabPane>
       </Tabs>
+      <div class="pagination">
+        <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize"  :total="total"></Page>
+      </div>
     </div>
   </div>
 
 </template>
 
 <script>
-  import {Table, Page, Form, Input, Select, Modal, Row, Col, Upload, Avatar} from 'iview';
   export default {
     name: "stock-in-order",
     data(){
@@ -74,7 +53,7 @@
         pageSizeList:[30,50,100],
         pageSize:30,
         total:0,
-        listData:"",
+        data:"",
         loading:false,
         currentPage:1,
         columns:[
@@ -153,6 +132,7 @@
             }
           }
         ],
+        currentTab:"goods",
         searchContent:{
           materielName:"",
           materielCode:"",
@@ -185,25 +165,27 @@
     },
     methods:{
       //新增
-      addMember(){
+      add(){
         this.$router.push({path:'/stock/stock-in-order/edit-stock-in-order'})
+      },
+      //切换tabs的时候
+      tabChange(name){
+        this.currentTab = name;
+        this.pagination();
+        console.log(name);
       },
       //提交搜索
       handleSubmit() {
         console.log(this.searchContent)
-        /*this.$http.post(`${this.$api}/search`,{data:this.searchContent}).then(response=>{
-          let res = response.data;
-          this.listData = res.data;
-        })*/
+
       },
       //查看
       show(params){
-        console.log(params.row);
-        this.$router.push({path:'/stock/stock-in-order/edit-stock-in-order',query:{id:params.row.id,checked:true}})
+        this.$router.push({path:this.url,query:{id:params.row.id,checked:true}})
       },
       //编辑
       edit(params){
-        this.$router.push({path:'/stock/stock-in-order/edit-stock-in-order',query:{id:params.row.id}})
+        this.$router.push({path:this.url,query:{id:params.row.id}})
       },
       //删除
       remove(params){
@@ -216,7 +198,6 @@
             this.$store.dispatch('modalLoading');
             this.$http.post(`${this.$api}/materiel/delete`,{id}).then(response  => {
               let res = response.data;
-
               if(res.result){
                 this.pagination();
                 this.$Modal.remove();
@@ -233,11 +214,19 @@
           pageSize:30
         };
         let params = customsParams || defaultParams;
-        this.$http.get("/static/materielone.json").then(response => {
-
+        let url = "/static/materielone.json";
+        switch (this.currentTab){
+          case "goods":
+            break;
+          case "present":
+            url = "/static/presentData.json";
+            break;
+          case "material":
+            url = "/static/materialData.json";
+        }
+        this.$http.get(url).then(response => {
           let data = response.data;
-          console.log(data.list)
-          this.listData = data.list;
+          this.data = data.list;
         })
       },
       //点击分页
@@ -247,7 +236,6 @@
           pageNum: this.currentPage,
           pageSize: this.pageSize
         };
-
         this.pagination(params)
       },
       changePageSize(currentPageSize) {
@@ -259,10 +247,24 @@
         };
         this.pagination(params)
       },
+    },
+    computed:{
+      //跳转路由
+      url(){
+        switch(this.currentTab){
+          case "goods":
+            return `/stock/stock-in-order/edit-stock-in-order`;
+          case "present":
+            return `/stock/stock-in-order/edit-stock-in-order-present`;
+          case "material":
+            return `/stock/stock-in-order/edit-stock-in-order-material`;
+        }
+
+      }
     }
   }
 </script>
 
 <style scoped lang="stylus">
-  @import "stock-in-order.styl";
+  @import "./stock-in-order.styl";
 </style>

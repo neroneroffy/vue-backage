@@ -4,10 +4,10 @@
     <div class="search-wrapper">
       <div class="search">
         <Form ref="formInline"  inline>
-          <FormItem v-if="isNew">
+          <FormItem v-if="title!=='新增入库单'">
             <Tag type="dot">入库单编号：{{baseData.code}}</Tag>
           </FormItem>
-          <FormItem>
+          <FormItem  v-if="title!=='新增入库单'">
             <Tag type="dot">单据日期：{{baseData.date}}</Tag>
           </FormItem>
           <FormItem>
@@ -15,7 +15,6 @@
               <Option v-for="item in supplierList" :value="item.id" :key="item.name">{{ item.name }}</Option>
             </Select>
           </FormItem>
-
 
         </Form>
       </div>
@@ -39,7 +38,7 @@
     name: "edit-stock-in-order",
     data(){
       return{
-        title:this.$route.query.id?this.$route.query.checked?'查看入库单':'编辑入库单':'新增入库单',
+        title:this.$route.query.id?this.$route.query.checked?'查看商品入库单':'编辑商品入库单':'新增商品入库单',
         isChecked:this.$route.query.checked?true:false,
         isNew:this.$route.query.id?true:false,
         columns:[
