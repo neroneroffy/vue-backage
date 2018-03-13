@@ -109,9 +109,9 @@
         BaseTitle
       },
       mounted(){
-        ///base/product/productInfo  查看单条信息
+        ///base/product/updatePre  查看单条信息
         if(this.$route.query.id){
-          this.$http.get(`http://192.168.31.34:8080/base/product/productInfo`,{
+          this.$http.get(`http://192.168.31.34:8080/base/product/updatePre`,{
             params:{ id:this.$route.query.id }
           }).then(response=>{
             let res = response.data;
