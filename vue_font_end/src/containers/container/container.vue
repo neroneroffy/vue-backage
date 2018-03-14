@@ -12,8 +12,9 @@
         </div>
       </Header>
       <Layout>
+
         <Sider hide-trigger :style="{background: '#fff'}" collapsible v-model="isCollapsed">
-          <Menu :active-name="currentPath" theme="light" width="auto" :class="menuitemClasses" :open-names="[openFirstMenu[0]]" class="menu" v-if="user">
+          <Menu :active-name="highLight" theme="light" width="auto" :open-names="[openFirstMenu[0]]" class="menu" v-if="user">
             <router-link to="/index">
               <MenuItem name="/index">
                 <Icon type="ios-home"></Icon>
@@ -207,10 +208,12 @@
               },
             ]
           }
-        ]
+        ],
+        highLight:sessionStorage.getItem("currentPath")
       }
     },
     created(){
+      //刷新时候保持高亮
 
       this.user = JSON.parse(localStorage.getItem('user'));
       //验证token
@@ -270,22 +273,36 @@
 
       },
       storePath(path){
-        sessionStorage.setItem('currentPath',path)
+        sessionStorage.setItem('currentPath',path);
+        this.highLight = sessionStorage.getItem('currentPath')
+      }
+    },
+    watch: {
+      '$route': function(to, from) {
+        if(this.$route.path.match(/^\/[a-z]+\/[a-z\-]+/g)){
+          this.highLight = this.$route.path.match(/^\/[a-z]+\/[a-z\-]+/g)[0]
+        }else{
+          this.highLight = this.$route.path
+        }
+        console.log(this.highLight);
+
       }
     },
     computed: {
-      menuitemClasses: function () {
+/*      menuitemClasses: function () {
         return [
           'menu-item',
           this.isCollapsed ? 'collapsed-menu' : ''
         ]
-      },
+      },*/
       //只是记录哪个菜单高亮用
       currentPath(){
         if(sessionStorage.getItem('currentPath') === '/'){
           this.$router.push('/index')
         }
-        return sessionStorage.getItem('currentPath')
+        let path =sessionStorage.getItem('currentPath')
+
+        return this.highLight
       },
       lastPath(){
         return sessionStorage.getItem('lastPath')
@@ -295,9 +312,9 @@
         if(sessionStorage.getItem('currentPath')){
           name = sessionStorage.getItem('currentPath').match(/^\/[a-z]+/ig);
         }
-        console.log(name)
+
         if(name){
-          console.log(name)
+
           return name
         }
 

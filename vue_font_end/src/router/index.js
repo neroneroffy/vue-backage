@@ -66,7 +66,10 @@ import editStockInOrderMaterial from "@/containers/stock/stock-in-order/edit-sto
 import stockTaking from "@/containers/repertory/stock-taking/stock-taking"//库存盘点
 import record from "@/containers/repertory/record/record"//库存记录查询
 import editRecord from '@/containers/repertory/record/edit-record/edit-record'//记录查询详情
-
+import In from '@/containers/repertory/in/in'//入库
+import editIn from '@/containers/repertory/in/edit-in/edit-in'//入库查询
+import Out from '@/containers/repertory/out/out'//出库
+import editOut from '@/containers/repertory/out/edit-out/edit-out'//出库查询
 
 Vue.use(Router);
 
@@ -259,6 +262,26 @@ const router = new Router({
           component:editRecord
         },
         {
+          path: '/repertory/in',
+          name:'in',
+          component:In
+        },
+        {
+          path: '/repertory/in/edit-in',
+          name:'edit-in',
+          component:editIn
+        },
+        {
+          path: '/repertory/out',
+          name:'out',
+          component:Out
+        },
+        {
+          path: '/repertory/out/edit-out',
+          name:'edit-out',
+          component:editOut
+        },
+        {
           path: '/stock/stock-order',
           name:'stock-order',
           component:stockOrder
@@ -331,9 +354,15 @@ router.beforeEach((to, from, next) => {
   if(from.fullPath === '/login'){
     sessionStorage.setItem('lastPath','/index');
   }else{
-    sessionStorage.setItem('lastPath',from.fullPath);
-  }
 
+    sessionStorage.setItem('lastPath',from.fullPath);
+    if(to.fullPath.match(/^\/[a-z]+\/[a-z\-]+/g)){
+      sessionStorage.setItem('currentPath',to.fullPath.match(/^\/[a-z]+\/[a-z\-]+/g)[0]);
+    }else{
+      sessionStorage.setItem('currentPath',to.fullPath);
+    }
+    console.log(to.fullPath)
+  }
   next()
 })
 

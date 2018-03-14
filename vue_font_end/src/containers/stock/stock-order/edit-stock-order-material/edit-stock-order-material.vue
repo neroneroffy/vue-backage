@@ -5,7 +5,7 @@
       <div class="search">
         <Form ref="formInline"  inline>
           <FormItem v-if="title!=='新增入库单'">
-            <Tag type="dot">入库单编号：{{baseData.code}}</Tag>
+            <Tag type="dot">采购单编号：{{baseData.code}}</Tag>
           </FormItem>
           <FormItem  v-if="title!=='新增入库单'">
             <Tag type="dot">单据日期：{{baseData.date}}</Tag>
@@ -19,7 +19,7 @@
         </Form>
       </div>
       <div v-if="!isChecked">
-        <Button type="primary" icon="plus-round" @click="save">保存入库单</Button>
+        <Button type="primary" icon="plus-round" @click="save">保存采购单</Button>
       </div>
 
     </div>
@@ -27,18 +27,19 @@
 
     <CommodityPicker type="goods" :showPicker="goodsPicker" @selectDone="selectDone" @cancel="cancel"/>
 
+
   </div>
 </template>
 
 <script>
   import BastTitle from  "@/components/base-title";
   import CommodityPicker from '@/components/commodity-picker/commodity-picker'
-  import { Form,Select,Upload,Avatar,Button,DatePicker,Cascader } from 'iview'
+
   export default {
     name: "edit-stock-in-order-material",
     data(){
       return{
-        title:this.$route.query.id?this.$route.query.checked?`查看物料采购单`:`编辑物料采购单`:`新增物料采购单`,
+        title:this.$route.query.id?this.$route.query.checked?'查看商品采购单':'编辑商品采购单':'新增商品采购单',
         isChecked:this.$route.query.checked?true:false,
         isNew:this.$route.query.id?true:false,
         columns:[
@@ -59,7 +60,6 @@
                   },
                   on:{
                     click:()=>{
-
                       this.addRow(params)
                     }
                   }
@@ -86,7 +86,7 @@
           },
           {
             title:"货物名称",
-            key:"goodsId",
+            key:"goodsName",
             render:(h,params)=>{
               return h("div",{
                 style:{
@@ -96,7 +96,6 @@
                   borderRadius:"3px",
                   float:"left"
                 },
-
                 on:{
                   click:()=>{
                     if(this.isChecked){
@@ -146,7 +145,6 @@
                 }
               },this.selectedGood[params.index].goodsName?this.selectedGood[params.index].goodsName:"请选择商品")
             }
-
           },
           {
             title:"仓库",
@@ -169,12 +167,10 @@
                     value:item.value,
                     label:item.name,
                   },
-
                 })
               }))
             }
           },
-
           {
             title:"单位",
             key:"unitsId",
@@ -188,7 +184,6 @@
                 on:{
                   input:(e)=>{
                     params.row.unitsId = e
-
                   }
                 }
               },this.units.map((item)=>{
@@ -202,26 +197,63 @@
             }
           },
           {
-            title:"入库单价",
-            key:"price",
+            title:"采购含税单价",
+            key:"taxPrice",
+            width:120,
             render:(h,params)=>{
               return h('Input',{
                 props:{
-                  value:params.row.price,
+                  value:params.row.taxPrice,
                   placeholder:"入库单价",
                   disabled:this.isChecked
                 },
-
                 on:{
                   input:(v)=>{
-                    params.row.price = v
+                    params.row.taxPrice = v
                   }
                 }
               })
             }
           },
           {
-            title:"入库数量",
+            title:"折扣率",
+            key:"discountRate",
+            render:(h,params)=>{
+              return h('Input',{
+                props:{
+                  value:params.row.price,
+                  placeholder:"折扣率",
+                  disabled:this.isChecked
+                },
+                on:{
+                  input:(v)=>{
+                    params.row.discountRate = v
+                    params.row.discountAmount = params.row.discountRate * params.row.taxPrice
+                  }
+                }
+              })
+            }
+          },
+          {
+            title:"优惠金额",
+            key:"discountAmount",
+            render:(h,params)=>{
+              return h('Input',{
+                props:{
+                  value:params.row.discountAmount,
+                  placeholder:"优惠金额",
+                  disabled:this.isChecked
+                },
+                on:{
+                  input:(v)=>{
+                    params.row.discountAmount = v
+                  }
+                }
+              })
+            }
+          },
+          {
+            title:"采购数量",
             key:"num",
             render:(h,params)=>{
               return h('Input',{
@@ -233,49 +265,49 @@
                 on:{
                   input:(v)=>{
                     params.row.num = v;
-                    params.row.total = params.row.num * params.row.price
+                    params.row.totalPurchasePrice = params.row.num * params.row.discountAmount
+                    params.row.totalTaxPrice = params.row.num * params.row.taxPrice
                   }
                 }
               })
             }
           },
           {
-            title:"总金额",
-            key:"total",
+            title:"采购总价",
+            key:"totalPurchasePrice",
             render:(h,params)=>{
               return h('Input',{
                 props:{
-                  value:params.row.total,
-                  placeholder:"总金额",
+                  value:params.row.totalPurchasePrice,
+                  placeholder:"采购总价",
                   disabled:this.isChecked
                 },
-
                 on:{
                   input:(v)=>{
-                    params.row.total = v
+                    params.row.totalPurchasePrice = v
                   }
                 }
               })
             }
           },
           {
-            title:"备注",
-            key:"mark",
+            title:"采购单含税总价",
+            key:"totalTaxPrice",
+            width:120,
             render:(h,params)=>{
               return h('Input',{
                 props:{
-                  value:this.data[params.index].mark,
-                  placeholder:"备注",
+                  value:params.row.totalTaxPrice,
+                  placeholder:"采购总价",
                   disabled:this.isChecked
                 },
                 on:{
                   input:(v)=>{
-                    params.row.mark = v
+                    params.row.totalTaxPrice = v
                   }
                 }
               })
             }
-
           },
         ],
         inputStyle:{
@@ -287,14 +319,17 @@
         },
         data:[
           {
-            warehouseId:"",
-            goodsId:"",
             goodsName:"",
-            unitsId:"",
-            price:"",
+            purchaseOrderId:"",
+            goodsId:"",
+            unipurchasePricetsId:"",
+            taxPrice:"",
+            discountRate:"",
+            discountAmount:"",
             num:"",
-            total:"",
-            mark:""
+            totalPurchasePrice:"",
+            totalTaxPrice:"",
+            warehouseId:""
           }
         ],
         currentRow:0,
@@ -343,20 +378,19 @@
     },
     mounted(){
       if(this.$route.query.id){
-        this.$http.get(`/static/goodsStockShowBack${this.$route.query.id}.json`,{
+        this.$http.get(`/static/editMaterialStock.json`,{
           params:{ id:this.$route.query.id }
         }).then(response =>{
           let res = response.data;
           if(res.result){
             this.baseData = res.data.baseData
             this.data = res.data.orderData;
+            this.selectedGood = [];
             this.data.forEach((v,i)=>{
-              if(i>0){
                 this.selectedGood.push({
                   goodsName:v.goodsName,
                   goodsId:v.goodsId
                 })
-              }
             })
           }
         })
@@ -366,7 +400,7 @@
       BastTitle,
       CommodityPicker
     },
-    methods:{
+    methods: {
       inputValue(index){
         // this.data[index].
       },
@@ -391,15 +425,18 @@
         //this.data[params.index] = params.row;
         this.data.push(
           {
-            warehouseId:"1",
+            goodsName:"",
+            purchaseOrderId:"",
             goodsId:"",
-            unitsId:"1",
-            price:"",
+            unipurchasePricetsId:"",
+            taxPrice:"",
+            discountRate:"",
+            discountAmount:"",
             num:"",
-            total:"",
-            mark:""
-          }
-        );
+            totalPurchasePrice:"",
+            totalTaxPrice:"",
+            warehouseId:""
+          }        );
         this.selectedGood.push({
           goodsName:"",
           goodsId:""
@@ -421,15 +458,12 @@
         let submitData = {
           baseData:this.baseData,
           orderData:this.data
-        };
-
+        }
         console.log(submitData)
       },
       submit(){
-
       }
-    }
-  }
+    }  }
 </script>
 
 <style scoped lang="stylus">

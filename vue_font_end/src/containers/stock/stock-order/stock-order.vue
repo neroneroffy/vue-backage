@@ -7,17 +7,19 @@
         <div class="search">
           <Form ref="formInline" :model="searchContent" inline>
             <FormItem>
-              <Input type="text" v-model="searchContent.materielName" placeholder="请输入名称"/>
+              <Input type="text" v-model="searchContent.materielName" placeholder="采购单编号"/>
             </FormItem>
             <FormItem>
-              <Input type="text" v-model="searchContent.materielCode" placeholder="请输入编号"/>
+              <Input type="text" v-model="searchContent.materielCode" placeholder="请输入采购员"/>
             </FormItem>
             <FormItem>
-              <Input type="text" v-model="searchContent.barCode" placeholder="请输入条形码"/>
+              <Select v-model="searchContent.status" style="width:200px" placeholder="采购单状态">
+                <Option v-for="item in status" :value="item.id" :key="item.id">{{ item.name }}</Option>
+              </Select>
             </FormItem>
             <FormItem>
-              <Select v-model="searchContent.category" style="width:200px">
-                <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              <Select v-model="searchContent.checkStatus" style="width:200px" placeholder="审核状态">
+                <Option v-for="item in checkStatus" :value="item.id" :key="item.id">{{ item.name }}</Option>
               </Select>
             </FormItem>
             <FormItem>
@@ -27,13 +29,13 @@
         </div>
       </div>
       <Tabs :value="currentTab" @on-click="tabChange">
-        <TabPane label="商品" name="goods">
+        <TabPane label="商品" name="商品">
           <Table :columns="columns" :data="data" class="table" v-if="data"></Table>
         </TabPane>
-        <TabPane label="赠品" name="present">
+        <TabPane label="赠品" name="赠品">
           <Table :columns="columns" :data="data" class="table" v-if="data"></Table>
         </TabPane>
-        <TabPane label="物料" name="material">
+        <TabPane label="物料" name="物料">
           <Table :columns="columns" :data="data" class="table" v-if="data"></Table>
         </TabPane>
       </Tabs>
@@ -47,7 +49,7 @@
 </template>
 
 <script>
-  import {Table, Page, Form, Input, Select, Modal, Row, Col, Upload, Avatar} from 'iview';
+
   export default {
     name: "stock-order",
     data(){
@@ -97,10 +99,6 @@
           {
             title: '交货日期',
             key: 'receiveTime'
-          },
-          {
-            title: '采购类型',
-            key: 'purchaseType',
           },
           {
             title: '采购单状态',
@@ -163,29 +161,49 @@
             }
           }
         ],
-        currentTab:"goods",
+        currentTab:"商品",
         searchContent:{
-          materielName:"",
-          materielCode:"",
+          name:"",
+          code:"",
           barCode:"",
-          category:""
+          status:"",
+          checkStatus:""
         },
-        cityList: [
+        status: [
           {
-            value: '2654',
-            label: 'A类'
+            id: '',
+            name: '采购单状态'
           },
           {
-            value: '2655',
-            label: 'B类'
+            id: 'NO',
+            name: '未入库'
           },
           {
-            value: '2656',
-            label: 'C类'
+            id: 'SOME',
+            name: '部分入库'
+          },
+          {
+            id: 'ALL',
+            name: '全部入库'
+          },
+        ],
+        checkStatus: [
+          {
+            id: '',
+            name: '审核状态'
+          },
+          {
+            id: 'NO',
+            name: '未审核'
+          },
+          {
+            id: 'PASS',
+            name: '已审核'
           },
         ]
       }
     },
+
     mounted(){
       //初始请求分页
       let params = {
@@ -197,22 +215,12 @@
     methods:{
       //新增
       add(){
-        this.$router.push({path:this.url})
+        this.$router.push({path:`/stock/stock-order/edit-stock-order`,query:{name:this.currentTab}})
       },
       //切换tabs的时候
       tabChange(name){
         this.currentTab = name;
-        switch (name){
-          case "goods":
-            sessionStorage.setItem('orderName',"商品");
-            break;
-          case "presents":
-            sessionStorage.setItem('orderName',"赠品");
-            break;
-          case "material":
-            sessionStorage.setItem('orderName',"物料");
-            break;
-        }
+        sessionStorage.setItem("currentTab",this.currentTab);
         this.pagination();
         console.log(name);
       },
@@ -222,11 +230,11 @@
       },
       //查看
       show(params){
-        this.$router.push({path:this.url,query:{id:params.row.id,checked:true}})
+        this.$router.push({path:`/stock/stock-order/edit-stock-order`,query:{id:params.row.id,checked:true,name:this.currentTab}})
       },
       //编辑
       edit(params){
-        this.$router.push({path:this.url,query:{id:params.row.id}})
+        this.$router.push({path:`/stock/stock-order/edit-stock-order`,query:{id:params.row.id,name:this.currentTab}})
       },
       //删除
       remove(params){
@@ -291,7 +299,7 @@
     },
     computed:{
       //跳转路由
-      url(){
+/*      url(){
         switch(this.currentTab){
           case "goods":
             return `/stock/stock-order/edit-stock-order`;
@@ -300,7 +308,7 @@
           case "material":
             return `/stock/stock-order/edit-stock-order-material`;
         }
-      }
+      }*/
     }
   }
 </script>

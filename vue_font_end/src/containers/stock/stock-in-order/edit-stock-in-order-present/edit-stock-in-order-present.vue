@@ -18,7 +18,8 @@
 
         </Form>
       </div>
-      <div v-if="!isChecked">
+      <div v-if="!isChecked" class="right-option">
+
         <Button type="primary" icon="plus-round" @click="save">保存入库单</Button>
       </div>
 
@@ -348,15 +349,14 @@
         }).then(response =>{
           let res = response.data;
           if(res.result){
-            this.baseData = res.data.baseData
+            this.baseData = res.data.baseData;
             this.data = res.data.orderData;
+            this.selectedGood = [];
             this.data.forEach((v,i)=>{
-              if(i>0){
                 this.selectedGood.push({
                   goodsName:v.goodsName,
                   goodsId:v.goodsId
                 })
-              }
             })
           }
         })
