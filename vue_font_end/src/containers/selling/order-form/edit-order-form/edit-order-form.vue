@@ -4,29 +4,27 @@
     <div class="search-wrapper">
       <div class="search">
         <Form ref="formInline":model="searchContent"  inline>
-          <span>供货商：</span>
-          <Input v-model="value4" icon="more" placeholder="供货商" style="width: 150px"></Input>
+          <FormItem>
+            <span>供货商：</span>
+            <Select  style="width:200px"  placeholder="请选择供货商">
+              <Option v-for="item in supplierList" :value="item.id" :key="item.name">{{ item.name }}</Option>
+            </Select>
+          </FormItem>
+
           <FormItem prop="user">
           <span>单据日期：</span>
           <DatePicker type="date" placeholder="单据日期" style="width: 150px"></DatePicker>
           </FormItem>
+
           <FormItem prop="user">
           <span>交货日期：</span>
           <DatePicker type="date" placeholder="交货日期" style="width: 150px"></DatePicker>
           </FormItem>
-
         </Form>
       </div>
-      <!--<div>-->
-      <!--<Button type="primary" icon="plus-round" >保存订单</Button>-->
-      <!--</div>-->
     </div>
-    <Table :columns="columns" :data="data"  > </Table>
-    <div class="pagination">
-      <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize"  placement="top" :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
-    </div>
+              <Table :columns="columns" :data="data"  > </Table>
   </div>
-
 </template>
 
 <script>
@@ -36,9 +34,10 @@
     name: "edit-order-form",
     data() {
       return {
+        api:"http://192.168.31.13:8080",
         value4: "爸爸的选择",
         pageSizeList: [5, 10, 20],
-        // pageSize: 5,
+        pageSize: 5,
         total:1,
         currentPage:1,
         visible:false,
@@ -49,71 +48,93 @@
         },
         columns: [
           {
-            title: "单据编号",
-            width: 100,
-            key: "orderNo",
+            title: "订单唯一标识",
+            key: "orderId",
 
           },
           {
-            title: "客户唯一标识",
-            key: "customerId",
-            width: 110,
+            title: "货物唯一标识",
+            key: "goodsId",
           },
           {
-            title: "销售人员唯一标识",
-            key: "salesId",
-            width: 140,
+            title: "货物名",
+            key: "goodsName",
           },
           {
-            title: "订单状态",
-            key: "status",
+            title: "计量单位唯一标识",
+            key: "unitsId",
           },
           {
-            title: "发货时间",
-            key: "sendTime",
+            title: "单位名",
+            key: "units",
           },
           {
-            title: "收货信息",
-            key: "address",
+            title: "单价",
+            key: "price",
           },
           {
-            title: "商品金额",
-            key: "totalGoodsPrice",
+            title: "数量",
+            key: "num",
           },
           {
-            title: "运费",
-            key: "dispatchPrice",
+            title: "总价",
+            key: "total",
           },
           {
-            title: "物流单号",
-            key: "logisticCode",
+            title: "实付金额",
+            key: "realPay",
+          },
+          {
+            title: "备注",
+            key: "mark",
+          },
 
-          },
         ],
         data: [
           {
-            orderNo: "156*423582",
-            customerId: "爸爸的选择",
-            salesId: "宝宝的依赖",
-            status: "已发",
-            sendTime: "12：30",
-            address: "代收",
-            totalGoodsPrice: "224元",
-            dispatchPrice: "15",
-            logisticCode: "1225223320",
-            mark: "这个商品已经被售出"
+            orderId: "",
+            goodsId: "",
+            goodsName: "",
+            unitsId: "",
+            units: "",
+            price: "",
+            num: "",
+            total: "",
+            realPay: "",
+            mark: ""
+          }
+        ],
+        supplierList:[
+          {
+            name:"供货商1",
+            id:"1"
+          },
+          {
+            name:"供货商2",
+            id:"2"
           }
         ],
         goodsData: ""
       }
     },
-    mounted() {
-      //初始请求分页
-      let params = {
-        currentPage: this.currentPage,
-        pageSize: this.pageSize
-      };
-      this.pagination(params)
+    // mounted() {
+    //   //初始请求分页
+    //   let params = {
+    //     currentPage: this.currentPage,
+    //     pageSize: this.pageSize
+    //   };
+    //   this.pagination(params)
+    // },
+    mounted(){
+      let id = this.$route.query.id
+      this.$http.get(`${this.api}/base/orderItem/findAll`,{
+        params:{ id:this.$route.query.id }
+      }).then(response => {
+        console.log(response.data)
+        let res = response.data;
+        this.data = res.pageList;
+        this.total = res.content;
+      })
     },
     methods: {
       done() {
@@ -129,7 +150,7 @@
           productNum: this.searchContent.productNum,
           productCode: this.searchContent.productCode,
           currentPage: 1,
-          // pageSize: 5
+          pageSize: 5
         }
         this.$http.post(`http://192.168.31.13:8080/base/product/findAllProduct`, data).then(response => {
           console.log(response)
@@ -140,44 +161,44 @@
       },
       //
       pagination(customsParams) {
-        let defaultParams = {
-          productNum: this.searchContent.productNum,
-          productCode: this.searchContent.productCode,
-          currentPage: 1,
-          // pageSize: 5
-        };
+        // let defaultParams = {
+        //   productNum: this.searchContent.productNum,
+        //   productCode: this.searchContent.productCode,
+        //   currentPage: 1,
+        //   pageSize: 5
+        // };
         let params = customsParams || defaultParams;
         ///base/product/findAllProduct  查询所有产品
-        this.$http.post(`http://192.168.31.13:8080/base/product/findAllProduct`, params).then(response => {
+        this.$http.post(`http://192.168.31.13:8080/base/product/findAllProduct`, data).then(response => {
           console.log(response.data)
           let res = response.data;
           this.listData = res.content;
           this.total = res.totalElements;
         })
       },
-      //点击分页
-      changePage(currentPageNum) {
-        this.currentPage = currentPageNum;
-        let params = {
-          productNum: this.searchContent.productNum,
-          productCode: this.searchContent.productCode,
-          currentPage: this.currentPage,
-          pageSize: this.pageSize
-        };
-
-        this.pagination(params)
-      },
-      changePageSize(currentPageSize) {
-        this.pageSize = currentPageSize;
-        this.currentPage = 1;
-        let params = {
-          productNum: this.searchContent.productNum,
-          productCode: this.searchContent.productCode,
-          currentPage: this.currentPage,
-          pageSize: this.pageSize
-        };
-        this.pagination(params)
-      },
+      // //点击分页
+      // changePage(currentPageNum) {
+      //   this.currentPage = currentPageNum;
+      //   let params = {
+      //     productNum: this.searchContent.productNum,
+      //     productCode: this.searchContent.productCode,
+      //     currentPage: this.currentPage,
+      //     pageSize: this.pageSize
+      //   };
+      //
+      //   this.pagination(params)
+      // },
+      // changePageSize(currentPageSize) {
+      //   this.pageSize = currentPageSize;
+      //   this.currentPage = 1;
+      //   let params = {
+      //     productNum: this.searchContent.productNum,
+      //     productCode: this.searchContent.productCode,
+      //     currentPage: this.currentPage,
+      //     pageSize: this.pageSize
+      //   };
+      //   this.pagination(params)
+      // },
       // mounted(){
       //   if(this.$route.query.id!==""){
       //     // this.$http.get("",{
