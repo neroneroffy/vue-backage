@@ -70,7 +70,7 @@
       },
       mounted(){
         if(this.$route.query.id){
-          this.$http.get(`${this.$api}/base/units/info`,{
+          this.$http.get(`${this.$api}/base/units/updatePre`,{
             params:{
               id:this.$route.query.id
             }

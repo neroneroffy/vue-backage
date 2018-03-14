@@ -58,7 +58,6 @@
                   },
                   on:{
                     click:()=>{
-
                       this.addRow(params)
                     }
                   }
@@ -95,7 +94,6 @@
                   borderRadius:"3px",
                   float:"left"
                 },
-
                 on:{
                   click:()=>{
                     if(this.isChecked){
@@ -167,7 +165,6 @@
                     value:item.value,
                     label:item.name,
                   },
-
                 })
               }))
             }
@@ -185,7 +182,6 @@
                 on:{
                   input:(e)=>{
                     params.row.unitsId = e
-
                   }
                 }
               },this.units.map((item)=>{
@@ -209,7 +205,6 @@
                   placeholder:"入库单价",
                   disabled:this.isChecked
                 },
-
                 on:{
                   input:(v)=>{
                     params.row.taxPrice = v
@@ -228,7 +223,6 @@
                   placeholder:"折扣率",
                   disabled:this.isChecked
                 },
-
                 on:{
                   input:(v)=>{
                     params.row.discountRate = v
@@ -248,7 +242,6 @@
                   placeholder:"优惠金额",
                   disabled:this.isChecked
                 },
-
                 on:{
                   input:(v)=>{
                     params.row.discountAmount = v
@@ -276,7 +269,7 @@
                 }
               })
             }
-            },
+          },
           {
             title:"采购总价",
             key:"totalPurchasePrice",
@@ -287,7 +280,6 @@
                   placeholder:"采购总价",
                   disabled:this.isChecked
                 },
-
                 on:{
                   input:(v)=>{
                     params.row.totalPurchasePrice = v
@@ -295,7 +287,6 @@
                 }
               })
             }
-
           },
           {
             title:"采购单含税总价",
@@ -308,7 +299,6 @@
                   placeholder:"采购总价",
                   disabled:this.isChecked
                 },
-
                 on:{
                   input:(v)=>{
                     params.row.totalTaxPrice = v
@@ -317,10 +307,7 @@
               })
             }
           },
-
         ],
-
-
         inputStyle:{
           width:"100%",
           height:"32px",
@@ -386,9 +373,7 @@
           date:new Date()
         }
       }
-
-
-      },
+    },
     mounted(){
       if(this.$route.query.id){
         this.$http.get(`/static/goodsStockShowBack${this.$route.query.id}.json`,{
@@ -409,7 +394,6 @@
           }
         })
       }
-
     },
     components:{
       BastTitle,
@@ -474,19 +458,14 @@
           baseData:this.baseData,
           orderData:this.data
         }
-
         console.log(submitData)
       },
       submit(){
-
-      }
-
       }
     }
-
+  }
 </script>
 
 <style scoped lang="stylus">
   @import "edit-stock-order.styl";
 </style>
-

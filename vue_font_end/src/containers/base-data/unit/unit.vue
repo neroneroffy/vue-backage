@@ -113,7 +113,7 @@
             loading: true,
             onOk: () => {
               this.$store.dispatch('modalLoading');
-              this.$http.get(`${this.$api}/base/units/delUnits`,{
+              this.$http.get(`${this.$api}/base/units/del`,{
                 params:{
                   id:id
                 }
@@ -132,7 +132,7 @@
 
         //请求数据
         getUnits(){
-          this.$http.get(`${this.$api}/base/units/findUnitsAll`).then(response=>{
+          this.$http.get(`${this.$api}/base/units/findAll/`).then(response=>{
             let res = response.data;
             if(res){
               this.listData = res;
