@@ -14,7 +14,7 @@
         </FormItem>
       </Form>
       <div  v-if="editData.unitsType === 'DOUBLE'">
-        <Form inline :label-width="100" v-for="(v,i) in units">
+        <Form inline :label-width="100" v-for="(v,i) in units" :key="i">
           <FormItem label="副单位名称" prop="units">
             <Input placeholder="请输入单位名称" style="width: 200px" v-model="v.viceUnit"/>
           </FormItem>

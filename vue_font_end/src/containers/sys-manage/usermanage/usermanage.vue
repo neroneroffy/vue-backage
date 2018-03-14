@@ -5,13 +5,13 @@
         <div class="search">
           <Form ref="formInline" :model="searchContent" inline>
             <FormItem prop="user">
-              <Input type="text" v-model="searchContent.id" placeholder="请输入ID"/>
+              <Input type="text" v-model="searchContent.nickName" placeholder="用户昵称"/>
             </FormItem>
             <FormItem prop="account">
-              <Input type="text" v-model="searchContent.account" placeholder="请输入搜索账户"/>
+              <Input type="text" v-model="searchContent.userName" placeholder="用户账号"/>
             </FormItem>
             <FormItem prop="phone">
-              <Input type="text" v-model="searchContent.phone" placeholder="请输入搜索电话"/>
+              <Input type="text" v-model="searchContent.mobile" placeholder="手机号"/>
             </FormItem>
             <FormItem >
               <Select v-model="searchContent.role" style="width:200px" placeholder="请选择角色">
@@ -64,12 +64,11 @@
 </template>
 
 <script>
-
-  import { Table,Page,Form,Input,Select,Modal,Row,Col,Upload,Avatar } from 'iview';
     export default {
       name: "usermanage",
       data(){
             return {
+              api:"http://192.168.31.174:8080",
               pageSizeList:[30,50,100],
               pageSize:30,
               total:0,
@@ -77,10 +76,9 @@
               visible:false,
               loading:true,
               searchContent: {
-                id: '',
-                account: '',
-                phone:"",
-                role:""
+                nickName: '',
+                userName: '',
+                mobile:"",
               },
               roleList: [
                 {
@@ -106,30 +104,23 @@
               ],
               columns: [
                 {
-                  type: 'selection',
-                  width: 60,
-                  align: 'center'
-                },
-                {
-                  title: 'ID',
-                  key: 'id',
-                  width:180
-
-                },
-                {
                   title: '账户',
-                  key: 'account',
+                  key: 'userName',
                 },
                 {
+                  title: "昵称",
+                  key: 'nickName',
+                },
+                /*{
                   title: '头像',
                   key: 'avatar',
-                  width:100,
+
                   render: (h, params) => {
                     return h('div', [
                       h('Avatar', {
                         props: {
                           shape:"square",
-                          src: `${params.row.avatar}`,
+                          src: `${params.row.thumbnail}`,
                           //
                           icon:"person"
                         },
@@ -148,14 +139,14 @@
                       }),
                     ]);
                   }
-                },
-                {
+                },*/
+/*                {
                   title: '角色',
                   key: 'roleName',
-                },
+                },*/
                 {
                   title: '电话',
-                  key: 'phone',
+                  key: 'mobile',
 
                 },
                 {
@@ -206,7 +197,7 @@
                           }
                         }
                       }, '删除'),
-                      h('Button', {
+                      /*h('Button', {
                         props: {
                           size: 'small'
                         },
@@ -221,7 +212,7 @@
                           }
                         }
                       },
-                        params.row.status?"禁用": '启用')
+                        params.row.status === "NORMAL"?"禁用": '启用')*/
                     ]);
                   }
                 }
@@ -236,13 +227,13 @@
               },
               imgName: '',
               uploadList: [],
-              listData:""
+              listData:[]
             }
         },
       mounted() {
         //初始请求分页
         let params = {
-          pageNum:this.currentPage,
+          currentPage:this.currentPage,
           pageSize:this.pageSize
         };
         this.pagination(params)
@@ -270,7 +261,7 @@
         },
         //查看信息
         show (params) {
-          this.$router.push({path:'/sys/user/checkmember',query:{id:params.row.id}})
+          this.$router.push({path:`/sys/user/editmember`,query:{id:params.row.id,checked:true}})
         },
         //编辑
         edit(params){
@@ -284,12 +275,12 @@
             loading: true,
             onOk: () => {
               this.$store.dispatch('modalLoading');
-              this.$http.post(`${this.$api}/auth/delete`,{id}).then(response=>{
+              this.$http.get(`${this.api}/sys/user/del`,{params:{id:id}}).then(response=>{
                 let res = response.data;
                 if(res.result){
                   this.pagination();//请求列表数据
                   this.$Modal.remove();
-                  this.$Message.info('删除成功');
+                  this.$Message.success('删除成功');
                 }
               })
             }
@@ -314,15 +305,17 @@
         //分页函数
         pagination(customsParams){
           let defaultParams = {
-            pageNum :1,
+            currentPage :1,
             pageSize : 30
           };
           let params = customsParams || defaultParams;
-          this.$http.get(`${this.$api}/auth/manager`,{params}).then(response=>{
+          this.$http.post(`${this.api}/sys/user/list`,{...params}).then(response=>{
             let res = response.data;
-            if(res.result){
-              this.listData = res.list;
-              this.total = res.total;
+            console.log(res);
+
+            if(res.totalElements.length!==0){
+              this.listData = res.content;
+              this.total = res.totalElements;
             }
           })
         },
@@ -330,7 +323,7 @@
         changePage(currentPageNum){
           this.currentPage = currentPageNum;
           let params = {
-            pageNum:this.currentPage,
+            currentPage:this.currentPage,
             pageSize:this.pageSize
           };
 
@@ -340,7 +333,7 @@
           this.pageSize = currentPageSize;
           this.currentPage = 1;
           let params = {
-            pageNum:this.currentPage,
+            currentPage:this.currentPage,
             pageSize:this.pageSize
           };
 

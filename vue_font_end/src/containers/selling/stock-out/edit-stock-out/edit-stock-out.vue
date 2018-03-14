@@ -5,7 +5,7 @@
       <div class="search">
         <Form ref="formInline"  inline>
           <FormItem v-if="!isNew">
-            <Tag type="dot">入库单编号：{{baseData.code}}</Tag>
+            <Tag type="dot">出库单编号：{{baseData.outboundOrderNo}}</Tag>
           </FormItem>
           <FormItem  v-if="!isNew">
             <Tag type="dot">单据日期：{{baseData.date}}</Tag>
@@ -16,7 +16,7 @@
             </Select>
           </FormItem>
           <FormItem v-if="title.indexOf('编辑')<0">
-            <Input type="text" v-model="baseData.stockInOrder" placeholder="关联采购单"/>
+            <Input type="text" v-model="baseData.orderNo" :disabled="isChecked" placeholder="关联客户订单"/>
           </FormItem>
 
         </Form>
@@ -42,14 +42,13 @@
   import CommodityPicker from '@/components/commodity-picker/commodity-picker'
   import { Form,Select,Upload,Avatar,Button,DatePicker,Cascader } from 'iview'
   export default {
-    name: "edit-stock-in-order",
+    name: "edit-stock-out",
     data(){
       return{
-        title:this.$route.query.id?this.$route.query.checked?`查看${this.$route.query.name}入库单`:`编辑${this.$route.query.name}入库单`:`新增${this.$route.query.name}入库单`,
+        title:this.$route.query.id?this.$route.query.checked?`查看${this.$route.query.name}出库单`:`编辑${this.$route.query.name}出库单`:`新增${this.$route.query.name}出库单`,
         isChecked:this.$route.query.checked?true:false,
         isNew:this.$route.query.id?false:true,
-        columns:this.$route.query.name === "物料"?
-          [
+        columns: [
             {
               title:"新增",
               key:"add",
@@ -119,32 +118,7 @@
               }
 
             },
-            {
-              title:"仓库",
-              key:"warehouseId",
-              render:(h,params)=>{
-                return h('Select',{
-                  props:{
-                    value:this.data[params.index].warehouseId,
-                    placeholder:"选择仓库",
-                    disabled:this.isChecked
-                  },
-                  on:{
-                    input:(e)=>{
-                      params.row.warehouseId = e;
-                    }
-                  }
-                },this.warehouse.map((item)=>{
-                    return h('Option',{
-                      props:{
-                        value:item.value,
-                        label:item.name,
-                      },
 
-                    })
-                }))
-              }
-            },
             {
               title:"单位",
               key:"unitsId",
@@ -172,7 +146,7 @@
               }
             },
             {
-              title:"入库单价",
+              title:"出库单价",
               key:"price",
               render:(h,params)=>{
                 return h('Input',{
@@ -191,7 +165,7 @@
               }
             },
             {
-              title:"入库数量",
+              title:"出库数量",
               key:"num",
               render:(h,params)=>{
                 return h('Input',{
@@ -229,225 +203,19 @@
               }
             },
             {
-              title:"备注",
-              key:"mark",
+              title:"实付金额",
+              key:"realPay",
               render:(h,params)=>{
                 return h('Input',{
                   props:{
-                    value:this.data[params.index].mark,
-                    placeholder:"备注",
-                    disabled:this.isChecked
-                  },
-                  on:{
-                    input:(v)=>{
-                      params.row.mark = v
-                    }
-                  }
-                })
-              }
-
-            },
-         ]:
-          [
-            {
-              title:"新增",
-              key:"add",
-              render:(h,params)=>{
-                return h('div', [
-                  h('Button',{
-                    props:{
-                      type:"primary",
-                      icon:"plus-round",
-                      size:"small",
-                      disabled:this.isChecked
-                    },
-                    style:{
-                      fontSize:"14px"
-                    },
-                    on:{
-                      click:()=>{
-
-                        this.addRow(params)
-                      }
-                    }
-                  }),
-                  h('Button',{
-                    props:{
-                      type:"error",
-                      icon:"close-round",
-                      size:"small",
-                      disabled:this.isChecked
-                    },
-                    style:{
-                      marginLeft:"10px",
-                      fontSize:"14px"
-                    },
-                    on:{
-                      click:()=>{
-                        this.closeRow(params.index)
-                      }
-                    }
-                  }),
-                ])
-              }
-            },
-            {
-              title:"货物名称",
-              key:"goodsId",
-              render:(h,params)=>{
-                return h("div",{
-                  style:{
-                    padding:"3px 5px",
-                    cursor:"pointer",
-                    background:"#f0f0f0",
-                    borderRadius:"3px",
-                    float:"left"
-                  },
-
-                  on:{
-                    click:()=>{
-                      if(this.isChecked){
-                        return
-                      }
-
-                      this.currentRow = params.index
-                      this.goodsPicker = true
-                    },
-                  }
-                },this.selectedGood[params.index].goodsName?this.selectedGood[params.index].goodsName:"请选择商品")
-              }
-
-            },
-            {
-              title:"货物型号",
-              key:"modelSize",
-              render:(h,params)=>{
-                return h('Select',{
-                  props:{
-                    value:this.data[params.index].modelSize,
-                    placeholder:"选择型号",
-                    disabled:this.isChecked
-                  },
-                  on:{
-                    input:(e)=>{
-                      params.row.modelSize = e;
-                    }
-                  }
-                },this.modelSize.map((item)=>{
-                  return h('Option',{
-                    props:{
-                      value:item,
-                      label:item,
-                    },
-
-                  })
-                }))
-              }
-            },
-            {
-              title:"仓库",
-              key:"warehouseId",
-              render:(h,params)=>{
-                return h('Select',{
-                  props:{
-                    value:this.data[params.index].warehouseId,
-                    placeholder:"选择仓库",
-                    disabled:this.isChecked
-                  },
-                  on:{
-                    input:(e)=>{
-                      params.row.warehouseId = e;
-                    }
-                  }
-                },this.warehouse.map((item)=>{
-                  return h('Option',{
-                    props:{
-                      value:item.value,
-                      label:item.name,
-                    },
-
-                  })
-                }))
-              }
-            },
-            {
-              title:"单位",
-              key:"unitsId",
-              render:(h,params)=>{
-                return h('Select',{
-                  props:{
-                    value:this.data[params.index].unitsId,
-                    placeholder:"选择单位",
-                    disabled:this.isChecked
-                  },
-                  on:{
-                    input:(e)=>{
-                      params.row.unitsId = e
-
-                    }
-                  }
-                },this.units.map((item)=>{
-                  return h('Option',{
-                    props:{
-                      value:item.value,
-                      label:item.name,
-                    }
-                  })
-                }))
-              }
-            },
-            {
-              title:"入库单价",
-              key:"price",
-              render:(h,params)=>{
-                return h('Input',{
-                  props:{
-                    value:params.row.price,
-                    placeholder:"入库单价",
-                    disabled:this.isChecked
-                  },
-
-                  on:{
-                    input:(v)=>{
-                      params.row.price = v
-                    }
-                  }
-                })
-              }
-            },
-            {
-              title:"入库数量",
-              key:"num",
-              render:(h,params)=>{
-                return h('Input',{
-                  props:{
-                    value:params.row.num,
-                    placeholder:"入库数量",
-                    disabled:this.isChecked
-                  },
-                  on:{
-                    input:(v)=>{
-                      params.row.num = v;
-                      params.row.total = params.row.num * params.row.price
-                    }
-                  }
-                })
-              }
-            },
-            {
-              title:"总金额",
-              key:"total",
-              render:(h,params)=>{
-                return h('Input',{
-                  props:{
-                    value:params.row.total,
+                    value:params.row.realPay,
                     placeholder:"总金额",
                     disabled:this.isChecked
                   },
 
                   on:{
                     input:(v)=>{
-                      params.row.total = v
+                      params.row.realPay = v
                     }
                   }
                 })
@@ -472,7 +240,7 @@
               }
 
             },
-          ]
+         ]
         ,
         type:"goods",
         inputStyle:{
@@ -482,30 +250,15 @@
           border:"1px solid #e4e4e4",
           borderRadius:"5px"
         },
-        data:this.$route.query.name === "物料"?
-          [
+        data: [
             {
-              warehouseId:"",
-              goodsId:"",
-              goodsName:"",
-              unitsId:"",
-              price:"",
-              num:"",
-              total:"",
-              mark:""
-            }
-          ]:
-          [
-            {
-              warehouseId:"",
-              goodsId:"",
-              modelSize:"",
-              goodsName:"",
-              unitsId:"",
-              price:"",
-              num:"",
-              total:"",
-              mark:""
+              "goodsId":"",
+              "unitsId":"",
+              "price":"",
+              "num":"",
+              "total":"",
+              "realPay":"",
+              "mark":""
             }
           ]
         ,
@@ -568,13 +321,14 @@
           break;
       };
       if(this.$route.query.id){
-        this.$http.get(`/static/goodsStockShowBack${this.$route.query.id}.json`,{
+        this.$http.get(`/static/editGoodsStockOut${this.$route.query.id}.json`,{
           params:{ id:this.$route.query.id }
         }).then(response =>{
           let res = response.data;
+          console.log(res);
           if(res.result){
-            this.baseData = res.data.baseData;
-            this.data = res.data.orderData;
+            this.baseData = res.baseData;
+            this.data = res.orderData;
             this.selectedGood = [];
             this.data.forEach((v,i)=>{
                 this.selectedGood.push({
@@ -616,13 +370,13 @@
         //this.data[params.index] = params.row;
         this.data.push(
           {
-            warehouseId:"1",
-            goodsId:"",
-            unitsId:"1",
-            price:"",
-            num:"",
-            total:"",
-            mark:""
+            "goodsId":"",
+            "unitsId":"",
+            "price":"",
+            "num":"",
+            "total":"",
+            "realPay":"",
+            "mark":""
           }
         );
         this.selectedGood.push({
@@ -640,7 +394,7 @@
         console.log(e.target.value);
         console.log(i);
       },
-      //保存入库单
+      //保存出库单
       save(){
         this.data = this.$refs.table.rebuildData;
         let submitData = {
@@ -648,7 +402,7 @@
           orderData:this.data
         }
 
-        console.log(submitData)
+
       },
       submit(){
 
@@ -658,6 +412,6 @@
 </script>
 
 <style scoped lang="stylus">
-@import './edit-stock-in-order.styl'
+@import './edit-stock-out.styl'
 </style>
 

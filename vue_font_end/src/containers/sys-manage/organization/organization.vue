@@ -7,14 +7,12 @@
         <div class="search">
           <Form ref="formInline" :model="searchContent" inline>
             <FormItem prop="user">
-              <Input type="text" v-model="searchContent.id" placeholder="请输入ID"/>
+              <Input type="text" v-model="searchContent.orgName" placeholder="请输入组织名称"/>
             </FormItem>
             <FormItem prop="account">
-              <Input type="text" v-model="searchContent.account" placeholder="请输入搜索账户"/>
+              <Input type="text" v-model="searchContent.orgCode" placeholder="请输入组织编码"/>
             </FormItem>
-            <FormItem prop="phone">
-              <Input type="text" v-model="searchContent.phone" placeholder="请输入搜索电话"/>
-            </FormItem>
+
 <!--            <FormItem>
               <Select v-model="searchContent.department" style="width:200px" placeholder="请选择部门">
                 <Option v-for="item in roleList" :value="item.value" :key="item.value">{{ item.label }}</Option>
@@ -36,40 +34,20 @@
       name: "organization",
       data(){
         return {
+          api:"http://192.168.31.174:8080",
           columns: [
             {
-              type: 'expand',
-              width: 50,
-              render: (h, params) => {
-                return h(`Table`, {
-                  props: {
-                    columns: this.childrenColumns,
-                    data:params.row.children,
-                    class:"children-table"
-                  }
-                })
-              }
-            },
-            {
               title: 'ID',
-              key: '_id',
-              width:180
+              key: 'id',
 
             },
             {
-              title: '名称',
-              key: 'name',
-              width:180
+              title: '组织名称',
+              key: 'orgName'
             },
             {
-              title: '上级组织',
-              key: 'department',
-              width:180
-            },
-            {
-              title: '电话',
-              key: 'phone',
-              width:180
+              title: '组织编码',
+              key: 'orgCode'
             },
             {
               title: '操作',
@@ -112,24 +90,16 @@
           childrenColumns: [
             {
               title: 'ID',
-              key: '_id',
-              width:180
-            },
-            {
-              title: '名称',
-              key: 'name',
-              width:180
-            },
-            {
-              title: '部门',
-              key: 'department',
-              width:180
-            },
-            {
-              title: '电话',
-              key: 'phone',
-              width:180
+              key: 'id',
 
+            },
+            {
+              title: '组织名称',
+              key: 'orgName'
+            },
+            {
+              title: '组织编码',
+              key: 'orgCode'
             },
             {
               title: '操作',
@@ -169,117 +139,94 @@
               }
             }
           ],
-          data:[
-            {
-              _id:"432534543543",
-              name:"行政部",
-              department:"行政组织部",
-              phone:"29437493",
-              children:[
-                {
-                  _id:"432534543543",
-                  name:"下级行政部1",
-                  department:"下级行政管理部",
-                  phone:"29437493",
-                },
-                {
-                  _id:"54938127839848",
-                  name:"下级行政部2",
-                  department:"下级行政管理部",
-                  phone:"29437493",
-                },
-              ]
-            },
-            {
-              _id:"765754354343",
-              name:"食堂部",
-              department:"食堂管理部",
-              phone:"29437493",
-              children:[
-                {
-                  _id:"342424554353",
-                  name:"下级食堂部1",
-                  department:"下级食堂管理部",
-                  phone:"29437493",
-                },
-                {
-                  _id:"5464565464523",
-                  name:"下级食堂部2",
-                  department:"下级食堂管理部",
-                  phone:"29437493",
-                },
-              ]
-            },
-            {
-              _id:"678789996556",
-              name:"党委",
-              department:"党委宣传部",
-              phone:"29439473",
-              children:[
-                {
-                  _id:"342424554353",
-                  name:"下级党委部1",
-                  department:"下级党委管理部",
-                  phone:"29437493",
-                },
-                {
-                  _id:"5464565464523",
-                  name:"下级党委部2",
-                  department:"下级党委管理部",
-                  phone:"29437493",
-                },
-              ]
-
-            },
-            {
-              _id:"7843274982743",
-              name:"后勤",
-              department:"后勤管理部",
-              phone:"29437784",
-              children:[
-                {
-                  _id:"342424554353",
-                  name:"下级后勤部1",
-                  department:"下级后勤管理部",
-                  phone:"29437493",
-                },
-                {
-                  _id:"5464565464523",
-                  name:"下级后勤部2",
-                  department:"下级后勤管理部",
-                  phone:"29437493",
-                },
-              ]
-
-            }
-          ],
+          data:[],
           searchContent:{
-            id:"",
-            account:"",
-            phone:"",
-            department:""
+            orgName:"",
+            orgCode:""
           }
         }
       },
       mounted(){
-        let params = {
-          pageNum:this.currentPage,
-          pageSize:this.pageSize
-        };
-        this.$store.dispatch('getList',params)
+
+        this.$http.post(`${this.api}/sys/org/list`,{}).then(response=>{
+          let res = response.data;
+          if(res.result){
+            this.data = res.data
+          }
+        })
       },
       methods:{
+        convertData(tempData){
+          let pData = [];
+          let cData = [];
+          tempData.forEach((v,i)=>{
+            if(!v.parentId){
+              v.children = [];
+              pData.push(v)
+            }else{
+              cData.push(v)
+            }
+          });
+
+          pData.forEach(v=>{
+            cData.forEach(k=>{
+              if(k.parentId === v.id){
+                v.children.push(k)
+              }
+            });
+            if(v.children.length === 0){
+              delete v.children
+            }
+          });
+          return pData
+        },
         edit(params){
-          console.log(params.row._id);
-          this.$router.push({path:"/sys/edit-organization",query:{id:params.row._id}})
+
+          this.$router.push({path:"/sys/organization/edit-organization",query:{id:params.row.id}})
         },
         remove(params){
+          this.$http.get(`${this.api}/sys/org/del`,{
+            params:{id:params.row.id}
+          }).then(response=>{
+            let res = response.data;
+            if(res.result){
+              this.$Message.success('删除成功!');
+              this.$http.post(`${this.api}/sys/org/list`,{}).then(response=>{
+                let res = response.data;
+                if(res.result){
+                  this.data = res.data
+                }
+              })
+            }
+          });
           console.log(params)
         },
         add(){
-          this.$router.push('/sys/edit-organization')
+          this.$router.push('/sys/organization/edit-organization')
         },
         handleSearch(){
+          if(this.searchContent.orgName === "" && this.searchContent.orgCode === ""){
+            this.$http.post(`${this.api}/sys/org/list`,{}).then(response=>{
+              let res = response.data;
+
+              if(res.result){
+                this.data = this.convertData(res.data);
+
+              }else{
+                this.data = []
+              }
+            });
+            return
+          }
+          this.$http.post(`${this.api}/sys/org/list`,{...this.searchContent}).then(response=>{
+            let res = response.data;
+
+            if(res.result){
+              this.data = res.data
+            }else{
+              this.data = []
+            }
+          });
 /*          axios.post(`${API}/search`).then(response=>{
             let res = response.data;
             if(res.result){

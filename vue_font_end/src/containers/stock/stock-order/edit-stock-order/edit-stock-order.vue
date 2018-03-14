@@ -16,6 +16,9 @@
               <Option v-for="item in supplierList" :value="item.id" :key="item.name">{{ item.name }}</Option>
             </Select>
           </FormItem>
+          <FormItem>
+            <Input type="text" placeholder="单据折扣率" v-model="baseData.orderRate" :disabled="isChecked" />
+          </FormItem>
 
         </Form>
       </div>
@@ -25,7 +28,10 @@
 
     </div>
     <Table :columns="columns" :data="data" ref="table"></Table>
-
+    <div class="remark">
+      <p>采购单备注</p>
+      <Input type="textarea" :rows="4" placeholder="请填写单据备注" :disabled="isChecked"  v-model="baseData.mark"/>
+    </div>
     <CommodityPicker :type="type" :showPicker="goodsPicker" @selectDone="selectDone" @cancel="cancel"/>
   </div>
 </template>
@@ -185,7 +191,7 @@
                 return h('Input',{
                   props:{
                     value:params.row.taxPrice,
-                    placeholder:"入库单价",
+                    placeholder:"采购单价",
                     disabled:this.isChecked
                   },
                   on:{
@@ -240,7 +246,7 @@
                 return h('Input',{
                   props:{
                     value:params.row.num,
-                    placeholder:"入库数量",
+                    placeholder:"采购数量",
                     disabled:this.isChecked
                   },
                   on:{
@@ -498,7 +504,7 @@
                 return h('Input',{
                   props:{
                     value:params.row.taxPrice,
-                    placeholder:"入库单价",
+                    placeholder:"采购单价",
                     disabled:this.isChecked
                   },
                   on:{
@@ -553,7 +559,7 @@
                 return h('Input',{
                   props:{
                     value:params.row.num,
-                    placeholder:"入库数量",
+                    placeholder:"采购数量",
                     disabled:this.isChecked
                   },
                   on:{
@@ -684,7 +690,9 @@
         baseData:{
           supplier:"",
           code:"",
-          date:new Date()
+          date:new Date(),
+          mark:"",
+          orderRate:""
         }
       }
     },

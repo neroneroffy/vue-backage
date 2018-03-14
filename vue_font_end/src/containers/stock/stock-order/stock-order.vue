@@ -109,6 +109,10 @@
             key: 'auditStatus',
           },
           {
+            title: '备注',
+            key: 'mark',
+          },
+          {
             title: '操作',
             key: 'action',
             align: 'center',
@@ -143,7 +147,7 @@
                     }
                   }
                 }, '编辑'),
-                h('Button', {
+                /*h('Button', {
                   props: {
                     type: 'error',
                     size: 'small'
@@ -156,7 +160,7 @@
                       this.remove(params)
                     }
                   }
-                }, '删除')
+                }, '删除')*/
               ]);
             }
           }
