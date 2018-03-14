@@ -47,7 +47,7 @@
           }
         ],
 
-      },
+      }},
         components:{
         BastTitle
       },
@@ -58,7 +58,7 @@
         let res=response.data;
         this.cityList=res.data;
       })
-      }
+      },
       methods:{
         make(){
 

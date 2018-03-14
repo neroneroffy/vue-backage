@@ -115,6 +115,7 @@
     ],
 
 
+    }
     },
       mounted() {
         /*this.$http.get("http://192.168.31.168/base/warehouse/warehouseFindAll").then(response=>{
@@ -170,6 +171,5 @@
 </script>
 
 <style scoped>
-  @import "record.styl";
 </style>
 

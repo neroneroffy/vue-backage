@@ -91,7 +91,7 @@
                       },
                       on: {
                         click: () => {
-                          /*this.$router.push({path:'/',query:{id:params.row.id}})*/
+                          this.$router.push({path:'/repertory/in'})
                         }
                       }
                     }, '盘盈'),
@@ -115,15 +115,16 @@
             ],
 
 
-        },
-        mounted() {
-          /*this.$http.get("http://192.168.31.168/base/warehouse/warehouseFindAll").then(response=>{
+        }},
+
+
+            /*this.$http.get("http://192.168.31.168/base/warehouse/warehouseFindAll").then(response=>{
             console.log(response)
             let res=response.data;
             this.cityList=res.data;
             this.pagination()
           })*/
-        },
+
         methods:{
           pagination(customsParams) {
             let defaultParams = {

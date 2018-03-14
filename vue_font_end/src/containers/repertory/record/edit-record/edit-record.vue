@@ -42,8 +42,9 @@
                 title: '盈亏',
                 key: 'inventoryResult'
               }
-            ],
+            ]
 
+           }
         },
         components:{
           BastTitle
