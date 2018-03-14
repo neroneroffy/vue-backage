@@ -91,7 +91,7 @@
                       },
                       on: {
                         click: () => {
-                          this.$router.push({path:'/repertory/in'})
+                          this.$router.push({path:'/repertory/in/edit-in'})
                         }
                       }
                     }, '盘盈'),

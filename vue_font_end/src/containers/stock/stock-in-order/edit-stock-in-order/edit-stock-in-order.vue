@@ -18,6 +18,9 @@
 
         </Form>
       </div>
+      <div>
+        <Input type="text" placeholder="关联采购单"/>
+      </div>
       <div v-if="!isChecked">
         <Button type="primary" icon="plus-round" @click="save">保存入库单</Button>
       </div>
@@ -38,7 +41,7 @@
     name: "edit-stock-in-order",
     data(){
       return{
-        title:this.$route.query.id?this.$route.query.checked?'查看商品入库单':'编辑商品入库单':'新增商品入库单',
+        title:this.$route.query.id?this.$route.query.checked?`查看${this.$route.query.name}入库单`:`编辑${this.$route.query.name}入库单`:`新增${this.$route.query.name}入库单`,
         isChecked:this.$route.query.checked?true:false,
         isNew:this.$route.query.id?true:false,
         columns:[
@@ -174,7 +177,6 @@
               }))
             }
           },
-
           {
             title:"单位",
             key:"unitsId",
@@ -348,15 +350,15 @@
         }).then(response =>{
           let res = response.data;
           if(res.result){
-            this.baseData = res.data.baseData
+            this.baseData = res.data.baseData;
             this.data = res.data.orderData;
+            this.selectedGood = [];
             this.data.forEach((v,i)=>{
-              if(i>0){
                 this.selectedGood.push({
                   goodsName:v.goodsName,
                   goodsId:v.goodsId
                 })
-              }
+
             })
           }
         })

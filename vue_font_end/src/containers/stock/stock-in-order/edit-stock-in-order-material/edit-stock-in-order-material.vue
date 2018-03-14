@@ -344,13 +344,12 @@
           if(res.result){
             this.baseData = res.data.baseData
             this.data = res.data.orderData;
+            this.selectedGood = [];
             this.data.forEach((v,i)=>{
-              if(i>0){
-                this.selectedGood.push({
-                  goodsName:v.goodsName,
-                  goodsId:v.goodsId
-                })
-              }
+              this.selectedGood.push({
+                goodsName:v.goodsName,
+                goodsId:v.goodsId
+              })
             })
           }
         })

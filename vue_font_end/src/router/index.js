@@ -347,7 +347,9 @@ router.beforeEach((to, from, next) => {
   if(from.fullPath === '/login'){
     sessionStorage.setItem('lastPath','/index');
   }else{
+
     sessionStorage.setItem('lastPath',from.fullPath);
+    sessionStorage.setItem('currentPath',to.fullPath);
   }
 
   next()
