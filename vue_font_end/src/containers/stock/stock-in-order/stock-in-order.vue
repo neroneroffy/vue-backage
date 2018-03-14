@@ -152,9 +152,7 @@
         ]
       }
     },
-    created(){
-      this.currentTab = sessionStorage.getItem('currentTab')
-    },
+
     mounted(){
       //初始请求分页
       let params = {
