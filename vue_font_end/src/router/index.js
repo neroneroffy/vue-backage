@@ -63,6 +63,8 @@ import editStockInOrderMaterial from "@/containers/stock/stock-in-order/edit-sto
 //库存管理
 import stockTaking from "@/containers/repertory/stock-taking/stock-taking"//库存盘点
 import record from "@/containers/repertory/record/record"//库存记录查询
+import editRecord from '@/containers/repertory/record/edit-record/edit-record'//记录查询详情
+
 
 Vue.use(Router);
 
@@ -248,6 +250,11 @@ const router = new Router({
           path: '/repertory/record',
           name:'record',
           component:record
+        },
+        {
+          path: '/repertory/record/edit-record',
+          name:'edit-record',
+          component:editRecord
         },
         {
           path: '/stock/stock-order',

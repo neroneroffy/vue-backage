@@ -180,7 +180,6 @@
       },
       //删除
       remove(params) {
-        let id = params.row.id;
         this.$Modal.confirm({
           content: '<p>确认删除此条数据吗？</p>',
           loading: true,

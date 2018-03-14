@@ -63,7 +63,6 @@
               {
                 title: '名称',
                 key: 'productName',
-
               },
               {
                 title: '编号',

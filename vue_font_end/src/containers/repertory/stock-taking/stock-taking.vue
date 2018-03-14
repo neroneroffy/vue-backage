@@ -5,7 +5,7 @@
           <Form inline>
             <FormItem prop="id">
               <Select v-model="id" :value="id" style="width:200px" placeholder="请选择仓库">
-                <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.contacts }}</Option>
               </Select>
             </FormItem>
             <FormItem>
@@ -15,11 +15,11 @@
       </Col>
     </Row>
     <Tabs v-model="status" :value="status" @on-click="tab()">
-      <TabPane label="商品" name="commodity" >
+      <TabPane label="商品" name="GOODS" >
            <Table border :columns="commodityType" :data="commodity"></Table>
       </TabPane>
-      <TabPane label="赠品" name="present" >标签二的内容</TabPane>
-      <TabPane label="物料" name="materiel" >标签三的内容</TabPane>
+      <TabPane label="赠品" name="GIFT" >标签二的内容</TabPane>
+      <TabPane label="物料" name="MATERIEL" >标签三的内容</TabPane>
     </Tabs>
   </div>
 </template>
@@ -105,38 +105,31 @@
           account:"",
           phone:""
         },
-        status:"commodity",
-        cityList:[
-          {
-            value: '',
-            label: '请选择仓库'
-          },
-          {
-            value: 'New York',
-            label: 'New York'
-          },
-          {
-            value: 'London',
-            label: 'London'
-          },
-          {
-            value: 'Sydney',
-            label: 'Sydney'
-          },
-        ]
+        status:"GOODS",
+        cityList:[]
       }
     },
     mounted(){
-       ///base/warehouse/warehouseFindAll查询仓库
-       this.$http.get("").then(response=>{
+       ///base/warehouse/warehouseFindAll查询仓库http://192.168.31.222:8080
+       /*this.$http.get("http://192.168.31.168/base/warehouse/warehouseFindAll").then(response=>{
+          console.log(response)
+         let res=response.data;
+          this.cityList=res.data;
 
-       })
+       })*/
+      let params= {
+        warehouseId:"1",
+        stockType:"GOODS"
+      }
+      this.$http.post("http://192.168.31.168:8080/base/stockInfo/search",params).then(response=>{
+        console.log(response)
+      })
     },
     methods:{
       //保存盘点单
       make(){
         this.$http.post("",this.commodity).then(response=>{
-
+          
         })
       },
       tab(){
