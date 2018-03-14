@@ -24,6 +24,22 @@
         name: "record",
         data(){
           return{
+            commodity:[
+              {
+                time:"3/13:3:10.",
+                warehouseId:"555",
+                status:"商品",
+                goodsId:"王大宝"
+              }
+            ],
+            time:[new Date(new Date().getTime() - 86400000), new Date()],
+            id:"",
+            cityList1:[
+              {
+                value:"123",
+                label:'123'
+              }
+            ],
             pageSizeList: [5, 10, 20],
             pageSize: 5,
             total: 0,
@@ -64,7 +80,7 @@
                           this.$router.push({path:'/repertory/record/edit-record',query:{id:params.row.goodsId}})
                         }
                       }
-                    }, '查看详情'),
+                    },'查看详情'),
                     h('Button', {
                       props: {
                         type: 'warning',
@@ -75,7 +91,7 @@
                       },
                       on: {
                         click: () => {
-                          this.$router.push({path:'',query:{id:params.row.id}})
+                          /*this.$router.push({path:'/',query:{id:params.row.id}})*/
                         }
                       }
                     }, '盘盈'),
@@ -93,29 +109,14 @@
                         }
                       }
                     }, '盘亏')
-                  ]);
+                  ])
                 }
               }
             ],
-            commodity:[
-              {
-                time:"3/13:3:10.",
-                warehouseId:"555",
-                status:"商品",
-                goodsId:"王大宝"
-              }
-            ],
-            time:[new Date(new Date().getTime() - 86400000), new Date()],
-            id:"",
-            cityList1:[
-              {
-                value:"123",
-                label:'123'
-              }
-            ]
-          }
+
+
         },
-        mounted(){
+        mounted() {
           /*this.$http.get("http://192.168.31.168/base/warehouse/warehouseFindAll").then(response=>{
             console.log(response)
             let res=response.data;

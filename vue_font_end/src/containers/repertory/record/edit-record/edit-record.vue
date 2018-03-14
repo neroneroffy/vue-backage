@@ -6,7 +6,7 @@
 </template>
 
 <script>
-    import BastTitle from "@/components/base-title";
+    import BastTitle from "@/components/base-title"
     export default {
         name: "edit-record",
         data(){
@@ -41,17 +41,17 @@
               {
                 title: '盈亏',
                 key: 'inventoryResult'
-              },
+              }
             ],
-          }
+
         },
         components:{
           BastTitle
         },
         mounted(){
-          console.log(this.$route.query)
-          this.$http.get("http://192.168.31.168/base/warehouse/warehouseFindAll").then(response=>{
-            console.log(response)
+          console.log(this.$route.query);
+          this.$http.get("http://192.168.31.168/base/warehouse/warehouseFindAll").then(response => {
+            console.log(response);
             let res=response.data;
             this.cityList=res.data;
           })
