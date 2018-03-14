@@ -61,7 +61,6 @@
                     销量比例
                   </MenuItem>
                 </router-link>
-
               </Submenu>
             <Submenu v-for="v in subMenu" :name="v.uri" :key ="v.uri">
                 <template slot="title">
@@ -231,7 +230,6 @@
             this.$router.push('/login');
           }else{
             localStorage.setItem('user',JSON.stringify(response.data.data));
-
             this.user = JSON.parse(localStorage.getItem('user'));
             console.log('验证通过');
             if(this.lastPath === '/index'){

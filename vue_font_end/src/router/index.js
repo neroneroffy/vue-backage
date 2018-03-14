@@ -44,15 +44,21 @@ import address from '@/containers/base-data/address/address';//地址管理
 import unit from '@/containers/base-data/unit/unit';//单位设置
 import editUnit from '@/containers/base-data/unit/edit-unit/edit-unit';//编辑单位
 import stockPrice from '@/containers/base-data/stock-price/stock-price';//进货价格设置
+//售货管理
+import orderForm from '@/containers/selling/order-form/order-form';//进货价格设置
 
-
-//进货管理
+//进货管理@/containers/selling/order-form
 import stockOrder from "@/containers/stock/stock-order/stock-order";//采购单管理
 import editStockOrder from "@/containers/stock/stock-order/edit-stock-order/edit-stock-order";//编辑采购单
+import editStockOrderPresent from "@/containers/stock/stock-order/edit-stock-order-present/edit-stock-order-present";//编辑采购单
+import editStockOrderMaterial from "@/containers/stock/stock-order/edit-stock-order-material/edit-stock-order-material";//编辑采购单
+
+
 import stockInOrder from "@/containers/stock/stock-in-order/stock-in-order";//入库单管理
 import editStockInOrder from "@/containers/stock/stock-in-order/edit-stock-in-order/edit-stock-in-order";//编辑商品入库单
 import editStockInOrderPresent from "@/containers/stock/stock-in-order/edit-stock-in-order-present/edit-stock-in-order-present";//编辑赠品入库单
 import editStockInOrderMaterial from "@/containers/stock/stock-in-order/edit-stock-in-order-material/edit-stock-in-order-material";//编辑物料入库单
+
 
 
 //库存管理
@@ -279,11 +285,7 @@ const router = new Router({
           name:'stock-order',
           component:stockOrder
         },
-        {
-          path: '/stock/stock-order/edit-stock-order',
-          name:'edit-stock-order',
-          component:editStockOrder
-        },
+
 
         {
           path: '/stock/stock-in-order',
@@ -296,6 +298,7 @@ const router = new Router({
           component:editStockInOrder
         },
         {
+
           path: '/stock/stock-in-order/edit-stock-in-order-present',
           name:'edit-stock-in-order-present',
           component:editStockInOrderPresent
@@ -304,6 +307,29 @@ const router = new Router({
           path: '/stock/stock-in-order/edit-stock-in-order-material',
           name:'edit-stock-in-order-material',
           component:editStockInOrderMaterial
+        },
+
+//-----------采购单
+        {
+          path: '/stock/stock-order/edit-stock-order',
+          name:'edit-stock-order',
+          component:editStockOrder
+        },
+        {
+          path: '/stock/stock-order/edit-stock-order-present',
+          name:'edit-stock-in-order-present',
+          component:editStockOrderPresent
+        },
+        {
+          path: '/stock/stock-order/edit-stock-order-material',
+          name:'edit-stock-in-order-material',
+          component:editStockOrderMaterial
+        },
+         {
+          path: '/selling/order-form',
+          name:'order-form',
+          component:orderForm
+
         },
 
 

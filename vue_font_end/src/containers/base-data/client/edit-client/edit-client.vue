@@ -62,10 +62,11 @@
             "mobilePhone":"",
             "telephone":"",
             "wechat":"",
-            "user":"",
+            "id":"",
             "address":"",
             "detailAddress":"",
-            "price":""
+            "price":"",
+            "userAccount":""
           },
           type:[
             {
@@ -105,7 +106,7 @@
       mounted(){
 
         if(this.$route.query.id){
-          this.$http.get(`${this.$api}/base/customer/Customerinfo`,{
+          this.$http.get(`${this.$api}/base/customer/updatePre`,{
             params:{ id:this.$route.query.id }
           }).then(response=>{
             let res = response.data;
@@ -177,9 +178,9 @@
           if(this.$route.query.id){
             this.editData.id = this.$route.query.id
           }
-          this.$http.post(`${this.$api}/base/customer/addCustomer`,this.editData).then(response=>{
+          this.$http.post(`${this.$api}/base/customer/add`,this.editData).then(response=>{
             let res = response.data;
-
+             console.log(res)
             if(res.msg === "手机号已注册"){
               this.$Message.error('手机号已注册');
             }else if(res.msg === "成功"){

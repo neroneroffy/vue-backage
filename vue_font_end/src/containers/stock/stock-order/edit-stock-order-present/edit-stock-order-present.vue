@@ -25,7 +25,7 @@
     </div>
     <Table :columns="columns" :data="data" ref="table"></Table>
 
-      <CommodityPicker type="goods" :showPicker="goodsPicker" @selectDone="selectDone" @cancel="cancel"/>
+    <CommodityPicker type="goods" :showPicker="goodsPicker" @selectDone="selectDone" @cancel="cancel"/>
 
   </div>
 </template>
@@ -35,10 +35,10 @@
   import CommodityPicker from '@/components/commodity-picker/commodity-picker'
   import { Form,Select,Upload,Avatar,Button,DatePicker,Cascader } from 'iview'
   export default {
-    name: "edit-stock-in-order",
+    name: "edit-stock-in-order-present",
     data(){
       return{
-        title:this.$route.query.id?this.$route.query.checked?'查看商品入库单':'编辑商品入库单':'新增商品入库单',
+        title:this.$route.query.id?this.$route.query.checked?'查看赠品采购单':'编辑赠品采购单':'新增赠品采购单',
         isChecked:this.$route.query.checked?true:false,
         isNew:this.$route.query.id?true:false,
         columns:[
@@ -164,13 +164,13 @@
                   }
                 }
               },this.warehouse.map((item)=>{
-                  return h('Option',{
-                    props:{
-                      value:item.value,
-                      label:item.name,
-                    },
+                return h('Option',{
+                  props:{
+                    value:item.value,
+                    label:item.name,
+                  },
 
-                  })
+                })
               }))
             }
           },
@@ -368,7 +368,7 @@
     },
     methods:{
       inputValue(index){
-       // this.data[index].
+        // this.data[index].
       },
       //选择商品完毕
       selectDone(data){
@@ -422,8 +422,6 @@
           baseData:this.baseData,
           orderData:this.data
         }
-
-        console.log(submitData)
       },
       submit(){
 
@@ -433,6 +431,6 @@
 </script>
 
 <style scoped lang="stylus">
-@import './edit-stock-in-order.styl'
+  @import './edit-stock-order-present.styl'
 </style>
 
