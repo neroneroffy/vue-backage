@@ -12,6 +12,7 @@
         </div>
       </Header>
       <Layout>
+
         <Sider hide-trigger :style="{background: '#fff'}" collapsible v-model="isCollapsed">
           <Menu :active-name="highLight" theme="light" width="auto" :open-names="[openFirstMenu[0]]" class="menu" v-if="user">
             <router-link to="/index">
@@ -277,7 +278,7 @@
     },
     watch: {
       '$route': function(to, from) {
-        this.highLight = this.$route.path
+        this.highLight = this.$route.path.match(/^\/[a-z]+\/[a-z\-]+/g)
       }
     },
     computed: {

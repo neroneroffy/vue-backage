@@ -44,129 +44,392 @@
         title:this.$route.query.id?this.$route.query.checked?`查看${this.$route.query.name}入库单`:`编辑${this.$route.query.name}入库单`:`新增${this.$route.query.name}入库单`,
         isChecked:this.$route.query.checked?true:false,
         isNew:this.$route.query.id?true:false,
-        columns:[
-          {
-            title:"新增",
-            key:"add",
-            render:(h,params)=>{
-              return h('div', [
-                h('Button',{
-                  props:{
-                    type:"primary",
-                    icon:"plus-round",
-                    size:"small",
-                    disabled:this.isChecked
-                  },
+        columns:this.$route.query.name === "物料"?
+          [
+            {
+              title:"新增",
+              key:"add",
+              render:(h,params)=>{
+                return h('div', [
+                  h('Button',{
+                    props:{
+                      type:"primary",
+                      icon:"plus-round",
+                      size:"small",
+                      disabled:this.isChecked
+                    },
+                    style:{
+                      fontSize:"14px"
+                    },
+                    on:{
+                      click:()=>{
+
+                        this.addRow(params)
+                      }
+                    }
+                  }),
+                  h('Button',{
+                    props:{
+                      type:"error",
+                      icon:"close-round",
+                      size:"small",
+                      disabled:this.isChecked
+                    },
+                    style:{
+                      marginLeft:"10px",
+                      fontSize:"14px"
+                    },
+                    on:{
+                      click:()=>{
+                        this.closeRow(params.index)
+                      }
+                    }
+                  }),
+                ])
+              }
+            },
+            {
+              title:"货物名称",
+              key:"goodsId",
+              render:(h,params)=>{
+                return h("div",{
                   style:{
-                    fontSize:"14px"
+                    padding:"3px 5px",
+                    cursor:"pointer",
+                    background:"#f0f0f0",
+                    borderRadius:"3px",
+                    float:"left"
                   },
+
                   on:{
                     click:()=>{
-
-                      this.addRow(params)
-                    }
+                      if(this.isChecked){
+                        return
+                      }
+                      this.goodsData = [
+                        {
+                          name:"纸尿裤1",
+                          id:"1"
+                        },
+                        {
+                          name:"纸尿裤2",
+                          id:"2"
+                        },
+                        {
+                          name:"纸尿裤3",
+                          id:"3"
+                        },
+                        {
+                          name:"纸尿裤4",
+                          id:"4"
+                        },
+                        {
+                          name:"纸尿裤5",
+                          id:"5"
+                        },
+                        {
+                          name:"纸尿裤6",
+                          id:"6"
+                        },
+                        {
+                          name:"纸尿裤7",
+                          id:"7"
+                        },
+                        {
+                          name:"纸尿裤8",
+                          id:"8"
+                        },
+                        {
+                          name:"纸尿裤9",
+                          id:"9"
+                        },
+                      ];
+                      this.currentRow = params.index
+                      this.goodsPicker = true
+                    },
                   }
-                }),
-                h('Button',{
+                },this.selectedGood[params.index].goodsName?this.selectedGood[params.index].goodsName:"请选择商品")
+              }
+
+            },
+            {
+              title:"仓库",
+              key:"warehouseId",
+              render:(h,params)=>{
+                return h('Select',{
                   props:{
-                    type:"error",
-                    icon:"close-round",
-                    size:"small",
+                    value:this.data[params.index].warehouseId,
+                    placeholder:"选择仓库",
                     disabled:this.isChecked
                   },
-                  style:{
-                    marginLeft:"10px",
-                    fontSize:"14px"
+                  on:{
+                    input:(e)=>{
+                      params.row.warehouseId = e;
+                    }
+                  }
+                },this.warehouse.map((item)=>{
+                    return h('Option',{
+                      props:{
+                        value:item.value,
+                        label:item.name,
+                      },
+
+                    })
+                }))
+              }
+            },
+            {
+              title:"单位",
+              key:"unitsId",
+              render:(h,params)=>{
+                return h('Select',{
+                  props:{
+                    value:this.data[params.index].unitsId,
+                    placeholder:"选择单位",
+                    disabled:this.isChecked
                   },
                   on:{
-                    click:()=>{
-                      this.closeRow(params.index)
+                    input:(e)=>{
+                      params.row.unitsId = e
+
                     }
                   }
-                }),
-              ])
-            }
-          },
-          {
-            title:"货物名称",
-            key:"goodsId",
-            render:(h,params)=>{
-              return h("div",{
-                style:{
-                  padding:"3px 5px",
-                  cursor:"pointer",
-                  background:"#f0f0f0",
-                  borderRadius:"3px",
-                  float:"left"
-                },
-
-                on:{
-                  click:()=>{
-                    if(this.isChecked){
-                      return
+                },this.units.map((item)=>{
+                  return h('Option',{
+                    props:{
+                      value:item.value,
+                      label:item.name,
                     }
-                    this.goodsData = [
-                      {
-                        name:"纸尿裤1",
-                        id:"1"
-                      },
-                      {
-                        name:"纸尿裤2",
-                        id:"2"
-                      },
-                      {
-                        name:"纸尿裤3",
-                        id:"3"
-                      },
-                      {
-                        name:"纸尿裤4",
-                        id:"4"
-                      },
-                      {
-                        name:"纸尿裤5",
-                        id:"5"
-                      },
-                      {
-                        name:"纸尿裤6",
-                        id:"6"
-                      },
-                      {
-                        name:"纸尿裤7",
-                        id:"7"
-                      },
-                      {
-                        name:"纸尿裤8",
-                        id:"8"
-                      },
-                      {
-                        name:"纸尿裤9",
-                        id:"9"
-                      },
-                    ];
-                    this.currentRow = params.index
-                    this.goodsPicker = true
+                  })
+                }))
+              }
+            },
+            {
+              title:"入库单价",
+              key:"price",
+              render:(h,params)=>{
+                return h('Input',{
+                  props:{
+                    value:params.row.price,
+                    placeholder:"入库单价",
+                    disabled:this.isChecked
                   },
-                }
-              },this.selectedGood[params.index].goodsName?this.selectedGood[params.index].goodsName:"请选择商品")
-            }
 
-          },
-          {
-            title:"仓库",
-            key:"warehouseId",
-            render:(h,params)=>{
-              return h('Select',{
-                props:{
-                  value:this.data[params.index].warehouseId,
-                  placeholder:"选择仓库",
-                  disabled:this.isChecked
-                },
-                on:{
-                  input:(e)=>{
-                    params.row.warehouseId = e;
+                  on:{
+                    input:(v)=>{
+                      params.row.price = v
+                    }
                   }
-                }
-              },this.warehouse.map((item)=>{
+                })
+              }
+            },
+            {
+              title:"入库数量",
+              key:"num",
+              render:(h,params)=>{
+                return h('Input',{
+                  props:{
+                    value:params.row.num,
+                    placeholder:"入库数量",
+                    disabled:this.isChecked
+                  },
+                  on:{
+                    input:(v)=>{
+                      params.row.num = v;
+                      params.row.total = params.row.num * params.row.price
+                    }
+                  }
+                })
+              }
+            },
+            {
+              title:"总金额",
+              key:"total",
+              render:(h,params)=>{
+                return h('Input',{
+                  props:{
+                    value:params.row.total,
+                    placeholder:"总金额",
+                    disabled:this.isChecked
+                  },
+
+                  on:{
+                    input:(v)=>{
+                      params.row.total = v
+                    }
+                  }
+                })
+              }
+            },
+            {
+              title:"备注",
+              key:"mark",
+              render:(h,params)=>{
+                return h('Input',{
+                  props:{
+                    value:this.data[params.index].mark,
+                    placeholder:"备注",
+                    disabled:this.isChecked
+                  },
+                  on:{
+                    input:(v)=>{
+                      params.row.mark = v
+                    }
+                  }
+                })
+              }
+
+            },
+         ]:
+          [
+            {
+              title:"新增",
+              key:"add",
+              render:(h,params)=>{
+                return h('div', [
+                  h('Button',{
+                    props:{
+                      type:"primary",
+                      icon:"plus-round",
+                      size:"small",
+                      disabled:this.isChecked
+                    },
+                    style:{
+                      fontSize:"14px"
+                    },
+                    on:{
+                      click:()=>{
+
+                        this.addRow(params)
+                      }
+                    }
+                  }),
+                  h('Button',{
+                    props:{
+                      type:"error",
+                      icon:"close-round",
+                      size:"small",
+                      disabled:this.isChecked
+                    },
+                    style:{
+                      marginLeft:"10px",
+                      fontSize:"14px"
+                    },
+                    on:{
+                      click:()=>{
+                        this.closeRow(params.index)
+                      }
+                    }
+                  }),
+                ])
+              }
+            },
+            {
+              title:"货物名称",
+              key:"goodsId",
+              render:(h,params)=>{
+                return h("div",{
+                  style:{
+                    padding:"3px 5px",
+                    cursor:"pointer",
+                    background:"#f0f0f0",
+                    borderRadius:"3px",
+                    float:"left"
+                  },
+
+                  on:{
+                    click:()=>{
+                      if(this.isChecked){
+                        return
+                      }
+                      this.goodsData = [
+                        {
+                          name:"纸尿裤1",
+                          id:"1"
+                        },
+                        {
+                          name:"纸尿裤2",
+                          id:"2"
+                        },
+                        {
+                          name:"纸尿裤3",
+                          id:"3"
+                        },
+                        {
+                          name:"纸尿裤4",
+                          id:"4"
+                        },
+                        {
+                          name:"纸尿裤5",
+                          id:"5"
+                        },
+                        {
+                          name:"纸尿裤6",
+                          id:"6"
+                        },
+                        {
+                          name:"纸尿裤7",
+                          id:"7"
+                        },
+                        {
+                          name:"纸尿裤8",
+                          id:"8"
+                        },
+                        {
+                          name:"纸尿裤9",
+                          id:"9"
+                        },
+                      ];
+                      this.currentRow = params.index
+                      this.goodsPicker = true
+                    },
+                  }
+                },this.selectedGood[params.index].goodsName?this.selectedGood[params.index].goodsName:"请选择商品")
+              }
+
+            },
+            {
+              title:"货物型号",
+              key:"modelSize",
+              render:(h,params)=>{
+                return h('Select',{
+                  props:{
+                    value:this.data[params.index].modelSize,
+                    placeholder:"选择型号",
+                    disabled:this.isChecked
+                  },
+                  on:{
+                    input:(e)=>{
+                      params.row.modelSize = e;
+                    }
+                  }
+                },this.modelSize.map((item)=>{
+                  return h('Option',{
+                    props:{
+                      value:item,
+                      label:item,
+                    },
+
+                  })
+                }))
+              }
+            },
+            {
+              title:"仓库",
+              key:"warehouseId",
+              render:(h,params)=>{
+                return h('Select',{
+                  props:{
+                    value:this.data[params.index].warehouseId,
+                    placeholder:"选择仓库",
+                    disabled:this.isChecked
+                  },
+                  on:{
+                    input:(e)=>{
+                      params.row.warehouseId = e;
+                    }
+                  }
+                },this.warehouse.map((item)=>{
                   return h('Option',{
                     props:{
                       value:item.value,
@@ -174,112 +437,113 @@
                     },
 
                   })
-              }))
-            }
-          },
-          {
-            title:"单位",
-            key:"unitsId",
-            render:(h,params)=>{
-              return h('Select',{
-                props:{
-                  value:this.data[params.index].unitsId,
-                  placeholder:"选择单位",
-                  disabled:this.isChecked
-                },
-                on:{
-                  input:(e)=>{
-                    params.row.unitsId = e
-
-                  }
-                }
-              },this.units.map((item)=>{
-                return h('Option',{
+                }))
+              }
+            },
+            {
+              title:"单位",
+              key:"unitsId",
+              render:(h,params)=>{
+                return h('Select',{
                   props:{
-                    value:item.value,
-                    label:item.name,
+                    value:this.data[params.index].unitsId,
+                    placeholder:"选择单位",
+                    disabled:this.isChecked
+                  },
+                  on:{
+                    input:(e)=>{
+                      params.row.unitsId = e
+
+                    }
+                  }
+                },this.units.map((item)=>{
+                  return h('Option',{
+                    props:{
+                      value:item.value,
+                      label:item.name,
+                    }
+                  })
+                }))
+              }
+            },
+            {
+              title:"入库单价",
+              key:"price",
+              render:(h,params)=>{
+                return h('Input',{
+                  props:{
+                    value:params.row.price,
+                    placeholder:"入库单价",
+                    disabled:this.isChecked
+                  },
+
+                  on:{
+                    input:(v)=>{
+                      params.row.price = v
+                    }
                   }
                 })
-              }))
-            }
-          },
-          {
-            title:"入库单价",
-            key:"price",
-            render:(h,params)=>{
-              return h('Input',{
-                props:{
-                  value:params.row.price,
-                  placeholder:"入库单价",
-                  disabled:this.isChecked
-                },
+              }
+            },
+            {
+              title:"入库数量",
+              key:"num",
+              render:(h,params)=>{
+                return h('Input',{
+                  props:{
+                    value:params.row.num,
+                    placeholder:"入库数量",
+                    disabled:this.isChecked
+                  },
+                  on:{
+                    input:(v)=>{
+                      params.row.num = v;
+                      params.row.total = params.row.num * params.row.price
+                    }
+                  }
+                })
+              }
+            },
+            {
+              title:"总金额",
+              key:"total",
+              render:(h,params)=>{
+                return h('Input',{
+                  props:{
+                    value:params.row.total,
+                    placeholder:"总金额",
+                    disabled:this.isChecked
+                  },
 
-                on:{
-                  input:(v)=>{
-                    params.row.price = v
+                  on:{
+                    input:(v)=>{
+                      params.row.total = v
+                    }
                   }
-                }
-              })
-            }
-          },
-          {
-            title:"入库数量",
-            key:"num",
-            render:(h,params)=>{
-              return h('Input',{
-                props:{
-                  value:params.row.num,
-                  placeholder:"入库数量",
-                  disabled:this.isChecked
-                },
-                on:{
-                  input:(v)=>{
-                    params.row.num = v;
-                    params.row.total = params.row.num * params.row.price
+                })
+              }
+            },
+            {
+              title:"备注",
+              key:"mark",
+              render:(h,params)=>{
+                return h('Input',{
+                  props:{
+                    value:this.data[params.index].mark,
+                    placeholder:"备注",
+                    disabled:this.isChecked
+                  },
+                  on:{
+                    input:(v)=>{
+                      params.row.mark = v
+                    }
                   }
-                }
-              })
-            }
-          },
-          {
-            title:"总金额",
-            key:"total",
-            render:(h,params)=>{
-              return h('Input',{
-                props:{
-                  value:params.row.total,
-                  placeholder:"总金额",
-                  disabled:this.isChecked
-                },
+                })
+              }
 
-                on:{
-                  input:(v)=>{
-                    params.row.total = v
-                  }
-                }
-              })
-            }
-          },
-          {
-            title:"备注",
-            key:"mark",
-            render:(h,params)=>{
-              return h('Input',{
-                props:{
-                  value:this.data[params.index].mark,
-                  placeholder:"备注",
-                  disabled:this.isChecked
-                },
-                on:{
-                  input:(v)=>{
-                    params.row.mark = v
-                  }
-                }
-              })
-            }
-
-          },
-        ],
+            },
+          ]
+        ,
         inputStyle:{
           width:"100%",
           height:"32px",
@@ -287,18 +551,33 @@
           border:"1px solid #e4e4e4",
           borderRadius:"5px"
         },
-        data:[
-          {
-            warehouseId:"",
-            goodsId:"",
-            goodsName:"",
-            unitsId:"",
-            price:"",
-            num:"",
-            total:"",
-            mark:""
-          }
-        ],
+        data:this.$route.query.name === "物料"?
+          [
+            {
+              warehouseId:"",
+              goodsId:"",
+              goodsName:"",
+              unitsId:"",
+              price:"",
+              num:"",
+              total:"",
+              mark:""
+            }
+          ]:
+          [
+            {
+              warehouseId:"",
+              goodsId:"",
+              modelSize:"",
+              goodsName:"",
+              unitsId:"",
+              price:"",
+              num:"",
+              total:"",
+              mark:""
+            }
+          ]
+        ,
         currentRow:0,
         goodsPicker:false,
         warehouse:[
@@ -311,6 +590,7 @@
             value:"2"
           },
         ],
+        modelSize:["NB","S"],
         units:[
           {
             name:"单位1",

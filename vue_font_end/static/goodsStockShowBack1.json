@@ -21,6 +21,7 @@
       {
         "warehouseId":"2",
         "goodsId":"1",
+        "modelSize":"NB",
         "goodsName":"产品",
         "unitsId":"1",
         "price":"15",
@@ -31,6 +32,7 @@
       {
         "warehouseId":"2",
         "goodsId":"2",
+        "modelSize":"S",
         "goodsName":"产品",
         "unitsId":"2",
         "price":"2",
@@ -41,6 +43,7 @@
       {
         "warehouseId":"1",
         "goodsId":"2",
+        "modelSize":"S",
         "goodsName":"产品",
         "unitsId":"2",
         "price":"32",
