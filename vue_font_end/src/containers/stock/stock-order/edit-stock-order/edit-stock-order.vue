@@ -1,14 +1,13 @@
-//新增采购单
 <template>
   <div class="edit-stock-order">
     <BastTitle :title="title"></BastTitle>
     <div class="search-wrapper">
       <div class="search">
         <Form ref="formInline"  inline>
-          <FormItem v-if="title!=='新增入库单'">
+          <FormItem >
             <Tag type="dot">入库单编号：{{baseData.code}}</Tag>
           </FormItem>
-          <FormItem  v-if="title!=='新增入库单'">
+          <FormItem >
             <Tag type="dot">单据日期：{{baseData.date}}</Tag>
           </FormItem>
           <FormItem>
@@ -37,7 +36,7 @@
     name: "edit-stock-order",
     data(){
       return{
-        title:this.$route.query.id?this.$route.query.checked?'查看商品采购单':'编辑商品采购单':'新增商品采购单',
+        title:this.$route.query.id?this.$route.query.checked?'客户订单明细':'客户订单明细':'客户订单明细',
         isChecked:this.$route.query.checked?true:false,
         isNew:this.$route.query.id?true:false,
         columns:[
