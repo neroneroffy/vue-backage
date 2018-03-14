@@ -51,7 +51,8 @@
              total:"21312",
              num:"12312",
              inventoryNum:"",
-             inventoryResult:""
+             inventoryResult:"",
+             status:"GOODS",
           }
         ],
         commodityType:[
@@ -106,7 +107,8 @@
           phone:""
         },
         status:"GOODS",
-        cityList:[]
+        cityList:[],
+        shuju:[]
       }
     },
     mounted(){
@@ -121,15 +123,19 @@
         warehouseId:"1",
         stockType:"GOODS"
       }
-      this.$http.post("http://192.168.31.168:8080/base/stockInfo/search",params).then(response=>{
+      /*this.$http.post("http://192.168.31.168:8080/base/stockInfo/search",params).then(response=>{
         console.log(response)
-      })
+        let res = response.data;
+        this.shuju[0]=(res[0]);
+        console.log(this.shuju)
+      })*/
     },
     methods:{
       //保存盘点单
       make(){
-        this.$http.post("",this.commodity).then(response=>{
-          
+        console.log(this.commodity)
+        this.$http.post("http://192.168.31.34:8080/base/invenntoryRecordItem/addInventoryReaordItem",this.commodity).then(response => {
+          console.log(response)
         })
       },
       tab(){
