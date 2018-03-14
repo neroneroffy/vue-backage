@@ -46,6 +46,7 @@ import editUnit from '@/containers/base-data/unit/edit-unit/edit-unit';//编辑�
 import stockPrice from '@/containers/base-data/stock-price/stock-price';//进货价格设置
 //售货管理
 import orderForm from '@/containers/selling/order-form/order-form';//进货价格设置
+import editOrderForm from '@/containers/selling/order-form/edit-order-form/edit-order-form';//进货价格明细
 
 //进货管理@/containers/selling/order-form
 import stockOrder from "@/containers/stock/stock-order/stock-order";//采购单管理
@@ -329,6 +330,12 @@ const router = new Router({
           path: '/selling/order-form',
           name:'order-form',
           component:orderForm
+
+        },
+        {
+          path: '/selling/order-form/edit-order-form/edit-order-form',
+          name:'edit-order-form',
+          component:editOrderForm
 
         },
 
