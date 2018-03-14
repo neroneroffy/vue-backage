@@ -4,14 +4,16 @@
     <Row type="flex" justify="space-between">
           <Form  inline>
             <DatePicker type="daterange" v-model="time" :value="time"></DatePicker>
-            <FormItem prop="id">
-              <Select v-model="id" :value="id" style="width:200px" placeholder="请选择仓库">
-                <Option v-for="item in cityList1" :value="item.value" :key="item.value">{{ item.label }}</Option>
-              </Select>
-            </FormItem>
           </Form >
+      <Form>
+      <FormItem prop="id">
+        <Select v-model="id" :value="id" style="width:200px" placeholder="请选择仓库">
+          <Option v-for="item in cityList1" :value="item.value" :key="item.value">{{ item.label }}</Option>
+        </Select>
+      </FormItem>
+      </Form >
     </Row>
-    <Table border :columns="commodityType" :data="commodity"></Table>
+    <Table :border="false" :columns="commodityType" :data="commodity"></Table>
     <div class="pagination">
       <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize" placement="top"
             :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
@@ -116,15 +118,21 @@
 
 
         }},
-
-
-            /*this.$http.get("http://192.168.31.168/base/warehouse/warehouseFindAll").then(response=>{
+        mounted(){
+          let params={
+             pageSize:'5',
+             currentPage:'1',
+             startTime:'2018-03-10',
+             endTime:'2018-03-15',
+             warehouseId:'1'
+          }
+          this.$http.post("http://192.168.31.34:8080/base/inventoryRecordItem/findAllInventoryRecordItem",params).then( response =>{
             console.log(response)
             let res=response.data;
             this.cityList=res.data;
             this.pagination()
-          })*/
-
+          })
+        },
         methods:{
           pagination(customsParams) {
             let defaultParams = {
@@ -135,13 +143,12 @@
             };
             let params = customsParams || defaultParams;
             /*/base/gift/findAllGift*/
-            console.log(params)
-            this.$http.post("http://192.168.31.34:8080/base/gift/findAllGift", params).then(response => {
-              console.log(response)
+
+            /*this.$http.post("http://192.168.31.34:8080/base/gift/findAllGift", params).then(response => {
               let data = response.data;
               this.listData = data.content;
               this.total = data.totalElements;
-            })
+            })*/
           },
           //点击分页
           changePage(currentPageNum) {

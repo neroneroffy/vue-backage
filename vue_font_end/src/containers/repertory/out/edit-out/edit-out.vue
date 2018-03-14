@@ -1,10 +1,12 @@
 <template>
   <div class="edit-client">
     <BastTitle :title="title"></BastTitle>
-    <Table border :columns="commodityType" :data="commodity"></Table>
-    <FormItem>
-      <Button type="primary" icon="plus-circled" @click="make()">保存盘点记录</Button>
-    </FormItem>
+    <Table :border="false" :columns="commodityType" :data="commodity"></Table>
+    <Form justify="end">
+      <FormItem>
+        <Button type="primary" icon="plus-circled" @click="make()">确认出库</Button>
+      </FormItem>
+    </Form>
   </div>
 </template>
 

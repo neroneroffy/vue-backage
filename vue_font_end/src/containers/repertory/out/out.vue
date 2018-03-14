@@ -11,7 +11,7 @@
         </FormItem>
       </Form >
     </Row>
-    <Table border :columns="commodityType" :data="commodity"></Table>
+    <Table :border="false" :columns="commodityType" :data="commodity"></Table>
     <div class="pagination">
       <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize" placement="top"
             :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
@@ -67,20 +67,6 @@
             align: 'center',
             render: (h, params) => {
             return h('div', [
-              h('Button', {
-                props: {
-                  type: 'primary',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '5px'
-                },
-                on: {
-                  click: () => {
-                  this.$router.push({path:'/repertory/record/edit-record',query:{id:params.row.goodsId}})
-              }
-          }
-      },'查看详情'),
       h('Button', {
         props: {
           type: 'warning',
@@ -94,7 +80,7 @@
           /*this.$router.push({path:'/',query:{id:params.row.id}})*/
         }
       }
-    }, '盘盈'),
+    }, '已出库'),
       h('Button', {
         props: {
           type: 'error',
@@ -105,10 +91,10 @@
         },
         on: {
           click: () => {
-          this.$router.push({path:'',query:{id:params.row.id}})
+          this.$router.push({path:'/repertory/out/edit-out',query:{id:params.row.id}})
       }
     }
-    }, '盘亏')
+    }, '待出库')
     ])
     }
     }
@@ -171,5 +157,11 @@
 </script>
 
 <style scoped>
+  .pagination{
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
 </style>
 
