@@ -15,12 +15,13 @@
               <Option v-for="item in supplierList" :value="item.id" :key="item.name">{{ item.name }}</Option>
             </Select>
           </FormItem>
+          <FormItem>
+            <Input type="text" v-model="baseData.stockInOrder" placeholder="关联采购单"/>
+          </FormItem>
 
         </Form>
       </div>
-      <div>
-        <Input type="text" placeholder="关联采购单"/>
-      </div>
+
       <div v-if="!isChecked">
         <Button type="primary" icon="plus-round" @click="save">保存入库单</Button>
       </div>
@@ -106,44 +107,7 @@
                       if(this.isChecked){
                         return
                       }
-                      this.goodsData = [
-                        {
-                          name:"纸尿裤1",
-                          id:"1"
-                        },
-                        {
-                          name:"纸尿裤2",
-                          id:"2"
-                        },
-                        {
-                          name:"纸尿裤3",
-                          id:"3"
-                        },
-                        {
-                          name:"纸尿裤4",
-                          id:"4"
-                        },
-                        {
-                          name:"纸尿裤5",
-                          id:"5"
-                        },
-                        {
-                          name:"纸尿裤6",
-                          id:"6"
-                        },
-                        {
-                          name:"纸尿裤7",
-                          id:"7"
-                        },
-                        {
-                          name:"纸尿裤8",
-                          id:"8"
-                        },
-                        {
-                          name:"纸尿裤9",
-                          id:"9"
-                        },
-                      ];
+
                       this.currentRow = params.index
                       this.goodsPicker = true
                     },
@@ -342,44 +306,7 @@
                       if(this.isChecked){
                         return
                       }
-                      this.goodsData = [
-                        {
-                          name:"纸尿裤1",
-                          id:"1"
-                        },
-                        {
-                          name:"纸尿裤2",
-                          id:"2"
-                        },
-                        {
-                          name:"纸尿裤3",
-                          id:"3"
-                        },
-                        {
-                          name:"纸尿裤4",
-                          id:"4"
-                        },
-                        {
-                          name:"纸尿裤5",
-                          id:"5"
-                        },
-                        {
-                          name:"纸尿裤6",
-                          id:"6"
-                        },
-                        {
-                          name:"纸尿裤7",
-                          id:"7"
-                        },
-                        {
-                          name:"纸尿裤8",
-                          id:"8"
-                        },
-                        {
-                          name:"纸尿裤9",
-                          id:"9"
-                        },
-                      ];
+
                       this.currentRow = params.index
                       this.goodsPicker = true
                     },
@@ -544,6 +471,7 @@
             },
           ]
         ,
+        type:"goods",
         inputStyle:{
           width:"100%",
           height:"32px",
@@ -601,7 +529,6 @@
             value:"2"
           },
         ],
-        goodsData:"",
         selectedGood:[{
           goodsName:"产品1",
           goodsId:"1"
@@ -619,11 +546,23 @@
         baseData:{
           supplier:"",
           code:"",
-          date:new Date()
+          date:new Date(),
+          stockInOrder:""
         }
       }
     },
     mounted(){
+      switch (this.$route.query.name){
+        case "商品":
+          this.type = "goods";
+          break;
+        case "赠品":
+          this.type = "present";
+          break;
+        case "物料":
+          this.type = "material";
+          break;
+      };
       if(this.$route.query.id){
         this.$http.get(`/static/goodsStockShowBack${this.$route.query.id}.json`,{
           params:{ id:this.$route.query.id }

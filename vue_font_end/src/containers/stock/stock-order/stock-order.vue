@@ -7,10 +7,10 @@
         <div class="search">
           <Form ref="formInline" :model="searchContent" inline>
             <FormItem>
-              <Input type="text" v-model="searchContent.materielName" placeholder="请输入名称"/>
+              <Input type="text" v-model="searchContent.materielName" placeholder="采购单编号"/>
             </FormItem>
             <FormItem>
-              <Input type="text" v-model="searchContent.materielCode" placeholder="请输入编号"/>
+              <Input type="text" v-model="searchContent.materielCode" placeholder="请输入采购员"/>
             </FormItem>
             <FormItem>
               <Input type="text" v-model="searchContent.barCode" placeholder="请输入条形码"/>
@@ -97,10 +97,6 @@
           {
             title: '交货日期',
             key: 'receiveTime'
-          },
-          {
-            title: '采购类型',
-            key: 'purchaseType',
           },
           {
             title: '采购单状态',
