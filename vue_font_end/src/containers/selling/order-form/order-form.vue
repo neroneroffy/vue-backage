@@ -17,16 +17,16 @@
           </FormItem>
           <FormItem prop="user">
             <span>查询：</span>
-            <Input type="text" v-model="searchContent" style="width: 150px" placeholder="请输入编号"/>
+            <Input type="text" style="width: 150px" placeholder="请输入编号"/>
           </FormItem>
           <FormItem>
-            <Button type="primary" icon="ios-search" @click="handleSubmit('formInline')">搜索</Button>
+            <Button type="primary" icon="ios-search" >搜索</Button>
           </FormItem>
 
         </Form>
       </div>
       <div>
-        <Button type="primary" icon="plus-round" @click="save">保存订单</Button>
+        <Button type="primary" icon="plus-round" >保存订单</Button>
       </div>
     </div>
     <Table :columns="columns" :data="data" > </Table>
@@ -66,39 +66,39 @@
           {
             title:"订单状态",
             key:"status",
-            width:100,
+
           },
           {
             title:"发货时间",
             key:"sendTime",
-            width:100,
+
 
           },
           {
             title:"收货信息",
             key:"address",
-            width:120,
+
 
           },
           {
             title:"商品金额",
             key:"totalGoodsPrice",
-            width:100,
+
           },
           {
         title:"运费",
           key:"dispatchPrice",
-          width:100,
+
       },
           {
             title:"物流单号",
             key:"logisticCode",
-            width:100,
+
           },
           {
             title: "备注",
             key: "mark",
-            width: 125,
+
           }
     ],
         data:[
