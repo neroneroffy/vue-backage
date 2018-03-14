@@ -27,13 +27,13 @@
         </div>
       </div>
       <Tabs :value="currentTab" @on-click="tabChange">
-        <TabPane label="商品" name="goods">
+        <TabPane label="商品" name="商品">
           <Table :columns="columns" :data="data" class="table" v-if="data"></Table>
         </TabPane>
-        <TabPane label="赠品" name="present">
+        <TabPane label="赠品" name="赠品">
           <Table :columns="columns" :data="data" class="table" v-if="data"></Table>
         </TabPane>
-        <TabPane label="物料" name="material">
+        <TabPane label="物料" name="物料">
           <Table :columns="columns" :data="data" class="table" v-if="data"></Table>
         </TabPane>
       </Tabs>
@@ -47,7 +47,7 @@
 </template>
 
 <script>
-  import {Table, Page, Form, Input, Select, Modal, Row, Col, Upload, Avatar} from 'iview';
+
   export default {
     name: "stock-order",
     data(){
@@ -163,7 +163,7 @@
             }
           }
         ],
-        currentTab:"goods",
+        currentTab:"商品",
         searchContent:{
           materielName:"",
           materielCode:"",
@@ -186,6 +186,9 @@
         ]
       }
     },
+    created(){
+      this.currentTab = sessionStorage.getItem('currentTab')
+    },
     mounted(){
       //初始请求分页
       let params = {
@@ -197,22 +200,12 @@
     methods:{
       //新增
       add(){
-        this.$router.push({path:this.url})
+        this.$router.push({path:`/stock/stock-order/edit-stock-order`,query:{name:this.currentTab}})
       },
       //切换tabs的时候
       tabChange(name){
         this.currentTab = name;
-        switch (name){
-          case "goods":
-            sessionStorage.setItem('orderName',"商品");
-            break;
-          case "presents":
-            sessionStorage.setItem('orderName',"赠品");
-            break;
-          case "material":
-            sessionStorage.setItem('orderName',"物料");
-            break;
-        }
+        sessionStorage.setItem("currentTab",this.currentTab);
         this.pagination();
         console.log(name);
       },
@@ -222,11 +215,11 @@
       },
       //查看
       show(params){
-        this.$router.push({path:this.url,query:{id:params.row.id,checked:true}})
+        this.$router.push({path:`/stock/stock-order/edit-stock-order`,query:{id:params.row.id,checked:true,name:this.currentTab}})
       },
       //编辑
       edit(params){
-        this.$router.push({path:this.url,query:{id:params.row.id}})
+        this.$router.push({path:`/stock/stock-order/edit-stock-order`,query:{id:params.row.id,name:this.currentTab}})
       },
       //删除
       remove(params){
@@ -291,7 +284,7 @@
     },
     computed:{
       //跳转路由
-      url(){
+/*      url(){
         switch(this.currentTab){
           case "goods":
             return `/stock/stock-order/edit-stock-order`;
@@ -300,7 +293,7 @@
           case "material":
             return `/stock/stock-order/edit-stock-order-material`;
         }
-      }
+      }*/
     }
   }
 </script>

@@ -27,13 +27,13 @@
         </div>
       </div>
       <Tabs :value="currentTab" @on-click="tabChange">
-        <TabPane label="商品" name="goods">
+        <TabPane label="商品" name="商品">
           <Table :columns="columns" :data="data" class="table" v-if="data"></Table>
         </TabPane>
-        <TabPane label="赠品" name="present">
+        <TabPane label="赠品" name="赠品">
           <Table :columns="columns" :data="data" class="table" v-if="data"></Table>
         </TabPane>
-        <TabPane label="物料" name="material">
+        <TabPane label="物料" name="物料">
           <Table :columns="columns" :data="data" class="table" v-if="data"></Table>
         </TabPane>
       </Tabs>
@@ -66,10 +66,7 @@
             title: '关联采购单',
             key: 'purchaseOrderNo'
           },
-          {
-            title: '入库类型',
-            key: 'inboundType'
-          },
+
           {
             title: '入库人员',
             key: 'operatorId',
@@ -132,7 +129,7 @@
             }
           }
         ],
-        currentTab:"goods",
+        currentTab:"商品",
         searchContent:{
           materielName:"",
           materielCode:"",
@@ -155,6 +152,9 @@
         ]
       }
     },
+    created(){
+      this.currentTab = sessionStorage.getItem('currentTab')
+    },
     mounted(){
       //初始请求分页
       let params = {
@@ -166,11 +166,12 @@
     methods:{
       //新增
       add(){
-        this.$router.push({path:'/stock/stock-in-order/edit-stock-in-order'})
+        this.$router.push({path:'/stock/stock-in-order/edit-stock-in-order',query:{name:this.currentTab}})
       },
       //切换tabs的时候
       tabChange(name){
         this.currentTab = name;
+        sessionStorage.setItem("currentTab",this.currentTab);
         this.pagination();
         console.log(name);
       },
@@ -181,11 +182,11 @@
       },
       //查看
       show(params){
-        this.$router.push({path:this.url,query:{id:params.row.id,checked:true}})
+        this.$router.push({path:`/stock/stock-in-order/edit-stock-in-order`,query:{id:params.row.id,checked:true,name:this.currentTab}})
       },
       //编辑
       edit(params){
-        this.$router.push({path:this.url,query:{id:params.row.id}})
+        this.$router.push({path:`/stock/stock-in-order/edit-stock-in-order`,query:{id:params.row.id,name:this.currentTab}})
       },
       //删除
       remove(params){
@@ -232,6 +233,8 @@
       //点击分页
       changePage(currentPageNum) {
         this.currentPage = currentPageNum;
+
+
         let params = {
           pageNum: this.currentPage,
           pageSize: this.pageSize
@@ -249,8 +252,8 @@
       },
     },
     computed:{
-      //跳转路由
-      url(){
+      //跳转路由；由于字段都一样，所以暂时用一个页面
+/*      url(){
         switch(this.currentTab){
           case "goods":
             return `/stock/stock-in-order/edit-stock-in-order`;
@@ -260,7 +263,7 @@
             return `/stock/stock-in-order/edit-stock-in-order-material`;
         }
 
-      }
+      }*/
     }
   }
 </script>

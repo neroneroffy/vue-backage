@@ -6,7 +6,7 @@
       <div class="search">
         <Form ref="formInline"  inline>
           <FormItem v-if="title!=='新增入库单'">
-            <Tag type="dot">入库单编号：{{baseData.code}}</Tag>
+            <Tag type="dot">采购单编号：{{baseData.code}}</Tag>
           </FormItem>
           <FormItem  v-if="title!=='新增入库单'">
             <Tag type="dot">单据日期：{{baseData.date}}</Tag>
@@ -20,7 +20,7 @@
         </Form>
       </div>
       <div v-if="!isChecked">
-        <Button type="primary" icon="plus-round" @click="save">保存入库单</Button>
+        <Button type="primary" icon="plus-round" @click="save">保存采购单</Button>
       </div>
 
     </div>
@@ -37,7 +37,8 @@
     name: "edit-stock-order",
     data(){
       return{
-        title:this.$route.query.id?this.$route.query.checked?'查看商品采购单':'编辑商品采购单':'新增商品采购单',
+
+        title:this.$route.query.id?this.$route.query.checked?`查看${this.$route.query.name}采购单`:`编辑${this.$route.query.name}采购单`:`新增${this.$route.query.name}采购单`,
         isChecked:this.$route.query.checked?true:false,
         isNew:this.$route.query.id?true:false,
         columns:[
@@ -192,6 +193,25 @@
                   }
                 })
               }))
+            }
+          },
+          {
+            title:"采购单价",
+            key:"purchasePrice",
+            width:120,
+            render:(h,params)=>{
+              return h('Input',{
+                props:{
+                  value:params.row.purchasePrice,
+                  placeholder:"采购单价",
+                  disabled:this.isChecked
+                },
+                on:{
+                  input:(v)=>{
+                    params.row.purchasePrice = v
+                  }
+                }
+              })
             }
           },
           {
@@ -354,8 +374,8 @@
         ],
         goodsData:"",
         selectedGood:[{
-          goodsName:"产品1",
-          goodsId:"1"
+          goodsName:"",
+          goodsId:""
         }],
         supplierList:[
           {
@@ -376,20 +396,20 @@
     },
     mounted(){
       if(this.$route.query.id){
-        this.$http.get(`/static/goodsStockShowBack${this.$route.query.id}.json`,{
+        this.$http.get(`/static/editGoodsStock.json`,{
           params:{ id:this.$route.query.id }
         }).then(response =>{
           let res = response.data;
           if(res.result){
-            this.baseData = res.data.baseData
-            this.data = res.data.orderData;
+
+            this.baseData = res.baseData;
+            this.data = res.orderData;
+            this.selectedGood = [];
             this.data.forEach((v,i)=>{
-              if(i>0){
-                this.selectedGood.push({
-                  goodsName:v.goodsName,
-                  goodsId:v.goodsId
-                })
-              }
+              this.selectedGood.push({
+                goodsName:v.goodsName,
+                goodsId:v.goodsId
+              })
             })
           }
         })
