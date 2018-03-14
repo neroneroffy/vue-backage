@@ -11,7 +11,7 @@
         </FormItem>
       </Form >
     </Row>
-    <Table border :columns="commodityType" :data="commodity"></Table>
+    <Table :border="false" :columns="commodityType" :data="commodity"></Table>
     <div class="pagination">
       <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize" placement="top"
             :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
@@ -170,6 +170,12 @@
     }
 </script>
 
-<style scoped>;
+<style scoped>
+  .pagination{
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
 </style>
 

@@ -1,22 +1,22 @@
 <template>
   <div class="stock">
-    <Row type="flex" justify="end">
-      <Col sapn="6">
-          <Form inline>
-            <FormItem prop="id">
-              <Select v-model="id" :value="id" style="width:200px" placeholder="请选择仓库">
-                <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.contacts }}</Option>
-              </Select>
-            </FormItem>
-            <FormItem>
-              <Button type="primary" icon="plus-circled" @click="make()">保存盘点记录</Button>
-            </FormItem>
-          </Form>
-      </Col>
+    <Row type="flex" justify="space-between">
+      <Form inline>
+        <FormItem prop="id">
+          <Select v-model="id" :value="id" style="width:200px" placeholder="请选择仓库">
+            <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.contacts }}</Option>
+          </Select>
+        </FormItem>
+      </Form>
+      <Form>
+      <FormItem>
+        <Button type="primary" icon="plus-circled" @click="make()">保存盘点记录</Button>
+      </FormItem>
+      </Form>
     </Row>
     <Tabs v-model="status" :value="status" @on-click="tab()">
       <TabPane label="商品" name="GOODS" >
-           <Table border :columns="commodityType" :data="commodity"></Table>
+           <Table :border="false" :columns="commodityType" :data="commodity"></Table>
       </TabPane>
       <TabPane label="赠品" name="GIFT" >标签二的内容</TabPane>
       <TabPane label="物料" name="MATERIEL" >标签三的内容</TabPane>
@@ -51,7 +51,8 @@
              total:"21312",
              num:"12312",
              inventoryNum:"",
-             inventoryResult:""
+             inventoryResult:"",
+             inventoryType:"GOODS",
           }
         ],
         commodityType:[
@@ -106,7 +107,8 @@
           phone:""
         },
         status:"GOODS",
-        cityList:[]
+        cityList:[],
+        shuju:[]
       }
     },
     mounted(){
@@ -121,15 +123,19 @@
         warehouseId:"1",
         stockType:"GOODS"
       }
-      this.$http.post("http://192.168.31.168:8080/base/stockInfo/search",params).then(response=>{
+      /*this.$http.post("http://192.168.31.168:8080/base/stockInfo/search",params).then(response=>{
         console.log(response)
-      })
+        let res = response.data;
+        this.shuju[0]=(res[0]);
+        console.log(this.shuju)
+      })*/
     },
     methods:{
       //保存盘点单
       make(){
-        this.$http.post("",this.commodity).then(response=>{
-          
+        console.log(this.commodity)
+        this.$http.post("http://192.168.31.34:8080/base/inventoryRecordItem/addInventoryRecordItem",this.commodity).then(response => {
+          console.log(response)
         })
       },
       tab(){
