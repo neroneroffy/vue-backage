@@ -349,9 +349,13 @@ router.beforeEach((to, from, next) => {
   }else{
 
     sessionStorage.setItem('lastPath',from.fullPath);
-    sessionStorage.setItem('currentPath',to.fullPath);
+    if(to.fullPath.match(/^\/[a-z]+\/[a-z\-]+/g)){
+      sessionStorage.setItem('currentPath',to.fullPath.match(/^\/[a-z]+\/[a-z\-]+/g)[0]);
+    }else{
+      sessionStorage.setItem('currentPath',to.fullPath);
+    }
+    console.log(to.fullPath)
   }
-
   next()
 })
 

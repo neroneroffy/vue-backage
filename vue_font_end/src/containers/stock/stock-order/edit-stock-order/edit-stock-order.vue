@@ -26,7 +26,7 @@
     </div>
     <Table :columns="columns" :data="data" ref="table"></Table>
 
-    <CommodityPicker type="goods" :showPicker="goodsPicker" @selectDone="selectDone" @cancel="cancel"/>
+    <CommodityPicker :type="type" :showPicker="goodsPicker" @selectDone="selectDone" @cancel="cancel"/>
   </div>
 </template>
 
@@ -37,10 +37,10 @@
     name: "edit-stock-order",
     data(){
       return{
-
         title:this.$route.query.id?this.$route.query.checked?`查看${this.$route.query.name}采购单`:`编辑${this.$route.query.name}采购单`:`新增${this.$route.query.name}采购单`,
         isChecked:this.$route.query.checked?true:false,
         isNew:this.$route.query.id?true:false,
+        type:"goods",
         columns:this.$route.query.name === "赠品"?
           [
           {
@@ -101,45 +101,8 @@
                     if(this.isChecked){
                       return
                     }
-                    this.goodsData = [
-                      {
-                        name:"纸尿裤1",
-                        id:"1"
-                      },
-                      {
-                        name:"纸尿裤2",
-                        id:"2"
-                      },
-                      {
-                        name:"纸尿裤3",
-                        id:"3"
-                      },
-                      {
-                        name:"纸尿裤4",
-                        id:"4"
-                      },
-                      {
-                        name:"纸尿裤5",
-                        id:"5"
-                      },
-                      {
-                        name:"纸尿裤6",
-                        id:"6"
-                      },
-                      {
-                        name:"纸尿裤7",
-                        id:"7"
-                      },
-                      {
-                        name:"纸尿裤8",
-                        id:"8"
-                      },
-                      {
-                        name:"纸尿裤9",
-                        id:"9"
-                      },
-                    ];
-                    this.currentRow = params.index
+
+                    this.currentRow = params.index;
                     this.goodsPicker = true
                   },
                 }
@@ -707,7 +670,7 @@
             value:"2"
           },
         ],
-        goodsData:"",
+
         selectedGood:[{
           goodsName:"",
           goodsId:""
@@ -730,6 +693,17 @@
       }
     },
     mounted(){
+      switch (this.$route.query.name){
+        case "商品":
+          this.type = "goods";
+          break;
+        case "赠品":
+          this.type = "present";
+          break;
+        case "物料":
+          this.type = "material";
+          break;
+      }
       if(this.$route.query.id){
         this.$http.get(`/static/editGoodsStock.json`,{
           params:{ id:this.$route.query.id }

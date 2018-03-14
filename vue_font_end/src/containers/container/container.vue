@@ -209,10 +209,11 @@
             ]
           }
         ],
-        highLight:sessionStorage.getItem('currentPath')
+        highLight:sessionStorage.getItem("currentPath")
       }
     },
     created(){
+      //刷新时候保持高亮
 
       this.user = JSON.parse(localStorage.getItem('user'));
       //验证token
@@ -278,7 +279,13 @@
     },
     watch: {
       '$route': function(to, from) {
-        this.highLight = this.$route.path.match(/^\/[a-z]+\/[a-z\-]+/g)
+        if(this.$route.path.match(/^\/[a-z]+\/[a-z\-]+/g)){
+          this.highLight = this.$route.path.match(/^\/[a-z]+\/[a-z\-]+/g)[0]
+        }else{
+          this.highLight = this.$route.path
+        }
+        console.log(this.highLight);
+
       }
     },
     computed: {
@@ -305,9 +312,9 @@
         if(sessionStorage.getItem('currentPath')){
           name = sessionStorage.getItem('currentPath').match(/^\/[a-z]+/ig);
         }
-        console.log(name)
+
         if(name){
-          console.log(name)
+
           return name
         }
 
