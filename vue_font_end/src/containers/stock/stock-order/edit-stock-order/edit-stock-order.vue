@@ -5,10 +5,10 @@
     <div class="search-wrapper">
       <div class="search">
         <Form ref="formInline"  inline>
-          <FormItem v-if="title!=='新增入库单'">
+          <FormItem v-if="!isNew">
             <Tag type="dot">采购单编号：{{baseData.code}}</Tag>
           </FormItem>
-          <FormItem  v-if="title!=='新增入库单'">
+          <FormItem  v-if="!isNew">
             <Tag type="dot">单据日期：{{baseData.date}}</Tag>
           </FormItem>
           <FormItem>
@@ -39,7 +39,7 @@
       return{
         title:this.$route.query.id?this.$route.query.checked?`查看${this.$route.query.name}采购单`:`编辑${this.$route.query.name}采购单`:`新增${this.$route.query.name}采购单`,
         isChecked:this.$route.query.checked?true:false,
-        isNew:this.$route.query.id?true:false,
+        isNew:this.$route.query.id?false:true,
         type:"goods",
         columns:this.$route.query.name === "赠品"?
           [

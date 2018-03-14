@@ -4,10 +4,10 @@
     <div class="search-wrapper">
       <div class="search">
         <Form ref="formInline"  inline>
-          <FormItem v-if="title!=='新增入库单'">
+          <FormItem v-if="!isNew">
             <Tag type="dot">入库单编号：{{baseData.code}}</Tag>
           </FormItem>
-          <FormItem  v-if="title!=='新增入库单'">
+          <FormItem  v-if="!isNew">
             <Tag type="dot">单据日期：{{baseData.date}}</Tag>
           </FormItem>
           <FormItem>
@@ -15,7 +15,7 @@
               <Option v-for="item in supplierList" :value="item.id" :key="item.name">{{ item.name }}</Option>
             </Select>
           </FormItem>
-          <FormItem>
+          <FormItem v-if="title.indexOf('编辑')<0">
             <Input type="text" v-model="baseData.stockInOrder" placeholder="关联采购单"/>
           </FormItem>
 
@@ -28,7 +28,6 @@
 
     </div>
     <Table :columns="columns" :data="data" ref="table"></Table>
-
       <CommodityPicker type="goods" :showPicker="goodsPicker" @selectDone="selectDone" @cancel="cancel"/>
 
   </div>
@@ -44,7 +43,7 @@
       return{
         title:this.$route.query.id?this.$route.query.checked?`查看${this.$route.query.name}入库单`:`编辑${this.$route.query.name}入库单`:`新增${this.$route.query.name}入库单`,
         isChecked:this.$route.query.checked?true:false,
-        isNew:this.$route.query.id?true:false,
+        isNew:this.$route.query.id?false:true,
         columns:this.$route.query.name === "物料"?
           [
             {

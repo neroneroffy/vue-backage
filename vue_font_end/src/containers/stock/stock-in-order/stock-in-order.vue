@@ -7,19 +7,12 @@
         <div class="search">
           <Form ref="formInline" :model="searchContent" inline>
             <FormItem>
-              <Input type="text" v-model="searchContent.materielName" placeholder="请输入名称"/>
+              <Input type="text" v-model="searchContent.code" placeholder="请输入编号"/>
             </FormItem>
             <FormItem>
-              <Input type="text" v-model="searchContent.materielCode" placeholder="请输入编号"/>
+              <DatePicker type="date" placeholder="选择日期" @on-change="selectDate" style="width: 200px"></DatePicker>
             </FormItem>
-            <FormItem>
-              <Input type="text" v-model="searchContent.barCode" placeholder="请输入条形码"/>
-            </FormItem>
-            <FormItem>
-              <Select v-model="searchContent.category" style="width:200px">
-                <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-              </Select>
-            </FormItem>
+
             <FormItem>
               <Button type="primary" icon="ios-search" @click="handleSubmit('formInline')">搜索</Button>
             </FormItem>
@@ -131,10 +124,8 @@
         ],
         currentTab:"商品",
         searchContent:{
-          materielName:"",
-          materielCode:"",
-          barCode:"",
-          category:""
+          code:"",
+          date:" "
         },
         cityList: [
           {
@@ -165,6 +156,10 @@
       //新增
       add(){
         this.$router.push({path:'/stock/stock-in-order/edit-stock-in-order',query:{name:this.currentTab}})
+      },
+      selectDate(date){
+        this.searchContent.date = date;
+        console.log(this.searchContent.date)
       },
       //切换tabs的时候
       tabChange(name){

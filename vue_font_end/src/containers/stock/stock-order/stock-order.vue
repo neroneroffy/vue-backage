@@ -13,11 +13,13 @@
               <Input type="text" v-model="searchContent.materielCode" placeholder="请输入采购员"/>
             </FormItem>
             <FormItem>
-              <Input type="text" v-model="searchContent.barCode" placeholder="请输入条形码"/>
+              <Select v-model="searchContent.status" style="width:200px" placeholder="采购单状态">
+                <Option v-for="item in status" :value="item.id" :key="item.id">{{ item.name }}</Option>
+              </Select>
             </FormItem>
             <FormItem>
-              <Select v-model="searchContent.category" style="width:200px">
-                <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+              <Select v-model="searchContent.checkStatus" style="width:200px" placeholder="审核状态">
+                <Option v-for="item in checkStatus" :value="item.id" :key="item.id">{{ item.name }}</Option>
               </Select>
             </FormItem>
             <FormItem>
@@ -161,23 +163,42 @@
         ],
         currentTab:"商品",
         searchContent:{
-          materielName:"",
-          materielCode:"",
+          name:"",
+          code:"",
           barCode:"",
-          category:""
+          status:"",
+          checkStatus:""
         },
-        cityList: [
+        status: [
           {
-            value: '2654',
-            label: 'A类'
+            id: '',
+            name: '采购单状态'
           },
           {
-            value: '2655',
-            label: 'B类'
+            id: 'NO',
+            name: '未入库'
           },
           {
-            value: '2656',
-            label: 'C类'
+            id: 'SOME',
+            name: '部分入库'
+          },
+          {
+            id: 'ALL',
+            name: '全部入库'
+          },
+        ],
+        checkStatus: [
+          {
+            id: '',
+            name: '审核状态'
+          },
+          {
+            id: 'NO',
+            name: '未审核'
+          },
+          {
+            id: 'PASS',
+            name: '已审核'
           },
         ]
       }
