@@ -14,21 +14,21 @@
             <!--<span>交货日期：</span>-->
             <!--<DatePicker type="date" placeholder="交货日期" style="width: 150px"></DatePicker>-->
           <!--</FormItem>-->
-          <FormItem prop="productCode">
+          <FormItem prop="orderNo">
             <span>查询:</span>
-            <Input type="text" style="width: 190px" v-model="searchContent.productCode"  placeholder="请输入单据编号"/>
+            <Input type="text" style="width: 190px" v-model="searchContent.orderNo"  placeholder="请输入单据编号"/>
           </FormItem>
-          <FormItem prop="productNum">
-            <Input type="text" style="width: 190px" v-model="searchContent.productNum" placeholder="客户唯一标识"/>
+          <FormItem prop="customerId">
+            <Input type="text" style="width: 190px" v-model="searchContent.customerId" placeholder="客户唯一标识"/>
           </FormItem>
-          <FormItem prop="productCode">
-            <Input type="text" style="width: 190px" v-model="searchContent.productCode"  placeholder="销售人员唯一标识"/>
+          <FormItem prop="salesId">
+            <Input type="text" style="width: 190px" v-model="searchContent.salesId"  placeholder="销售人员唯一标识"/>
           </FormItem>
-          <FormItem prop="productNum">
-            <Input type="text" style="width: 190px" v-model="searchContent.productNum" placeholder="请输入物流单号"/>
+          <FormItem prop="logisticCode">
+            <Input type="text" style="width: 190px" v-model="searchContent.logisticCode" placeholder="请输入物流单号"/>
           </FormItem>
           <FormItem>
-            <Button type="primary" icon="ios-search" >搜索</Button>
+            <Button type="primary" icon="ios-search" @click="handleSubmit('formInline')">搜索</Button>
           </FormItem>
 
         </Form>
@@ -39,7 +39,7 @@
     </div>
     <Table :columns="columns" :data="data"  > </Table>
     <div class="pagination">
-      <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize"  placement="top" :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
+      <Page  show-sizer @on-change="changePage" @on-page-size-change="changePageSize"  :total="total"></Page>
     </div>
   </div>
 
@@ -54,8 +54,8 @@
       return {
         value4: "爸爸的选择",
         pageSizeList: [5, 10, 20],
-        // pageSize: 5,
-        total:1,
+        pageSize: 5,
+        total:0,
         currentPage:1,
         visible:false,
         loading:true,
@@ -66,19 +66,23 @@
         columns: [
           {
             title: "单据编号",
-            width: 100,
             key: "orderNo",
 
           },
           {
             title: "客户唯一标识",
             key: "customerId",
-            width: 110,
+
+          },
+          {
+            title: "名称",
+            key: "nickName",
+
           },
           {
             title: "销售人员唯一标识",
             key: "salesId",
-            width: 140,
+
           },
           {
             title: "订单状态",
@@ -135,19 +139,21 @@
         ],
         data: [
           {
-            orderNo: "156*423582",
-            customerId: "爸爸的选择",
-            salesId: "宝宝的依赖",
-            status: "已发",
-            sendTime: "12：30",
-            address: "代收",
-            totalGoodsPrice: "224元",
-            dispatchPrice: "15",
-            logisticCode: "1225223320",
-            mark: "这个商品已经被售出"
+            orderNo: "",
+            customerId: "",
+            salesId: "",
+            status: "",
+            sendTime: "",
+            address: "",
+            nickName:"",
+            totalGoodsPrice: "",
+            dispatchPrice: "",
+            logisticCode: "",
+            mark: ""
           }
         ],
-        goodsData: ""
+        goodsData: "",
+        id: '',
       }
     },
     mounted() {
@@ -157,6 +163,7 @@
         pageSize: this.pageSize
       };
       this.pagination(params)
+
     },
     methods: {
       done() {
@@ -167,47 +174,56 @@
       },
       //查看
       show(params){
-        this.$router.push({path:'/selling/order-form/edit-order-form/edit-order-form',query:{id:params.row.id,checked:true}})
+        this.$router.push({path:'/selling/order-form/edit-order-form/edit-order-form',query:{id:params.row.id}})
       },
       //提交搜索
       handleSubmit() {
         console.log(this.searchContent)
         let data = {
-          productNum: this.searchContent.productNum,
-          productCode: this.searchContent.productCode,
+          orderNo: this.searchContent.orderNo,
+          customerId: this.searchContent.customerId,
+          salesId: this.searchContent.salesId,
+          logisticCode: this.searchContent.logisticCode,
           currentPage: 1,
-          // pageSize: 5
+          pageSize: 5
         }
-        this.$http.post(`http://192.168.31.13:8080/base/product/findAllProduct`, data).then(response => {
+        ///base/order/seek单条查询
+        this.$http.post(`http://192.168.31.13:8080/base/order/seek`,{...data}).then(response => {
           console.log(response)
           let res = response.data;
-          this.listData = res.content;
-          this.total = res.totalElements;
+          this.data = res.pageList;
+          this.total = res.content;
         })
       },
-      //
+      //分页函数
       pagination(customsParams) {
         let defaultParams = {
-          productNum: this.searchContent.productNum,
-          productCode: this.searchContent.productCode,
+          orderNo: this.searchContent.orderNo,
+          customerId: this.searchContent.customerId,
+          salesId: this.searchContent.salesId,
+          logisticCode: this.searchContent.logisticCode,
           currentPage: 1,
-          // pageSize: 5
+          pageSize: 5
         };
         let params = customsParams || defaultParams;
         ///base/product/findAllProduct  查询所有产品
-        this.$http.post(`http://192.168.31.13:8080/base/product/findAllProduct`, params).then(response => {
+        this.$http.get(`http://192.168.31.13:8080/base/order/findAll`, {
+          params:params
+        }).then(response => {
           console.log(response.data)
           let res = response.data;
-          this.listData = res.content;
-          this.total = res.totalElements;
+          this.data = res.pageList;
+          this.total = res.content;
         })
       },
       //点击分页
       changePage(currentPageNum) {
         this.currentPage = currentPageNum;
         let params = {
-          productNum: this.searchContent.productNum,
-          productCode: this.searchContent.productCode,
+          orderNo: this.searchContent.orderNo,
+          customerId: this.searchContent.customerId,
+          salesId: this.searchContent.salesId,
+          logisticCode: this.searchContent.logisticCode,
           currentPage: this.currentPage,
           pageSize: this.pageSize
         };
@@ -218,22 +234,24 @@
         this.pageSize = currentPageSize;
         this.currentPage = 1;
         let params = {
-          productNum: this.searchContent.productNum,
-          productCode: this.searchContent.productCode,
+          orderNo: this.searchContent.orderNo,
+          customerId: this.searchContent.customerId,
+          salesId: this.searchContent.salesId,
+          logisticCode: this.searchContent.logisticCode,
           currentPage: this.currentPage,
           pageSize: this.pageSize
         };
         this.pagination(params)
       },
-      // mounted(){
-      //   if(this.$route.query.id!==""){
-      //     // this.$http.get("",{
-      //     //   params:{ id:this.$route.query.id }
-      //     // }).then(response =>{
-      //     //   this.editData = response.data.data;
-      //     // })
-      //   }
-      // },
+      mounted(){
+        if(this.$route.query.id!==""){
+          // this.$http.get("",{
+          //   params:{ id:this.$route.query.id }
+          // }).then(response =>{
+          //   this.editData = response.data.data;
+          // })
+        }
+      },
     }
   }
 </script>

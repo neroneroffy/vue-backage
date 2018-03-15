@@ -183,13 +183,17 @@
                 menuName:"出库单管理",
                 uri: "/selling/out"
               },
-              {
+/*            {
                 menuName:"在线支付",
                 uri: "/selling/pay"
               },
               {
                 menuName:"报表统计",
                 uri: "/repertory/report"
+              },*/
+              {
+                menuName:"申请记录",
+                uri: "/repertory/apply-record"
               }
             ]
           },
@@ -285,7 +289,6 @@
           this.highLight = this.$route.path
         }
         console.log(this.highLight);
-
       }
     },
     computed: {

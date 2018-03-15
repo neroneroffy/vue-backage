@@ -3,7 +3,9 @@
   "baseData":{
     "supplier":"1",
     "code":"7894565645665",
-    "date":"2018-03-21"
+    "date":"2018-03-21",
+    "orderRate":"20%",
+    "mark":"备注备注"
   },
   "orderData":[
     {
@@ -18,7 +20,8 @@
       "num":"1",
       "totalPurchasePrice":"33445",
       "totalTaxPrice":"frf",
-      "warehouseId":"2"
+      "warehouseId":"2",
+      "mark":""
     },
     {
       "goodsName":"没有的啊",
@@ -32,7 +35,8 @@
       "num":"1",
       "totalPurchasePrice":"33445",
       "totalTaxPrice":"frf",
-      "warehouseId":"2"
+      "warehouseId":"2",
+      "mark":""
     },
     {
       "goodsName":"没有的啊",
@@ -46,7 +50,8 @@
       "num":"1",
       "totalPurchasePrice":"33445",
       "totalTaxPrice":"frf",
-      "warehouseId":"2"
+      "warehouseId":"2",
+      "mark":""
     },
     {
       "goodsName":"没有的啊",
@@ -60,7 +65,8 @@
       "num":"1",
       "totalPurchasePrice":"33445",
       "totalTaxPrice":"frf",
-      "warehouseId":"2"
+      "warehouseId":"2",
+      "mark":""
     }
 
   ]

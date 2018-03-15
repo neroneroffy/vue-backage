@@ -40,7 +40,7 @@
 
 <script>
   export default {
-    name: "stock-in-order",
+    name: "stock-out",
     data(){
       return{
         pageSizeList:[30,50,100],
@@ -51,24 +51,35 @@
         currentPage:1,
         columns:[
           {
-            title: '单据编码',
-            key: 'orderNo',
+            title: '出库单编号',
+            key: 'outboundOrderNo',
 
           },
           {
-            title: '关联采购单',
-            key: 'purchaseOrderNo'
+            title: '关联客户订单编号',
+            key: 'orderNo'
           },
 
           {
-            title: '入库人员',
+            title: '出库类型',
+            key: 'outboundType',
+          },
+          {
+            title: '所属销售人员账户',
+            key: 'salesAccount',
+          },
+          {
+            title: '交货时间',
+            key: 'receiveTime',
+          },
+          {
+            title: '出库人员唯一标识',
             key: 'operatorId',
           },
           {
             title: '备注',
-            key: 'mark'
+            key: 'mark',
           },
-
           {
             title: '操作',
             key: 'action',
@@ -142,7 +153,7 @@
     methods:{
       //新增
       add(){
-        this.$router.push({path:'/stock/stock-in-order/edit-stock-in-order',query:{name:this.currentTab}})
+        this.$router.push({path:'/selling/out/edit-stock-out',query:{name:this.currentTab}})
       },
       selectDate(date){
         this.searchContent.date = date;
@@ -162,11 +173,11 @@
       },
       //查看
       show(params){
-        this.$router.push({path:`/stock/stock-in-order/edit-stock-in-order`,query:{id:params.row.id,checked:true,name:this.currentTab}})
+        this.$router.push({path:`/selling/out/edit-stock-out`,query:{id:params.row.id,checked:true,name:this.currentTab}})
       },
       //编辑
       edit(params){
-        this.$router.push({path:`/stock/stock-in-order/edit-stock-in-order`,query:{id:params.row.id,name:this.currentTab}})
+        this.$router.push({path:`/selling/out/edit-stock-out`,query:{id:params.row.id,name:this.currentTab}})
       },
       //删除
       remove(params){
@@ -195,8 +206,8 @@
           pageSize:30
         };
         let params = customsParams || defaultParams;
-        let url = "/static/materielone.json";
-        switch (this.currentTab){
+        let url = "/static/stockOutData.json";
+/*        switch (this.currentTab){
           case "goods":
             break;
           case "present":
@@ -204,10 +215,13 @@
             break;
           case "material":
             url = "/static/materialData.json";
-        }
+        }*/
         this.$http.get(url).then(response => {
-          let data = response.data;
-          this.data = data.list;
+          let res = response.data;
+          console.log(res)
+          if(res.result){
+            this.data = res.data;
+          }
         })
       },
       //点击分页
@@ -249,5 +263,5 @@
 </script>
 
 <style scoped lang="stylus">
-  @import "./stock-in-order.styl";
+  @import "./stock-out.styl";
 </style>

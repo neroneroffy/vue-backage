@@ -2,18 +2,18 @@
   <div class="edit-member">
     <BastTitle :title="title"></BastTitle>
     <Form ref="editData" :model="editData" :label-width="40" v-if="editData" label-position="left">
-      <FormItem label="ID" prop="id">
-        <Input v-model="editData.id" :disabled="checkMember" placeholder="请输入ID" />
+      <FormItem label="账户" prop="id">
+        <Input v-model="editData.userName" :disabled="isChecked" placeholder="用户账户" />
       </FormItem>
-      <FormItem label="账户" prop="account">
-        <Input v-model="editData.account" :disabled="checkMember" placeholder="请输入账户"/>
+      <FormItem label="昵称" prop="account">
+        <Input v-model="editData.nickName" :disabled="isChecked" placeholder="用户昵称"/>
       </FormItem>
       <FormItem label="角色" prop="role">
-        <Select v-model="editData.roleId" :disabled="checkMember"  placeholder="请选择角色" @on-change = 'roleChange'>
-          <Option :value="v.roleId" :key="v.roleId" v-for="v in editRoleList">{{v.roleName}}</Option>
+        <Select v-model="editData.roleId" :disabled="isChecked"  placeholder="请选择角色" @on-change = 'roleChange'>
+          <Option :value="v.id" :key="v.id" v-for="v in editRoleList">{{v.roleName}}</Option>
         </Select>
       </FormItem>
-      <FormItem label="头像">
+      <!--<FormItem label="头像">
         <FormItem prop="date">
           <Upload
             ref="upload"
@@ -29,14 +29,11 @@
           </Upload>
           <Avatar shape="square" icon="person" size="large" class="avatar-edit-display" :src="editData.avatar"/>
         </FormItem>
-      </FormItem>
+      </FormItem>-->
       <FormItem label="电话" prop="phone">
-        <Input v-model="editData.phone" placeholder="请输入电话" :disabled="checkMember"/>
+        <Input v-model="editData.mobile" placeholder="请输入电话" :disabled="isChecked"/>
       </FormItem>
-      <FormItem label="备注" prop="remark">
-        <Input v-model="editData.remark" :disabled="checkMember" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请填写备注"/>
-      </FormItem>
-      <FormItem v-if="!checkMember" >
+      <FormItem v-if="!isChecked" >
         <Button type="primary" @click="submit">提交</Button>
       </FormItem>
     </Form>
@@ -51,34 +48,19 @@
         name: "editmember",
       data(){
           return {
-            title:this.$route.query.id?'编辑成员':'新增成员',
+            api:"http://192.168.31.174:8080",
+            title:this.$route.query.id?this.$route.query.checked?"查看成员":'编辑成员':'新增成员',
+            isChecked:this.$route.query.checked,
             editData:{
-              id:"",
-              account:"",
+              id:this.$route.query.id?this.$route.query.id:"",
+              userName:"",
+              nickName:"",
               roleId:"",
-              avatar:"",
-              phone:"",
-              remark:""
+              mobile:"",
+
             },
             checkMember:false,
-            editRoleList: [
-              {
-                roleId: 'role1',
-                roleName: '角色1'
-              },
-              {
-                roleId: 'role2',
-                roleName: '角色2'
-              },
-              {
-                roleId: 'role3',
-                roleName: '角色3'
-              },
-              {
-                roleId: 'role4',
-                roleName: '角色4'
-              }
-            ],
+            editRoleList: [],
           }
       },
       components:{
@@ -90,13 +72,19 @@
           }else{
             this.checkMember = false
           }
-
+          //请求角色列表
+        this.$http.get(`${this.api}/sys/user/addPre`).then(response=>{
+          let res = response.data;
+          if(res.result){
+            this.editRoleList = res.data;
+          }
+        });
+          //请求用户数据，回显
         if(this.$route.query.id){
-          this.$http.get(`${this.$api}/auth/queryuser`,{
+          this.$http.get(`${this.api}/sys/user/updatePre`,{
             params:{ id:this.$route.query.id }
           }).then(response=>{
             let res = response.data;
-
             if(res.result){
               this.editData = res.data;
             }
@@ -110,7 +98,30 @@
 
         },
         submit(){
-          console.log(this.editData)
+
+          if(this.$route.query.id){
+            this.$http.post(`${this.api}/sys/user/update`,{...this.editData}).then(response=>{
+              let res = response.data;
+              if(res.result){
+                this.$Message.success('编辑成功!');
+                this.$router.push('/sys/user')
+              }else{
+                this.$Message.error(res.msg);
+              }
+            })
+            return
+          }
+          this.$http.post(`${this.api}/sys/user/add`,{...this.editData}).then(response=>{
+            let res = response.data;
+            if(res.result){
+              this.$Message.success('新增成功!');
+              this.$router.push('/sys/user')
+            }else{
+              this.$Message.error(res.msg);
+            }
+            console.log(res)
+          })
+
         },
         handleView (name) {
           this.imgName = name;

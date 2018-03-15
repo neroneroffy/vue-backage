@@ -47,8 +47,11 @@ import stockPrice from '@/containers/base-data/stock-price/stock-price';//进货
 //售货管理
 import orderForm from '@/containers/selling/order-form/order-form';//进货价格设置
 import editOrderForm from '@/containers/selling/order-form/edit-order-form/edit-order-form';//进货价格明细
+import stockOut from '@/containers/selling/stock-out/stock-out'//出库单管理
+import editStockOut from '@/containers/selling/stock-out/edit-stock-out/edit-stock-out'//出库单管理
 
-//进货管理@/containers/selling/order-form
+
+//进货管理
 import stockOrder from "@/containers/stock/stock-order/stock-order";//采购单管理
 import editStockOrder from "@/containers/stock/stock-order/edit-stock-order/edit-stock-order";//编辑采购单
 import editStockOrderPresent from "@/containers/stock/stock-order/edit-stock-order-present/edit-stock-order-present";//编辑采购单
@@ -118,11 +121,11 @@ const router = new Router({
         },
         {
           path: '/sys/organization',
-          name: 'usermanage',
+          name: 'organization',
           component: organization
         },
         {
-          path: '/sys/edit-organization',
+          path: '/sys/organization/edit-organization',
           name: 'editOrganization',
           component: editOrganization
         },
@@ -133,12 +136,12 @@ const router = new Router({
         },
         {
           path: '/sys/user/checkmember',
-          name: 'editmember',
+          name: 'checkmember',
           component: editmember
         },
         {
           path: '/sys/user/addmember',
-          name: 'editmember',
+          name: 'addmember',
           component: editmember
         },
         {
@@ -298,17 +301,17 @@ const router = new Router({
           name:'edit-stock-in-order',
           component:editStockInOrder
         },
-        {
+/*        {
 
           path: '/stock/stock-in-order/edit-stock-in-order-present',
           name:'edit-stock-in-order-present',
           component:editStockInOrderPresent
-        },
-        {
+        },*/
+/*        {
           path: '/stock/stock-in-order/edit-stock-in-order-material',
           name:'edit-stock-in-order-material',
           component:editStockInOrderMaterial
-        },
+        },*/
 
 //-----------采购单
         {
@@ -316,16 +319,16 @@ const router = new Router({
           name:'edit-stock-order',
           component:editStockOrder
         },
-        {
+/*        {
           path: '/stock/stock-order/edit-stock-order-present',
           name:'edit-stock-in-order-present',
           component:editStockOrderPresent
-        },
-        {
+        },*/
+/*        {
           path: '/stock/stock-order/edit-stock-order-material',
           name:'edit-stock-in-order-material',
           component:editStockOrderMaterial
-        },
+        },*/
          {
           path: '/selling/order-form',
           name:'order-form',
@@ -337,6 +340,16 @@ const router = new Router({
           name:'edit-order-form',
           component:editOrderForm
 
+        },
+        {
+          path: '/selling/out',
+          name:'stock-out',
+          component:stockOut
+        },
+        {
+          path: '/selling/out/edit-stock-out',
+          name:'edit-stock-out',
+          component:editStockOut
         },
 
 
@@ -361,7 +374,7 @@ router.beforeEach((to, from, next) => {
     }else{
       sessionStorage.setItem('currentPath',to.fullPath);
     }
-    console.log(to.fullPath)
+
   }
   next()
 })
