@@ -11,7 +11,7 @@
           mark备注
          }
      -->
-      <Form ref="editData" :model="editData" :label-width="40" v-if="editData" label-position="left">
+      <Form ref="editData" :model="editData" :label-width="80" v-if="editData">
         <FormItem label="名称" prop="productName">
           <Input v-model="editData.productName" placeholder="请输入名称" />
         </FormItem>
@@ -21,14 +21,12 @@
         <FormItem label="条形码" prop="barCode">
           <Input v-model="editData.barCode" placeholder="请输入条形码"/>
         </FormItem>
-        <FormItem prop="category">
-          <Select v-model="editData.category" style="width:200px" placeholder="请选择类型">
-            <Option v-for="item in roleList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-          </Select>
+        <FormItem label="请选择类型" prop="category">
+          <Input v-model="editData.category" placeholder="请输入类型"/>
         </FormItem>
-        <FormItem prop="modelSize">
+        <FormItem label="请选择型号" prop="modelSize">
           <Select v-model="editData.modelSize" style="width:200px" placeholder="请选择型号">
-            <Option v-for="item in roleList2" :value="item.value" :key="item.value">{{ item .label}}</Option>
+            <Option v-for="item in modelSize" :value="item.value" :key="item.value">{{ item .label}}</Option>
           </Select>
         </FormItem>
         <FormItem label="备注" prop="mark">
@@ -38,7 +36,6 @@
           <Button type="primary" @click="submit">提交</Button>
         </FormItem>
       </Form>
-
     </div>
 </template>
 
@@ -58,22 +55,8 @@
             modelSize:'',
             mark:''
           },
-          roleList:[
-            {
-              value: '23',
-              label: 'A型'
-            },
-            {
-              value: '24',
-              label: 'B型'
-            },
-            {
-              value: '25',
-              label: 'C型'
-            }
-          ],
           //NB("NB"), S("S"), M("M"), L("L"), XL("XL"), XXL("XXL"), XXXL("XXXL");
-          roleList2:[
+          modelSize:[
             {
               value: 'NB',
               label: 'NB'
@@ -130,6 +113,12 @@
           }
           this.$http.post(`http://192.168.31.34:8080${url}`,data).then(response=>{
             let res = response.data;
+            if(res.result){
+              this.$Message.success("成功");
+              this.$router.push('/baseData/commodity')
+            }else{
+              this.$Message.success(res.msg);
+            }
           })
         }
       }

@@ -13,58 +13,46 @@
             <Input type="text" v-model="searchContent.giftCode" placeholder="请输入编号"/>
           </FormItem>
           <FormItem prop="account">
-            <Input type="text" v-model="searchContent.barCode" placeholder="请输入条形码"/>
+            <Input type="text" v-model="searchContent.category" placeholder="请输入类型"/>
           </FormItem>
-          <FormItem >
-            <Select v-model="searchContent.category" style="width:200px" placeholder="请选择类型">
-              <Option v-for="item in roleList" :value="item" :key="item">{{ item }}</Option>
-            </Select>
-          </FormItem>
+
           <FormItem>
             <Button type="primary" icon="ios-search" @click="handleSubmit('formInline')">搜索</Button>
           </FormItem>
         </Form>
       </div>
     </div>
-    <Table :columns="columns" :data="listData" class="table" v-if="listData"></Table>
+    <Table :columns="columns" :data="listData" class="table"></Table>
     <div class="pagination">
       <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize" placement="top"
-            :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
+            :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total" :current="currentPage"></Page>
     </div>
   </div>
 </template>
 
 <script>
-
-  import {Table, Page, Form, Input, Select, Modal, Row, Col, Upload, Avatar} from 'iview';
-
   export default {
     name: "present",
     data() {
       return {
-        pageSizeList: [5, 10, 20],
-        pageSize: 5,
+        pageSizeList: [30,50,100],
+        pageSize: 30,
         total: 0,
         currentPage: 1,
         searchContent: {
           giftName: '',
           giftCode: '',
-          category: "",
-          barCode: ""
+          category:""
         },
-        roleList:["请选择赠品类型","A类","B类","C类"],
-        roleList2:["请选择赠品型号","A型","B型","C型"],
+        modelSize:["请选择型号","NB","S"],
         columns: [
           {
-            type: 'selection',
-            width: 60,
-            align: 'center'
+            title: '赠品名称',
+            key: 'giftName'
           },
           {
-            title: '赠品名称',
-            key: 'giftName',
-            width: 180
-
+            title: '分类',
+            key: 'category',
           },
           {
             title: '编号',
@@ -131,7 +119,7 @@
             }
           }
     ],
-        listData:""
+        listData:[]
     }
     },
     mounted() {
@@ -139,15 +127,7 @@
       //
       /**/
       //初始请求分页
-      let params = {
-        giftName: this.searchContent.giftName,
-        giftCode: this.searchContent.giftCode,
-        category: this.searchContent.category,
-        barCode: this.searchContent.barCode,
-        currentPage: this.currentPage,
-        pageSize: this.pageSize
-      };
-      this.pagination(params)
+      this.pagination()
     },
     methods: {
       addMember() {
@@ -156,12 +136,13 @@
       //提交搜索
       handleSubmit() {
         let params={
-          giftName: this.searchContent.giftName,
-          giftCode: this.searchContent.giftCode,
-          category: this.searchContent.category,
-          barCode: this.searchContent.barCode,
+          ...this.searchContent,
           currentPage: 1,
           pageSize: 5
+        };
+        if(this.searchContent.giftName === "" && this.searchContent.giftCode === "" && this.searchContent.giftCode ===""){
+          this.pagination();
+          return
         }
         this.$http.post("http://192.168.31.34:8080/base/gift/findAllGift", params).then(response=>{
           let data = response.data;
@@ -185,10 +166,11 @@
           loading: true,
           onOk: () => {
           this.$store.dispatch('modalLoading');
-          this.$http.get(`http://192.168.13.31:8080/base/gift/deleteGift`,{
+          this.$http.get(`http://192.168.31.34:8080/base/gift/deleteGift`,{
             params:{ id:params.row.id}
           }).then(response=>{
-            console.log(response)
+            let res = response.data;
+            console.log(response);
             if (res.result) {
               this.pagination();
               this.$Modal.remove();
@@ -205,18 +187,13 @@
       //分页函数
       pagination(customsParams) {
         let defaultParams = {
-          giftName: '',
-          giftCode: '',
-          category: "",
-          barCode: "",
           currentPage: 1,
-          pageSize: 5
+          pageSize: 30
         };
         let params = customsParams || defaultParams;
         /*/base/gift/findAllGift*/
         console.log(params)
         this.$http.post("http://192.168.31.34:8080/base/gift/findAllGift", params).then(response => {
-          console.log(response)
           let data = response.data;
           this.listData = data.content;
           this.total = data.totalElements;
@@ -226,24 +203,17 @@
       changePage(currentPageNum) {
         this.currentPage = currentPageNum;
         let params = {
-          giftName: this.searchContent.giftName,
-          giftCode: this.searchContent.giftCode,
-          category: this.searchContent.category,
-          barCode: this.searchContent.barCode,
+          ...this.searchContent,
           currentPage: this.currentPage,
           pageSize: this.pageSize
         };
-
         this.pagination(params)
       },
       changePageSize(currentPageSize) {
         this.pageSize = currentPageSize;
         this.currentPage = 1;
         let params = {
-          giftName: this.searchContent.giftName,
-          giftCode: this.searchContent.giftCode,
-          category: this.searchContent.category,
-          barCode: this.searchContent.barCode,
+          ...this.searchContent,
           currentPage: this.currentPage,
           pageSize: this.pageSize
         };

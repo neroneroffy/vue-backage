@@ -16,7 +16,7 @@
         <div class="search">
           <Form ref="formInline" :model="searchContent" inline>
             <FormItem prop="user">
-            <Checkbox v-model="searchContent.isHidden" >是否隐藏</Checkbox>
+            <Checkbox v-model="searchContent.isHidden" >是否已删除</Checkbox>
             </FormItem>
             <FormItem prop="user">
               <Input type="text" v-model="searchContent.materielName" placeholder="请输入名称"/>
@@ -25,12 +25,7 @@
               <Input type="text" v-model="searchContent.materielCode" placeholder="请输入编号"/>
             </FormItem>
             <FormItem prop="user">
-              <Input type="text" v-model="searchContent.barCode" placeholder="请输入条形码"/>
-            </FormItem>
-            <FormItem prop="user">
-              <Select v-model="searchContent.category" style="width:200px">
-                <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-              </Select>
+              <Input type="text" v-model="searchContent.category" placeholder="请输入分类"/>
             </FormItem>
             <FormItem>
               <Button type="primary" icon="ios-search" @click="handleSubmit('formInline')">搜索</Button>
@@ -39,7 +34,7 @@
         </div>
       </div>
       <!--表格数据获取-->
-      <Table :columns="columns" :data="listData" class="table" v-if="listData"></Table>
+      <Table :columns="columns" :data="listData" :row-class-name="rowClassName" class="table" v-if="listData"></Table>
       <!--listData数据
       changePage回调页码 changePageSize回调条数 page-size每页条数 page-size-opts:每页条数配置 total:数据总数-->
       <div class="pagination">
@@ -62,11 +57,7 @@
             loading:false,
             currentPage:1,
             columns:[
-              {
-                type: 'selection',
-                width: 60,
-                align: 'center'
-              },
+
               {
                 title: '物料名称',
                 key: 'materielName',
@@ -139,24 +130,10 @@
             searchContent:{
               materielName:"",
               materielCode:"",
-              barCode:"",
               category:"",
               isHidden:false
             },
-            cityList: [
-              {
-                value: '2654',
-                label: 'A类'
-              },
-              {
-                value: '2655',
-                label: 'B类'
-              },
-              {
-                value: '2656',
-                label: 'C类'
-              },
-            ]
+
           }
         },
         mounted(){
@@ -169,23 +146,33 @@
           this.pagination(params)
         },
         methods:{
+          rowClassName (row, index) {
+
+            if (row.del) {
+              console.log(432423);
+              return 'del';
+            } else{
+              return '';
+            }
+
+          },
           //新增
           addMember(){
             this.$router.push({path:'/baseData/materiel/edit-materiel'})
           },
           //提交搜索
           handleSubmit() {
+            if(this.searchContent.materielName === "" && this.searchContent.materielCode === "" && this.searchContent.category ===""){
+              this.pagination();
+              return
+            }
             let params = {
-              materielName:this.searchContent.materielName,
-              materielCode:this.searchContent.materielCode,
-              barCode:this.searchContent.barCode,
-              category:this.searchContent.category,
+              ...this.searchContent,
               currentPage: this.currentPage,
               pageSize: this.pageSize,
               isDel:this.searchContent.isHidden
             };
             this.$http.post("http://192.168.31.34:8080/base/materiel/findAllMateriel",params).then(response => {
-              console.log(response.data)
               let data = response.data;
               this.listData = data.content;
               this.total=data.totalElements;
@@ -249,10 +236,7 @@
           changePage(currentPageNum) {
             this.currentPage = currentPageNum;
             let params = {
-              materielName:this.searchContent.materielName,
-              materielCode:this.searchContent.materielCode,
-              barCode:this.searchContent.barCode,
-              category:this.searchContent.category,
+
               currentPage: this.currentPage,
               pageSize: this.pageSize,
               isDel:this.searchContent.isHidden
@@ -264,10 +248,7 @@
             this.pageSize = currentPageSize;
             this.currentPage = 1;
             let params = {
-              materielName:this.searchContent.materielName,
-              materielCode:this.searchContent.materielCode,
-              barCode:this.searchContent.barCode,
-              category:this.searchContent.category,
+
               currentPage: this.currentPage,
               pageSize: this.pageSize,
               isDel:this.searchContent.isHidden
@@ -280,4 +261,7 @@
 
 <style scoped lang="stylus">
   @import "materiel.styl";
+  .ivu-table .del td{
+    background #cccccc
+  }
 </style>
