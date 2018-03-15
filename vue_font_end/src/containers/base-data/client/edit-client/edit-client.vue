@@ -55,6 +55,7 @@
       name: "edit-client",
       data(){
         return {
+          api:"http://192.168.31.13:8080",
           title:this.$route.query.id?this.$route.query.checked?'查看客户':'编辑客户':'新增客户',
           editData:{
             "customerName":"",
@@ -84,33 +85,27 @@
           ],
           status:["请选择客户状态","初次拜访","二次拜访","多次拜访","已签约"],
           isChecked:this.$route.query.checked?true:false,
-          areaData:[
-            {
-              value: 'beijing',
-              label: '北京',
-              children: [],
-              loading: false
-            },
-            {
-              value: 'hangzhou',
-              label: '杭州',
-              children: [],
-              loading:false
-            }
-          ]
+          areaData:[]
         }
       },
       components:{
         BastTitle
       },
       mounted(){
-
+        this.$http.get(`${this.api}/base/area/province`).then(response => {
+          this.areaData = response.data;
+          this.areaData.forEach(v=>{
+            v.label = v.areaName;
+            v.value = v.id;
+            v.loading = false
+          })
+          let res = response.data;
+        });
         if(this.$route.query.id){
           this.$http.get(`${this.$api}/base/customer/updatePre`,{
             params:{ id:this.$route.query.id }
           }).then(response=>{
             let res = response.data;
-
             if(res){
               this.editData = res;
             }
@@ -118,14 +113,27 @@
         }
 
         if(this.$route.query.id){
-          this.setCascader("北京/西雅图","block","")
+          //this.setCascader("北京/西雅图","block","")
         }
 
       },
       methods:{
         loadData (item, callback) {
           item.loading = true;
-          setTimeout(() => {
+          this.$http.get(`${this.api}/base/area/cityOrDistrict`,{
+            params:{id:item.value}
+          }).then(response=>{
+            let res = response.data;
+            item.children = res.array;
+            //请求回来，展开列表
+            item.children.forEach(v=>{
+              v.value = v.id;
+              v.loading = false
+            })
+            callback();
+            item.loading = false;
+          });
+          /*setTimeout(() => {
             if (item.value === 'beijing') {
               item.children = [
                 {
@@ -156,7 +164,7 @@
             }
             item.loading = false;
             callback();
-          }, 1000);
+          }, 1000);*/
         },
         setCascader(val,style,placeholoder){
           document.getElementsByClassName("ivu-cascader-label")[0].innerHTML = val;

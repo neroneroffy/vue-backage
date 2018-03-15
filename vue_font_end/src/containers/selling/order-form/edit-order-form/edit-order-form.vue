@@ -2,15 +2,15 @@
 <template>
   <div class="edit-order-form">
     <div class="search-wrapper">
+      <BastTitle title="客户订单管理明细"/>
       <div class="search">
-        <Form ref="formInline":model="searchContent"  inline>
+        <Form ref="formInline":model="searchContent"   inline>
           <FormItem>
             <span>供货商：</span>
             <Select  style="width:200px"  placeholder="请选择供货商">
               <Option v-for="item in supplierList" :value="item.id" :key="item.name">{{ item.name }}</Option>
             </Select>
           </FormItem>
-
           <FormItem prop="user">
           <span>单据日期：</span>
           <DatePicker type="date" placeholder="单据日期" style="width: 150px"></DatePicker>
@@ -20,15 +20,17 @@
           <span>交货日期：</span>
           <DatePicker type="date" placeholder="交货日期" style="width: 150px"></DatePicker>
           </FormItem>
+          <Button type="primary" size="large" @click="exportData"><Icon type="ios-download-outline"></Icon>导出数据</Button>
         </Form>
       </div>
     </div>
-              <Table :columns="columns" :data="data"  > </Table>
+    <Table :columns="columns" :data="data" ref="table" > </Table>
+
   </div>
 </template>
 
 <script>
-  import BastTitle from  "@/components/base-title";
+  import BastTitle from  "@/components/base-title";//标题
   import { Form,Select,Upload,Avatar,Button,DatePicker,Cascader } from 'iview'
   export default {
     name: "edit-order-form",
@@ -117,6 +119,9 @@
         goodsData: ""
       }
     },
+    components:{
+      BastTitle
+    },
     // mounted() {
     //   //初始请求分页
     //   let params = {
@@ -142,6 +147,11 @@
       },
       cancel() {
 
+      },
+        exportData() {
+            this.$refs.table.exportCsv({
+              filename: '导出数据',
+            });
       },
       //提交搜索
       handleSubmit() {
@@ -208,7 +218,7 @@
       //     // })
       //   }
       // },
-    }
+        }
   }
 </script>
 
