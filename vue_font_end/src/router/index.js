@@ -49,7 +49,8 @@ import orderForm from '@/containers/selling/order-form/order-form';//进货价�
 import editOrderForm from '@/containers/selling/order-form/edit-order-form/edit-order-form';//进货价格明细
 import stockOut from '@/containers/selling/stock-out/stock-out'//出库单管理
 import editStockOut from '@/containers/selling/stock-out/edit-stock-out/edit-stock-out'//出库单管理
-
+import applyRecord from '@/containers/selling/apply-record/apply-record'//申请记录
+import editApplyRecord from '@/containers/selling/apply-record/edit-apply-record/edit-apply-record'//申请记录
 
 //进货管理
 import stockOrder from "@/containers/stock/stock-order/stock-order";//采购单管理
@@ -350,6 +351,16 @@ const router = new Router({
           path: '/selling/out/edit-stock-out',
           name:'edit-stock-out',
           component:editStockOut
+        },
+        {
+          path: '/selling/apply-record',
+          name:'apply-record',
+          component:applyRecord
+        },
+        {
+          path: '/selling/apply-record/edit-apply-record',
+          name:'edit-apply-record',
+          component:editApplyRecord
         },
 
 
