@@ -13,23 +13,24 @@
           <Option :value="v.id" :key="v.id" v-for="v in editRoleList">{{v.roleName}}</Option>
         </Select>
       </FormItem>
-      <!--<FormItem label="头像">
+      <FormItem label="头像">
         <FormItem prop="date">
           <Upload
             ref="upload"
+            :headers="headers"
             :on-success="handleSuccess"
             :format="['jpg','jpeg','png']"
             :max-size="2048"
             :on-format-error="handleFormatError"
             :on-exceeded-size="handleMaxSize"
-            action="//jsonplaceholder.typicode.com/posts/"
+            action="http://192.168.31.174:8080/base/attachment/upload/uploadImg"
             v-if="!checkMember"
           >
             <Button type="ghost" icon="ios-cloud-upload-outline"v-if="!checkMember"  >上传头像</Button>
           </Upload>
           <Avatar shape="square" icon="person" size="large" class="avatar-edit-display" :src="editData.avatar"/>
         </FormItem>
-      </FormItem>-->
+      </FormItem>
       <FormItem label="电话" prop="phone">
         <Input v-model="editData.mobile" placeholder="请输入电话" :disabled="isChecked"/>
       </FormItem>
@@ -61,6 +62,9 @@
             },
             checkMember:false,
             editRoleList: [],
+            headers:{
+              token:localStorage.getItem('xAuthToken')
+            }
           }
       },
       components:{
@@ -131,9 +135,12 @@
           const fileList = this.$refs.upload.fileList;
           this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
         },
-        handleSuccess (res, file) {
-          file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar';
-          file.name = '7eb99afb9d5f317c912f08b5212fd69a';
+        handleSuccess (response, file, fileList) {
+          console.log(response)
+          console.log(file)
+          console.log(fileList)
+          /*file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar';
+          file.name = '7eb99afb9d5f317c912f08b5212fd69a';*/
         },
         handleFormatError (file) {
           this.$Notice.warning({

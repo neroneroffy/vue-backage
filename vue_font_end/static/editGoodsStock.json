@@ -12,6 +12,7 @@
       "goodsName":"没有的啊",
       "purchaseOrderId":"22",
       "goodsId":"22334",
+      "modelSize":"NB",
       "unipurchasePricetsId":"4512314",
       "unitsId":"1",
       "taxPrice":"222",
@@ -26,6 +27,7 @@
     {
       "goodsName":"没有的啊",
       "purchaseOrderId":"22",
+      "modelSize":"S",
       "goodsId":"22334",
       "unipurchasePricetsId":"4512314",
       "unitsId":"2",
@@ -41,6 +43,7 @@
     {
       "goodsName":"没有的啊",
       "purchaseOrderId":"22",
+      "modelSize":"NB",
       "goodsId":"22334",
       "unipurchasePricetsId":"4512314",
       "taxPrice":"222",
@@ -56,6 +59,7 @@
     {
       "goodsName":"没有的啊",
       "purchaseOrderId":"22",
+      "modelSize":"NB",
       "goodsId":"22334",
       "unipurchasePricetsId":"4512314",
       "unitsId":"2",

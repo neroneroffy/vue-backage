@@ -322,27 +322,17 @@
               title:"货物型号",
               key:"modelSize",
               render:(h,params)=>{
-                return h('Select',{
-                  props:{
-                    value:this.data[params.index].modelSize,
-                    placeholder:"选择型号",
-                    disabled:this.isChecked
+                return h("div",{
+                  style:{
+                    padding:"3px 5px",
+                    cursor:"pointer",
+                    background:"#f0f0f0",
+                    borderRadius:"3px",
+                    float:"left"
                   },
-                  on:{
-                    input:(e)=>{
-                      params.row.modelSize = e;
-                    }
-                  }
-                },this.modelSize.map((item)=>{
-                  return h('Option',{
-                    props:{
-                      value:item,
-                      label:item,
-                    },
-
-                  })
-                }))
+                },this.selectedGood[params.index].goodsName?params.row.modelSize:"请先选择商品")
               }
+
             },
             {
               title:"仓库",
@@ -533,8 +523,8 @@
           },
         ],
         selectedGood:[{
-          goodsName:"产品1",
-          goodsId:"1"
+          goodsName:"",
+          goodsId:""
         }],
         supplierList:[
           {
@@ -600,6 +590,7 @@
         this.selectedGood[this.currentRow].goodsName = data.productName;
         this.selectedGood[this.currentRow].goodsId = data.id;
         this.$refs.table.rebuildData[this.currentRow].goodsName = data.productName;
+        this.$refs.table.rebuildData[this.currentRow].modelSize = data.modelSize;
         this.$refs.table.rebuildData[this.currentRow].goodsId = data.id;
         this.goodsPicker = false
       },

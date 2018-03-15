@@ -325,7 +325,7 @@
           params:{ id:this.$route.query.id }
         }).then(response =>{
           let res = response.data;
-          console.log(res);
+
           if(res.result){
             this.baseData = res.baseData;
             this.data = res.orderData;
