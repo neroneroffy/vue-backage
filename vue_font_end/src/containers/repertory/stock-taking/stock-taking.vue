@@ -50,9 +50,19 @@
              unitsId:"12331",
              total:"21312",
              num:"12312",
-             inventoryNum:"",
-             inventoryResult:"",
+             inventoryNum:"12",
+             inventoryResult:"45",
              inventoryType:"GOODS",
+          },
+          {
+            warehouseId:"21312",
+            goodsId:"21312",
+            unitsId:"12331",
+            total:"21312",
+            num:"12312",
+            inventoryNum:"",
+            inventoryResult:"",
+            inventoryType:"GOODS",
           }
         ],
         commodityType:[
@@ -120,21 +130,21 @@
 
        })*/
       let params= {
-        warehouseId:"1",
-        stockType:"GOODS"
+        warehouseId:"",
+        stockType:"GIFT"
       }
-      /*this.$http.post("http://192.168.31.168:8080/base/stockInfo/search",params).then(response=>{
+      this.$http.post("http://192.168.1.25:8080/base/stockInfo/search",params).then(response=>{
         console.log(response)
         let res = response.data;
         this.shuju[0]=(res[0]);
         console.log(this.shuju)
-      })*/
+      })
     },
     methods:{
-      //保存盘点单
+      //保存盘点单base:inventoryRecord:addInventoryRecord
       make(){
         console.log(this.commodity)
-        this.$http.post("http://192.168.31.34:8080/base/inventoryRecordItem/addInventoryRecordItem",this.commodity).then(response => {
+        this.$http.post("http://192.168.31.34:8080/base/inventoryRecord/addInventoryRecord",this.commodity).then(response => {
           console.log(response)
         })
       },
