@@ -51,7 +51,8 @@
         },
         mounted(){
           console.log(this.$route.query);
-          this.$http.get("http://192.168.31.168/base/warehouse/warehouseFindAll").then(response => {
+          //base/inventoryRecordItem/findInventoryRecordItem this.$route.query.id
+          this.$http.get("http://192.168.31.34:8080/base/inventoryRecordItem/findInventoryRecordItem",{params:{id:4}}).then(response => {
             console.log(response);
             let res=response.data;
             this.cityList=res.data;

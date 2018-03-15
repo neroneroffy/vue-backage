@@ -3,7 +3,7 @@
   <div class="stock">
     <Row type="flex" justify="space-between">
           <Form  inline>
-            <DatePicker type="daterange" v-model="time" :value="time"></DatePicker>
+            <DatePicker type="daterange" v-model="time" :value="time" @on-change="timey"></DatePicker>
           </Form >
       <Form>
       <FormItem prop="id">
@@ -34,14 +34,9 @@
                 goodsId:"王大宝"
               }
             ],
-            time:[new Date(new Date().getTime() - 86400000), new Date()],
+            time:["2018-3-14","2018-3-15"],
             id:"",
-            cityList1:[
-              {
-                value:"123",
-                label:'123'
-              }
-            ],
+            cityList1:[],
             pageSizeList: [5, 10, 20],
             pageSize: 5,
             total: 0,
@@ -79,7 +74,9 @@
                       },
                       on: {
                         click: () => {
-                          this.$router.push({path:'/repertory/record/edit-record',query:{id:params.row.goodsId}})
+                          // let dd=new Date(this.time[0]).format("yyyy-MM-dd hh:mm:ss")
+                          console.log(this.time[0])
+                          this.$router.push({path:'/repertory/record/edit-record',query:{id:params.row.id}})
                         }
                       }
                     },'查看详情'),
@@ -123,10 +120,11 @@
              pageSize:'5',
              currentPage:'1',
              startTime:'2018-03-10',
-             endTime:'2018-03-15',
-             warehouseId:'1'
+             endTime:'2018-03-16',
+             warehouseId:'4'
           }
-          this.$http.post("http://192.168.31.34:8080/base/inventoryRecordItem/findAllInventoryRecordItem",params).then( response =>{
+          //base/inventoryRecord/findAllInventoryRecord 查询
+          this.$http.post("http://192.168.31.34:8080/base/inventoryRecord/findAllInventoryRecord ",params).then( response =>{
             console.log(response)
             let res=response.data;
             this.cityList=res.data;
@@ -134,6 +132,10 @@
           })
         },
         methods:{
+          timey(daterange){
+            this.time=daterange;
+            console.log(this.time)
+          },
           pagination(customsParams) {
             let defaultParams = {
               time:[new Date(new Date().getTime() - 86400000), new Date()],
@@ -143,6 +145,7 @@
             };
             let params = customsParams || defaultParams;
             /*/base/gift/findAllGift*/
+
 
             /*this.$http.post("http://192.168.31.34:8080/base/gift/findAllGift", params).then(response => {
               let data = response.data;
