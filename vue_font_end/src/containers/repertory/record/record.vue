@@ -121,10 +121,10 @@
              currentPage:'1',
              startTime:'2018-03-10',
              endTime:'2018-03-16',
-             warehouseId:'4'
+             warehouseId:'1'
           }
           //base/inventoryRecord/findAllInventoryRecord 查询
-          this.$http.post("http://192.168.31.34:8080/base/inventoryRecord/findAllInventoryRecord ",params).then( response =>{
+          this.$http.post("http://192.168.31.13:8080/base/inventoryRecord/findAllInventoryRecord ",params).then( response =>{
             console.log(response)
             let res=response.data;
             this.cityList=res.data;

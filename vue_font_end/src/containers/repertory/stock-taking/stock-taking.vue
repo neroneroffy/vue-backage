@@ -53,30 +53,20 @@
              inventoryNum:"12",
              inventoryResult:"45",
              inventoryType:"GOODS",
-          },
-          {
-            warehouseId:"21312",
-            goodsId:"21312",
-            unitsId:"12331",
-            total:"21312",
-            num:"12312",
-            inventoryNum:"",
-            inventoryResult:"",
-            inventoryType:"GOODS",
           }
         ],
         commodityType:[
           {
             title: '仓库名称',
-            key: 'warehouseId'
+            key: 'warehouseName'
           },
           {
             title: '货物',
-            key: 'goodsId'
+            key: 'goodsName'
           },
           {
             title: '单位',
-            key: 'unitsId'
+            key: 'units'
           },
           {
             title: '金额',
@@ -98,9 +88,11 @@
                 on: {
                   input: (val) => {
                     //赋值行内数据
+                    console.log(params)
                     params.row.inventoryNum = val;
                     params.row.inventoryResult=parseInt(params.row.num)-parseInt(params.row.inventoryNum);
                     this.commodity[params.index]=params.row;
+                    console.log(this.commodity)
                   }
                 }
               })
@@ -111,41 +103,72 @@
             key: 'inventoryResult'
           },
         ],
-        searchContent: {
-          id:"",
-          account:"",
-          phone:""
-        },
         status:"GOODS",
-        cityList:[],
-        shuju:[]
+        cityList:[]
       }
     },
     mounted(){
        ///base/warehouse/warehouseFindAll查询仓库http://192.168.31.222:8080
-       /*this.$http.get("http://192.168.31.168/base/warehouse/warehouseFindAll").then(response=>{
+       /*this.$http.get("http://192.168.31.168:8080/base/warehouse/warehouseFindAll").then(response=>{
           console.log(response)
-         let res=response.data;
+          let res=response.data;
           this.cityList=res.data;
-
+          this.id=res.data[0].id;
        })*/
       let params= {
-        warehouseId:"",
-        stockType:"GIFT"
+        warehouseId:"1",
+        stockType:this.status
       }
-      this.$http.post("http://192.168.1.25:8080/base/stockInfo/search",params).then(response=>{
+      this.$http.post("http://192.168.31.13:8080/base/stockInfo/search",params).then(response=>{
         console.log(response)
         let res = response.data;
-        this.shuju[0]=(res[0]);
-        console.log(this.shuju)
+        res.forEach((item)=>{
+          console.log(item)
+          item['inventoryNum']='';
+          item['inventoryResult']='';
+          item['inventoryType']=item['stockType'];
+        })
+        console.log(res)
+        this.commodity=res;
       })
     },
     methods:{
       //保存盘点单base:inventoryRecord:addInventoryRecord
       make(){
+        /*
+          {
+             warehouseId:"21312",
+             goodsId:"21312",
+             unitsId:"12331",
+             total:"21312",
+             num:"12312",
+             inventoryNum:"12",
+             inventoryResult:"45",
+             inventoryType:"GOODS",
+          }
+         * */
         console.log(this.commodity)
-        this.$http.post("http://192.168.31.34:8080/base/inventoryRecord/addInventoryRecord",this.commodity).then(response => {
+        let params=[];
+        this.commodity.forEach(item=>{
+          if(item.inventoryNum){
+            let obj = {
+              warehouseId:item.warehouseId,
+              goodsId:item.goodsId,
+              unitsId:item.unitsId,
+              total:item.total,
+              num:item.num,
+              inventoryNum:item.inventoryNum,
+              inventoryResult:item.inventoryResult,
+              inventoryType:item.inventoryType,
+            }
+            params.push(obj)
+          }
+        })
+        console.log(params)
+        this.$http.post("http://192.168.31.13:8080/base/inventoryRecord/addInventoryRecord",params).then(response => {
           console.log(response)
+          console.log('保存成功')
+
         })
       },
       tab(){
@@ -154,8 +177,17 @@
           status:this.status,
           id:this.id
         }
-        this.$http.post("",{}).then(response=>{
-
+        this.$http.post("http://192.168.1.25:8080/base/stockInfo/search",params).then(response=>{
+          console.log(response)
+          let res = response.data;
+          res.forEach((item)=>{
+            console.log(item)
+            item['inventoryNum']='';
+            item['inventoryResult']='';
+            item['inventoryType']=item['stockType'];
+          })
+          console.log(res)
+          this.commodity=res;
         })
       }
     }
