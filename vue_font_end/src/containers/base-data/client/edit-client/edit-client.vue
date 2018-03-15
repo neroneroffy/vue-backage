@@ -97,9 +97,10 @@
           this.areaData.forEach(v=>{
             v.label = v.areaName;
             v.value = v.id;
-            v.loading = false
+            v.loading = false;
+            v.children = []
           })
-          let res = response.data;
+          console.log(this.areaData);
         });
         if(this.$route.query.id){
           this.$http.get(`${this.$api}/base/customer/updatePre`,{
@@ -108,12 +109,14 @@
             let res = response.data;
             if(res){
               this.editData = res;
+              console.log(this.editData);
+              this.setCascader(`${this.editData.address[0]}/${this.editData.address[1]}/${this.editData.address[2]}`,"block","")
+
             }
           });
         }
 
         if(this.$route.query.id){
-          //this.setCascader("北京/西雅图","block","")
         }
 
       },
@@ -124,12 +127,16 @@
             params:{id:item.value}
           }).then(response=>{
             let res = response.data;
-            item.children = res.array;
+            item.children = res;
             //请求回来，展开列表
             item.children.forEach(v=>{
               v.value = v.id;
-              v.loading = false
-            })
+              v.label = v.areaName;
+              v.children = [];
+              if(v.areaType !== "DISTRICT"){
+                v.loading = false
+              }
+            });
             callback();
             item.loading = false;
           });
@@ -188,12 +195,12 @@
           }
           this.$http.post(`${this.$api}/base/customer/add`,this.editData).then(response=>{
             let res = response.data;
-             console.log(res)
-            if(res.msg === "手机号已注册"){
+            console.log(response.data)
+            if(!res.result){
               this.$Message.error('手机号已注册');
-            }else if(res.msg === "成功"){
-              this.$Message.info('成功');
-              this.$router.push('/baseData/client')
+            }else{
+             this.$Message.info('添加成功');
+             this.$router.push('/baseData/client')
             }
           })
 
