@@ -193,7 +193,7 @@
               },*/
               {
                 menuName:"申请记录",
-                uri: "/repertory/apply-record"
+                uri: "/selling/apply-record"
               }
             ]
           },
@@ -227,7 +227,7 @@
       if(!xAuthToken){
         this.$router.push('/login');
       }else{
-        axios.get(`${HOST}/validate`).then(response=>{
+        axios.get(`${this.$host}/validate`).then(response=>{
           //如果用户token失效，那么return
           if(!response){
             return
@@ -261,7 +261,7 @@
           loading: true,
           onOk:()=>{
             this.$store.dispatch('modalLoading');
-            axios.get(`${HOST}/logout`).then(res=>{
+            axios.get(`${this.$host}/logout`).then(res=>{
               console.log(res)
               if(res.data.result){
                 sessionStorage.clear();
@@ -282,13 +282,13 @@
       }
     },
     watch: {
-      '$route': function(to, from) {
+      $route(to, from){
         if(this.$route.path.match(/^\/[a-z]+\/[a-z\-]+/g)){
           this.highLight = this.$route.path.match(/^\/[a-z]+\/[a-z\-]+/g)[0]
         }else{
-          this.highLight = this.$route.path
+          let activeNameList = this.$route.path.split('/');
+          this.hightLight = `/${activeNameList[1]}/${activeNameList[2]}`;
         }
-        console.log(this.highLight);
       }
     },
     computed: {

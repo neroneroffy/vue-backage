@@ -1,0 +1,35 @@
+{
+  "result":true,
+  "data":[
+    {
+      "goodsName":"产品名称",
+      "unitsId":"单位",
+      "num":"数量",
+      "mark":"备注"
+    },
+    {
+      "goodsName":"产品名称",
+      "unitsId":"单位",
+      "num":"数量",
+      "mark":"备注"
+    },
+    {
+      "goodsName":"产品名称",
+      "unitsId":"单位",
+      "num":"数量",
+      "mark":"备注"
+    },
+    {
+      "goodsName":"产品名称",
+      "unitsId":"单位",
+      "num":"数量",
+      "mark":"备注"
+    },
+    {
+      "goodsName":"产品名称",
+      "unitsId":"单位",
+      "num":"数量",
+      "mark":"备注"
+    }
+  ]
+}
