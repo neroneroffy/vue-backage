@@ -111,16 +111,15 @@
                   title: "昵称",
                   key: 'nickName',
                 },
-                /*{
+                {
                   title: '头像',
                   key: 'avatar',
-
                   render: (h, params) => {
                     return h('div', [
                       h('Avatar', {
                         props: {
                           shape:"square",
-                          src: `${params.row.thumbnail}`,
+                          src: `${params.row.thumbnail?params.row.thumbnail:""}`,
                           //
                           icon:"person"
                         },
@@ -139,7 +138,7 @@
                       }),
                     ]);
                   }
-                },*/
+                },
 /*                {
                   title: '角色',
                   key: 'roleName',

@@ -5,9 +5,9 @@
         <BaseTitle title="申请记录"/>
         <div class="search">
           <Form ref="formInline" :model="searchContent" inline>
-            <FormItem>
+<!--            <FormItem>
               <Input type="text" v-model="searchContent.customerName" placeholder="客户名称"/>
-            </FormItem>
+            </FormItem>-->
             <FormItem>
               <Input type="text" v-model="searchContent.mobilePhone" placeholder="客户电话"/>
             </FormItem>
