@@ -196,12 +196,12 @@
           };
           let params = customsParams || defaultParams;
           this.$http.get(`${this.api}/base/supplier/supplierFindAll`,{params}).then(response=>{
-            let res = response.data;
-            console.log(res);
-
+            if(response){
+              let res = response.data;
+              console.log(res);
               this.listData = res.supplierList;
               this.total = res.count;
-
+            }
           })
         },
         //点击分页
