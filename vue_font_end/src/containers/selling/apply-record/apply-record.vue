@@ -21,16 +21,14 @@
           </Form>
         </div>
       </div>
-      <Tabs value="赠品">
-        <TabPane label="赠品" name="赠品">
+      <Tabs  v-model="currentTab" :value="currentTab" @on-click="tab">
+        <TabPane label="赠品" name="GIFT">
           <Table :columns="columns" :data="listData" class="table"></Table>
         </TabPane>
-        <TabPane label="物料" name="物料">
+        <TabPane label="物料" name="MATERIEL">
           <Table :columns="columns" :data="listData" class="table"></Table>
         </TabPane>
-
       </Tabs>
-
       <div class="pagination">
         <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize" placement="top" :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
       </div>
@@ -44,7 +42,6 @@
       data(){
           return {
             searchContent: {
-              customerName:'',
               mobilePhone:'',
               applyNo:''
             },
@@ -92,7 +89,8 @@
                       color:this.tagColor(params.row.status).color,
                       type:"dot"
                     }
-                  },this.tagColor(params.row.status).txt)
+                  },
+                    this.tagColor(params.row.status).txt)
                 }
               },
 
@@ -129,7 +127,9 @@
             total:0,
             currentPage:1,
             api:"",
-            listData:[]
+            listData:[],
+            currentTab:'GIFT',
+
           }
       },
       components:{
@@ -137,6 +137,10 @@
       },
       mounted(){
         this.pagination()
+        let params= {
+          customerId:"1",
+          stockType:this.status
+        }
       },
       methods:{
         tagColor(flag){
@@ -176,48 +180,55 @@
                 txt:"已拒绝"
               };
               break;
+            default:
+              return {
+                color:"#c2c99f",
+                txt:"未定义状态"
+
+              }
           }
         },
         handleSubmit(){
-
+          this.pagination();
         },
-
+        tab(name){
+          console.log(name);
+          this.currentTab = name;
+          this.pagination();
+        },
+//查看
         show(params){
+          console.log(params)
           this.$router.push({path:"/selling/apply-record/edit-apply-record",query:{
-              id:params.row.id,
-              status:params.row.status,
-              customerName:params.row.customerName,
-              applyNo:params.row.applyNo,
-              mark:params.row.mark,
-              date:params.row.date,
-              address:params.row.address
+              id:params.row.id
           }})
         },
         //分页函数
         pagination(customsParams){
           let defaultParams = {
-            productName:this.searchContent.productName,
-            productCode:this.searchContent.productCode,
-            category:this.searchContent.category,
+            ...this.searchContent,
+            applyType:this.currentTab,
             currentPage :1,
             pageSize : 5
           };
           let params = customsParams || defaultParams;
           ///base/product/findAllProduct  查询所有产品
-          this.$http.get(`${this.api}/static/applyRecord.json`).then(response=>{
-            console.log(response.data)
-            let res = response.data;
-            this.listData = res.data;
-            //this.total = res.totalElements;
-          })
-        },
+          this.$http.post(`http://192.168.31.34:8080/base/goodsApply/findAllGoodApply`,{...params})
+            .then(response=>{
+              if(response){
+                console.log(response.data);
+                let res = response.data;
+                this.listData = res.pageList;
+                this.total = res.totalElements;
+              }
+              })
 
+        },
         changePage(currentPageNum){
           this.currentPage = currentPageNum;
           let params = {
-            productName:this.searchContent.productName,
-            productCode:this.searchContent.productCode,
-            category:this.searchContent.category,
+            ...this.searchContent,
+            applyType:this.currentTab,
             currentPage:this.currentPage,
             pageSize:this.pageSize
           };
@@ -228,9 +239,8 @@
           this.pageSize = currentPageSize;
           this.currentPage = 1;
           let params = {
-            productName:this.searchContent.productName,
-            productCode:this.searchContent.productCode,
-            category:this.searchContent.category,
+            ...this.searchContent,
+            applyType:this.currentTab,
             currentPage:this.currentPage,
             pageSize:this.pageSize
           };
