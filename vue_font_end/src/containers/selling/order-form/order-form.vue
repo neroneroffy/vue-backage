@@ -1,31 +1,21 @@
-
+//客户订单管理
 <template>
   <div class="order-form">
     <div class="search-wrapper">
+      <BastTitle title="客户订单管理"/>
       <div class="search">
         <Form ref="formInline":model="searchContent"  inline>
-          <!--<span>供货商：</span>-->
-          <!--<Input v-model="value4" icon="more" placeholder="供货商" style="width: 150px"></Input>-->
-          <!--<FormItem prop="user">-->
-            <!--<span>单据日期：</span>-->
-            <!--<DatePicker type="date" placeholder="单据日期" style="width: 150px"></DatePicker>-->
-          <!--</FormItem>-->
-          <!--<FormItem prop="user">-->
-            <!--<span>交货日期：</span>-->
-            <!--<DatePicker type="date" placeholder="交货日期" style="width: 150px"></DatePicker>-->
-          <!--</FormItem>-->
           <FormItem prop="orderNo">
-            <span>查询:</span>
-            <Input type="text" style="width: 190px" v-model="searchContent.orderNo"  placeholder="请输入单据编号"/>
+            <Input type="text" style="width: 200px" v-model="searchContent.orderNo"  placeholder="请输入单据编号"/>
           </FormItem>
           <FormItem prop="customerId">
-            <Input type="text" style="width: 190px" v-model="searchContent.customerId" placeholder="客户唯一标识"/>
+            <Input type="text" style="width: 200px" v-model="searchContent.customerId" placeholder="客户唯一标识"/>
           </FormItem>
           <FormItem prop="salesId">
-            <Input type="text" style="width: 190px" v-model="searchContent.salesId"  placeholder="销售人员唯一标识"/>
+            <Input type="text" style="width: 200px" v-model="searchContent.salesId"  placeholder="销售人员唯一标识"/>
           </FormItem>
           <FormItem prop="logisticCode">
-            <Input type="text" style="width: 190px" v-model="searchContent.logisticCode" placeholder="请输入物流单号"/>
+            <Input type="text" style="width: 200px" v-model="searchContent.logisticCode" placeholder="请输入物流单号"/>
           </FormItem>
           <FormItem>
             <Button type="primary" icon="ios-search" @click="handleSubmit('formInline')">搜索</Button>
@@ -82,11 +72,13 @@
           {
             title: "销售人员唯一标识",
             key: "salesId",
-
           },
           {
             title: "订单状态",
             key: "status",
+            // render:(h,params)=>{
+            //   h("",{},params.row.status === "null"?"":params.row.status)
+            // }
           },
           {
             title: "发货时间",
@@ -156,6 +148,9 @@
         id: '',
       }
     },
+    components:{
+      BastTitle
+    },
     mounted() {
       //初始请求分页
       let params = {
@@ -206,7 +201,7 @@
           pageSize: 5
         };
         let params = customsParams || defaultParams;
-        ///base/product/findAllProduct  查询所有产品
+        ///base/order/findAll  查询所有产品
         this.$http.get(`http://192.168.31.13:8080/base/order/findAll`, {
           params:params
         }).then(response => {
