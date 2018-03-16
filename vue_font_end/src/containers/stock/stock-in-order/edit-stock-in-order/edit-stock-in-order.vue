@@ -560,8 +560,9 @@
         }).then(response =>{
           if(response){
             let res = response.data;
+            console.log(res);
             //转换时间戳
-            res.createTime = formatDate(res.createTime)
+            res.createTime = formatDate(parseInt(res.createTime))
             this.baseData = res;
             this.data = res.inboundOrderItemModelList;
             this.units = res.unitsList;
@@ -575,6 +576,7 @@
               })
 
             })
+
           }
 
         })
@@ -620,7 +622,7 @@
         this.baseData.date = date
       },
       addRow(params){
-        console.log(params);
+
         this.data = this.$refs.table.rebuildData;
         //this.data[params.index] = params.row;
         this.data.push(
@@ -657,7 +659,7 @@
           inboundOrderItemModelList:this.data
         };
         let url = !this.$route.query.id?`${this.api}/base/InboundOrder/addInboundOrder`:`${this.api}/base/InboundOrder/updateInboundOrder`;
-        console.log(url);
+        console.log(submitData);
         this.$http.post(url,{...submitData}).then(response=>{
           let res = response.data;
           if(res.result){
