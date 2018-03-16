@@ -16,19 +16,21 @@
       <FormItem label="头像">
         <FormItem prop="date">
           <Upload
+
             ref="upload"
             :headers="headers"
+            :show-upload-list="false"
             :on-success="handleSuccess"
             :format="['jpg','jpeg','png']"
             :max-size="2048"
             :on-format-error="handleFormatError"
             :on-exceeded-size="handleMaxSize"
-            action="http://192.168.31.174:8080/base/attachment/upload/uploadImg"
-            v-if="!checkMember"
+            action="http://192.168.31.174:8080/base/attachment/upload/signal/uploadImg"
+            v-if="!isChecked"
           >
-            <Button type="ghost" icon="ios-cloud-upload-outline"v-if="!checkMember"  >上传头像</Button>
+            <Button type="ghost" icon="ios-cloud-upload-outline" v-if="!isChecked" >上传头像</Button>
           </Upload>
-          <Avatar shape="square" icon="person" size="large" class="avatar-edit-display" :src="editData.avatar"/>
+          <Avatar shape="square" icon="person" size="large" class="avatar-edit-display" :src="editData.thumbnail"/>
         </FormItem>
       </FormItem>
       <FormItem label="电话" prop="phone">
@@ -51,14 +53,14 @@
           return {
             api:"http://192.168.31.174:8080",
             title:this.$route.query.id?this.$route.query.checked?"查看成员":'编辑成员':'新增成员',
-            isChecked:this.$route.query.checked,
+            isChecked:this.$route.query.checked?true:false,
             editData:{
               id:this.$route.query.id?this.$route.query.id:"",
               userName:"",
               nickName:"",
               roleId:"",
               mobile:"",
-
+              thumbnail:""
             },
             checkMember:false,
             editRoleList: [],
@@ -136,11 +138,9 @@
           this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
         },
         handleSuccess (response, file, fileList) {
-          console.log(response)
-          console.log(file)
-          console.log(fileList)
-          /*file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar';
-          file.name = '7eb99afb9d5f317c912f08b5212fd69a';*/
+          this.editData.thumbnail = response.data
+          console.log(response);
+
         },
         handleFormatError (file) {
           this.$Notice.warning({

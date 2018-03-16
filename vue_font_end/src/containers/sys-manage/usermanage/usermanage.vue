@@ -4,20 +4,13 @@
         <Button type="primary" icon="plus-round" @click="addMember" class="add">新增</Button>
         <div class="search">
           <Form ref="formInline" :model="searchContent" inline>
-            <FormItem prop="user">
-              <Input type="text" v-model="searchContent.nickName" placeholder="用户昵称"/>
-            </FormItem>
             <FormItem prop="account">
               <Input type="text" v-model="searchContent.userName" placeholder="用户账号"/>
             </FormItem>
             <FormItem prop="phone">
               <Input type="text" v-model="searchContent.mobile" placeholder="手机号"/>
             </FormItem>
-            <FormItem >
-              <Select v-model="searchContent.role" style="width:200px" placeholder="请选择角色">
-                <Option v-for="item in roleList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-              </Select>
-            </FormItem>
+
             <FormItem>
               <Button type="primary" icon="ios-search" @click="handleSubmit('formInline')">搜索</Button>
             </FormItem>
@@ -26,40 +19,9 @@
       </div>
       <Table :columns="columns" :data="listData" class="table" v-if="listData"></Table>
       <div class="pagination">
-        <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize" placement="top" :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
+        <Page show-sizer @on-change="changePage" :current="currentPage" @on-page-size-change="changePageSize" placement="top" :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
       </div>
 
-      <Modal
-        v-model="visible"
-        title="查看详情"
-        :loading="loading"
-        @on-cancel = "cancel"
-        @on-ok="done">
-        <div class="edit-wrapper">
-          <Form ref="formValidate" :model="formValidate" :label-width="80">
-            <FormItem label="ID" prop="id">
-              <Input v-model="formValidate.id" disabled placeholder="请输入ID" />
-            </FormItem>
-            <FormItem label="账户" prop="account">
-              <Input v-model="formValidate.account" disabled placeholder="请输入账户"/>
-            </FormItem>
-            <FormItem label="角色" prop="role">
-              <Input v-model="formValidate.roleName" disabled />
-            </FormItem>
-            <FormItem label="头像">
-                  <FormItem prop="date">
-                      <Avatar shape="square" icon="person" size="large" :src="formValidate.avatar" class="avatar-edit-display"/>
-                  </FormItem>
-            </FormItem>
-            <FormItem label="电话" prop="phone">
-              <Input v-model="formValidate.phone" disabled placeholder="请输入电话"/>
-            </FormItem>
-            <FormItem label="备注" prop="remark">
-              <Input v-model="formValidate.remark" disabled type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请填写备注"/>
-            </FormItem>
-          </Form>
-        </div>
-      </Modal>
     </div>
 </template>
 
@@ -73,35 +35,11 @@
               pageSize:30,
               total:0,
               currentPage:1,
-              visible:false,
               loading:true,
               searchContent: {
-                nickName: '',
                 userName: '',
                 mobile:"",
               },
-              roleList: [
-                {
-                  value: '',
-                  label: '请选择角色'
-                },
-                {
-                  value: 'role1',
-                  label: '角色1'
-                },
-                {
-                  value: 'role2',
-                  label: '角色2'
-                },
-                {
-                  value: 'role3',
-                  label: '角色3'
-                },
-                {
-                  value: 'role4',
-                  label: '角色4'
-                }
-              ],
               columns: [
                 {
                   title: '账户',
@@ -111,16 +49,15 @@
                   title: "昵称",
                   key: 'nickName',
                 },
-                /*{
+                {
                   title: '头像',
                   key: 'avatar',
-
                   render: (h, params) => {
                     return h('div', [
                       h('Avatar', {
                         props: {
                           shape:"square",
-                          src: `${params.row.thumbnail}`,
+                          src: `${params.row.thumbnail?params.row.thumbnail:""}`,
                           //
                           icon:"person"
                         },
@@ -129,7 +66,7 @@
                           height:'50px',
                           margin:'5px 0',
                           lineHeight:"50px",
-                          fontSize:"30px"
+                          fontSize:"5px"
                         },
                         on: {
                           click: () => {
@@ -139,7 +76,7 @@
                       }),
                     ]);
                   }
-                },*/
+                },
 /*                {
                   title: '角色',
                   key: 'roleName',
@@ -217,16 +154,8 @@
                   }
                 }
               ],
-              formValidate: {
-                id: '',
-                account: '',
-                roleId:"",
-                phone: '',
-                avatarUrl:"",
-                remark:""
-              },
               imgName: '',
-              uploadList: [],
+
               listData:[]
             }
         },
@@ -251,13 +180,21 @@
         },
         //提交搜索
         handleSubmit() {
-          console.log(this.searchContent)
-/*
-          this.$http.post(`${this.$api}/search`,{data:this.searchContent}).then(response=>{
+          if(this.searchContent.mobile===""&& this.searchContent.userName===""){
+            this.pagination();
+            return
+          }
+          let searchData = {
+            currentPage:this.currentPage,
+            pageSize:this.pageSize,
+            ...this.searchContent
+          };
+          this.$http.post(`${this.api}/sys/user/list`,{...searchData}).then(response=>{
             let res = response.data;
-            this.listData = res.data;
+            this.listData = res.content;
+            this.total = data.totalElements;
           })
-*/
+
         },
         //查看信息
         show (params) {
@@ -278,9 +215,13 @@
               this.$http.get(`${this.api}/sys/user/del`,{params:{id:id}}).then(response=>{
                 let res = response.data;
                 if(res.result){
+                  this.currentPage = 1,
                   this.pagination();//请求列表数据
                   this.$Modal.remove();
                   this.$Message.success('删除成功');
+                }else{
+                  this.$Modal.remove();
+                  this.$Message.error(res.msg);
                 }
               })
             }
@@ -311,8 +252,6 @@
           let params = customsParams || defaultParams;
           this.$http.post(`${this.api}/sys/user/list`,{...params}).then(response=>{
             let res = response.data;
-            console.log(res);
-
             if(res.totalElements.length!==0){
               this.listData = res.content;
               this.total = res.totalElements;
@@ -326,7 +265,6 @@
             currentPage:this.currentPage,
             pageSize:this.pageSize
           };
-
           this.pagination(params)
         },
         changePageSize(currentPageSize){

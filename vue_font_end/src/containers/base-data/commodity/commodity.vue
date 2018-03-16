@@ -21,9 +21,7 @@
             <Input type="text" v-model="searchContent.productCode" placeholder="请输入编号"/>
           </FormItem>
           <FormItem prop="category">
-            <Select v-model="searchContent.category" style="width:200px" placeholder="请选择类型">
-              <Option v-for="item in roleList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-            </Select>
+            <Input type="text" v-model="searchContent.category" placeholder="请输入商品类型"/>
           </FormItem>
           <FormItem>
             <Button type="primary" icon="ios-search" @click="handleSubmit('formInline')">搜索</Button>
@@ -46,8 +44,8 @@
       name: "commodity",
       data(){
           return {
-            pageSizeList:[5,10,20],
-            pageSize:5,
+            pageSizeList:[30,50,100],
+            pageSize:30,
             total:0,
             currentPage:1,
             loading:true,
@@ -121,7 +119,6 @@
               {
                 title: '型号',
                 key: 'modelSize',
-
               },
               {
                 title: '操作',
@@ -210,16 +207,16 @@
         },
         //提交搜索
         handleSubmit() {
-          console.log(this.searchContent)
-          let data={
-            productName:this.searchContent.productName,
-            productCode:this.searchContent.productCode,
-            category:this.searchContent.category,
-            currentPage :1,
-            pageSize : 5
+          if(this.searchContent.productName === "" && this.searchContent.productCode === "" && this.searchContent.category ===""){
+            this.pagination();
+            return
           }
+          let data={
+            ...this.searchContent,
+            currentPage :1,
+            pageSize : 30
+          };
           this.$http.post(`http://192.168.31.34:8080/base/product/findAllProduct`,data).then(response=>{
-            console.log(response)
             let res = response.data;
             this.listData = res.content;
             this.total = res.totalElements;
@@ -243,7 +240,17 @@
               console.log(this)
               this.$http.get(`http://192.168.31.34:8080/base/product/deleteProduct`,{params:{id:params.row.id}}).then(response=>{
                   let res = response.data;
-                  this.pagination();
+
+                if(res.result){
+                    this.currentPage = 1;
+                    this.$Message.success("删除成功");
+                    this.$Modal.remove();
+                    this.pagination();
+                  }else{
+                    this.$Message.success("删除失败");
+                    this.$Modal.remove();
+                }
+
               })
             }
           });
@@ -273,9 +280,7 @@
         changePage(currentPageNum){
           this.currentPage = currentPageNum;
           let params = {
-            productName:this.searchContent.productName,
-            productCode:this.searchContent.productCode,
-            category:this.searchContent.category,
+            ...this.searchContent,
             currentPage:this.currentPage,
             pageSize:this.pageSize
           };
@@ -286,9 +291,7 @@
           this.pageSize = currentPageSize;
           this.currentPage = 1;
           let params = {
-            productName:this.searchContent.productName,
-            productCode:this.searchContent.productCode,
-            category:this.searchContent.category,
+            ...this.searchContent,
             currentPage:this.currentPage,
             pageSize:this.pageSize
           };

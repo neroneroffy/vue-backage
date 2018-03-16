@@ -11,11 +11,10 @@
       <FormItem label="条形码" prop="barCode">
         <Input v-model="editData.barCode" placeholder="请输入条形码" :disabled="isChecked"  />
       </FormItem>
-      <FormItem label="赠品类型" prop="category">
-        <Select v-model="editData.category" style="width:200px" :value="editData.category" :disabled="isChecked" placeholder="请选择客户类型">
-          <Option v-for="item in type" :value="item.id" :key="item.id">{{ item.name }}</Option>
-        </Select>
+      <FormItem label="赠品类型" prop="barCode">
+        <Input v-model="editData.category" placeholder="请输入赠品类型" :disabled="isChecked"  />
       </FormItem>
+
       <FormItem label="赠品型号" prop="modelSize">
         <Select v-model="editData.modelSize" style="width:200px" :value="editData.modelSize" :disabled="isChecked" placeholder="请选择客户类型">
           <Option v-for="item in status" :value="item.id" :key="item.id">{{ item.name }}</Option>
@@ -68,37 +67,33 @@
         ],
         status:[
           {
-            name:"请选择赠品型号",
-            id:""
+            value: 'NB',
+            label: 'NB'
           },
           {
-            name:"NB",
-            id:"NB"
+            value: 'S',
+            label: 'S'
           },
           {
-            name:"S",
-            id:"S"
+            value: 'M',
+            label: 'M'
           },
           {
-            name:"M",
-            id:"M"
+            value: 'L',
+            label: 'L'
           },
           {
-            name:"L",
-            id:"L"
+            value: 'XL',
+            label: 'XL'
           },
           {
-            name:"XL",
-            id:"XL"
+            value: 'XXL',
+            label: 'XXL'
           },
           {
-            name:"XXl",
-            id:"XXL"
-          },
-          {
-            name:"XXXL",
-            id:"XXXl"
-          },
+            value: 'XXXL',
+            label: 'XXXL'
+          }
         ],
         isChecked:this.$route.query.checked?true:false
     }},
@@ -125,12 +120,11 @@
         }
         this.$http.post(`http://192.168.31.34:8080${url}`,this.editData).then(response=>{
           let res = response.data;
-          console.log(response)
-          if(res.msg === "手机号已注册"){
-            this.$Message.error('手机号已注册');
-          }else if(res.msg === "成功"){
+          if(res.result){
             this.$Message.info('修改成功');
-            this.$router.push('/baseData/client')
+            this.$router.push('/baseData/present')
+          }else{
+            this.$Message.info(res.msg);
           }
         })
       }
