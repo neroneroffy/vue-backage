@@ -9,10 +9,10 @@
             <Input type="text" style="width: 200px" v-model="searchContent.orderNo"  placeholder="请输入单据编号"/>
           </FormItem>
           <FormItem prop="customerId">
-            <Input type="text" style="width: 200px" v-model="searchContent.customerId" placeholder="客户唯一标识"/>
+            <Input type="text" style="width: 200px" v-model="searchContent.customerId" placeholder="请输入客户名称"/>
           </FormItem>
           <FormItem prop="salesId">
-            <Input type="text" style="width: 200px" v-model="searchContent.salesId"  placeholder="销售人员唯一标识"/>
+            <Input type="text" style="width: 200px" v-model="searchContent.salesId"  placeholder="请输入销售人员名称"/>
           </FormItem>
           <FormItem prop="logisticCode">
             <Input type="text" style="width: 200px" v-model="searchContent.logisticCode" placeholder="请输入物流单号"/>
@@ -23,9 +23,6 @@
 
         </Form>
       </div>
-      <!--<div>-->
-        <!--<Button type="primary" icon="plus-round" >保存订单</Button>-->
-      <!--</div>-->
     </div>
     <Table :columns="columns" :data="data"  > </Table>
     <div class="pagination">
@@ -60,7 +57,7 @@
 
           },
           {
-            title: "客户唯一标识",
+            title: "客户名称",
             key: "customerId",
 
           },
@@ -70,7 +67,7 @@
 
           },
           {
-            title: "销售人员唯一标识",
+            title: "销售人员名称",
             key: "salesId",
           },
           {
