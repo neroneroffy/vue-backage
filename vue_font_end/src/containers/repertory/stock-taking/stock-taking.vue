@@ -109,12 +109,12 @@
     },
     mounted(){
        ///base/warehouse/warehouseFindAll查询仓库http://192.168.31.222:8080
-       /*this.$http.get("http://192.168.31.168:8080/base/warehouse/warehouseFindAll").then(response=>{
+       this.$http.get("http://192.168.31.168:8080/base/warehouse/warehouseFindAll").then(response=>{
           console.log(response)
           let res=response.data;
           this.cityList=res.data;
           this.id=res.data[0].id;
-       })*/
+       })
       let params= {
         warehouseId:"1",
         stockType:this.status

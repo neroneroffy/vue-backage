@@ -16,15 +16,15 @@
             commodityType:[
               {
                 title: '仓库名称',
-                key: 'warehouseId'
+                key: 'warehouseName'
               },
               {
                 title: '货物',
-                key: 'goodsId'
+                key: 'goodsName'
               },
               {
                 title: '单位',
-                key: 'unitsId'
+                key: 'units'
               },
               {
                 title: '金额',
@@ -50,12 +50,11 @@
           BastTitle
         },
         mounted(){
-          console.log(this.$route.query);
           //base/inventoryRecordItem/findInventoryRecordItem this.$route.query.id
-          this.$http.get("http://192.168.31.34:8080/base/inventoryRecordItem/findInventoryRecordItem",{params:{id:24}}).then(response => {
+          this.$http.get("http://192.168.31.34:8080/base/inventoryRecordItem/findInventoryRecordItem",{params:{id:this.$route.query.id}}).then(response => {
             console.log(response);
             let res=response.data;
-            this.cityList=res.data;
+            this.commodity=res.pageList;
           })
         }
     }
