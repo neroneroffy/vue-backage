@@ -21,15 +21,15 @@
         commodityType:[
           {
             title: '仓库名称',
-            key: 'warehouseId'
+            key: 'warehouseName'
           },
           {
             title: '货物',
-            key: 'goodsId'
+            key: 'goodsName'
           },
           {
             title: '单位',
-            key: 'unitsId'
+            key: 'units'
           },
           {
             title: '金额',
@@ -47,23 +47,27 @@
             title: '盈亏',
             key: 'inventoryResult'
           }
-        ],
+        ]
 
       }},
         components:{
         BastTitle
       },
       mounted(){
-        console.log(this.$route.query);
-        this.$http.get("http://192.168.31.168/base/warehouse/warehouseFindAll").then(response => {
+        ///base/inventoryOutboundItem/find this.$route.query.id
+        this.$http.get("http://192.168.31.13:8080/base/inventoryOutboundItem/find",{params:{id:this.$route.query.id}}).then(response => {
           console.log(response);
-        let res=response.data;
-        this.cityList=res.data;
-      })
+          let res=response.data;
+          this.commodity=res.pageList;
+        })
       },
       methods:{
         make(){
-
+          this.$http.get('http://192.168.31.13:8080/base/inventoryOutboundItem/outBound',{params:{id:this.$route.query.id}}).then(response => {
+            console.log(response);
+            let res=response.data;
+            this.commodity=res.pageList;
+          })
         },
       }
     }
@@ -72,4 +76,6 @@
 <style scoped>
 
 </style>
+
+
 

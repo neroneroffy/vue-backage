@@ -2,13 +2,13 @@
   <!--盘点查询-->
   <div class="stock">
     <Row type="flex" justify="space-between">
-          <Form  inline>
-            <DatePicker type="daterange" v-model="time" :value="time" @on-change="timey"></DatePicker>
-          </Form >
+      <Form  inline>
+        <DatePicker type="daterange" :value="time" @on-change="timey"></DatePicker>
+      </Form >
       <Form>
       <FormItem prop="id">
         <Select v-model="id" :value="id" style="width:200px" placeholder="请选择仓库">
-          <Option v-for="item in cityList1" :value="item.value" :key="item.value">{{ item.label }}</Option>
+          <Option v-for="item in cityList1" :value="item.id" :key="item.id">{{ item.contacts }}</Option>
         </Select>
       </FormItem>
       </Form >
@@ -26,15 +26,8 @@
         name: "record",
         data(){
           return{
-            commodity:[
-              {
-                time:"3/13:3:10.",
-                warehouseId:"555",
-                status:"商品",
-                goodsId:"王大宝"
-              }
-            ],
-            time:["2018-3-14","2018-3-15"],
+            commodity:[],
+            time:[new Date(new Date().getTime() - 7 * 24 * 3600 * 1000).toLocaleDateString(),new Date().toLocaleDateString()],
             id:"",
             cityList1:[],
             pageSizeList: [5, 10, 20],
@@ -44,19 +37,19 @@
             commodityType:[
               {
                 title:'时间',
-                key:"time"
+                key:"inventoryTime"
               },
               {
                 title: '仓库名称',
-                key: 'warehouseId'
+                key: 'warehouseName'
               },
               {
                 title:'类型',
-                key:'status'
+                key:'inventoryType'
               },
               {
                 title: '负责人',
-                key: 'goodsId'
+                key: 'userName'
               },
               {
                 title: '操作',
@@ -74,8 +67,6 @@
                       },
                       on: {
                         click: () => {
-                          // let dd=new Date(this.time[0]).format("yyyy-MM-dd hh:mm:ss")
-                          console.log(this.time[0])
                           this.$router.push({path:'/repertory/record/edit-record',query:{id:params.row.id}})
                         }
                       }
@@ -104,7 +95,7 @@
                       },
                       on: {
                         click: () => {
-                          this.$router.push({path:'',query:{id:params.row.id}})
+                          this.$router.push({path:'/repertory/out/edit-out',query:{id:params.row.id}})
                         }
                       }
                     }, '盘亏')
@@ -116,65 +107,54 @@
 
         }},
         mounted(){
-          let params={
-             pageSize:'5',
-             currentPage:'1',
-             startTime:'2018-03-10',
-             endTime:'2018-03-16',
-             warehouseId:'1'
-          }
-          //base/inventoryRecord/findAllInventoryRecord 查询
-          this.$http.post("http://192.168.31.13:8080/base/inventoryRecord/findAllInventoryRecord ",params).then( response =>{
+          /*this.$http.get("http://192.168.31.168:8080/base/warehouse/warehouseFindAll").then(response=>{
             console.log(response)
             let res=response.data;
             this.cityList=res.data;
-            this.pagination()
-          })
+            this.id=res.data[0].id;
+          */
+          let date=new Date(new Date().getTime() - 7 * 24 * 3600 * 1000);
+          this.time[0]=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+          date=new Date();
+          this.time[1]=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+          this.pagination()
         },
         methods:{
           timey(daterange){
             this.time=daterange;
-            console.log(this.time)
+            this.pagination()
           },
           pagination(customsParams) {
+            //console.log(this.time)
             let defaultParams = {
-              time:[new Date(new Date().getTime() - 86400000), new Date()],
-              id:'',
-              currentPage: 1,
-              pageSize: 5
+              pageSize:this.pageSize,
+              currentPage:this.currentPage,
+              startTime:this.time[0],
+              endTime:this.time[1],
+              warehouseId:'1'
             };
             let params = customsParams || defaultParams;
-            /*/base/gift/findAllGift*/
-
-
-            /*this.$http.post("http://192.168.31.34:8080/base/gift/findAllGift", params).then(response => {
-              let data = response.data;
-              this.listData = data.content;
-              this.total = data.totalElements;
-            })*/
+            this.$http.post("http://192.168.31.34:8080/base/inventoryRecord/findAllInventoryRecord ",params).then( response =>{
+              console.log(response);
+              let res=response.data;
+              this.commodity=res.pageList;
+              if(this.commodity){
+                this.commodity.forEach(item=>{
+                  item.inventoryTime=new Date(item.inventoryTime).toLocaleDateString();
+                })
+              }
+              this.total=res.count;
+            })
           },
           //点击分页
           changePage(currentPageNum) {
             this.currentPage = currentPageNum;
-            let params = {
-              time:this.time,
-              id:this.id,
-              currentPage: this.currentPage,
-              pageSize: this.pageSize
-            };
-
-            this.pagination(params)
+            this.pagination()
           },
           changePageSize(currentPageSize) {
             this.pageSize = currentPageSize;
             this.currentPage = 1;
-            let params = {
-              time:this.time,
-              id:this.id,
-              currentPage: this.currentPage,
-              pageSize: this.pageSize
-            };
-            this.pagination(params)
+            this.pagination()
           },
         }
     }

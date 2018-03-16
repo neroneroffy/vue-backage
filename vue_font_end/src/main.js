@@ -18,7 +18,7 @@ axios.create({
 Vue.prototype.$http = axios;
 Vue.prototype.$api = 'http://192.168.31.13:8080';
 //Vue.prototype.$api = '/api';
-Vue.prototype.$host = 'http://192.168.31.13:8080';
+Vue.prototype.$host = 'http://192.168.31.34:8080';
 
 //Vue.prototype.$host = 'http://m1.baobaofarm.com';
 

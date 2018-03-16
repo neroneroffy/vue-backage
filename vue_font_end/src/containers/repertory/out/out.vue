@@ -3,10 +3,12 @@
   <div class="stock">
     <Row type="flex" justify="space-between">
       <Form  inline>
-        <DatePicker type="daterange" v-model="time" :value="time"></DatePicker>
+        <DatePicker type="daterange" :value="time" @on-change="timey"></DatePicker>
+      </Form >
+      <Form>
         <FormItem prop="id">
           <Select v-model="id" :value="id" style="width:200px" placeholder="请选择仓库">
-            <Option v-for="item in cityList1" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            <Option v-for="item in cityList1" :value="item.id" :key="item.id">{{ item.contacts }}</Option>
           </Select>
         </FormItem>
       </Form >
@@ -24,22 +26,10 @@
     name: "out",
     data(){
       return{
-        commodity:[
-          {
-            time:"3/13:3:10.",
-            warehouseId:"555",
-            status:"商品",
-            goodsId:"王大宝"
-          }
-        ],
-        time:[new Date(new Date().getTime() - 86400000), new Date()],
+        commodity:[],
+        time:[],
         id:"",
-        cityList1:[
-          {
-            value:"123",
-            label:'123'
-          }
-        ],
+        cityList1:[],
         pageSizeList: [5, 10, 20],
         pageSize: 5,
         total: 0,
@@ -47,121 +37,126 @@
         commodityType:[
           {
             title:'时间',
-            key:"time"
+            key:"createTime"
           },
           {
             title: '仓库名称',
-            key: 'warehouseId'
+            key: 'warehouseName'
           },
           {
             title:'类型',
-            key:'status'
+            key:'inventoryType'
           },
           {
             title: '负责人',
-            key: 'goodsId'
+            key: 'userName'
           },
           {
             title: '操作',
             key: 'action',
             align: 'center',
             render: (h, params) => {
-            return h('div', [
-      h('Button', {
-        props: {
-          type: 'warning',
-          size: 'small'
-        },
-        style: {
-          marginRight: '5px'
-        },
-        on: {
-          click: () => {
-          /*this.$router.push({path:'/',query:{id:params.row.id}})*/
-        }
-      }
-    }, '已出库'),
-      h('Button', {
-        props: {
-          type: 'error',
-          size: 'small'
-        },
-        style: {
-          marginRight: '5px'
-        },
-        on: {
-          click: () => {
-          this.$router.push({path:'/repertory/out/edit-out',query:{id:params.row.id}})
-      }
-    }
-    }, '待出库')
-    ])
-    }
-    }
-    ],
+              return h('div', [
+                h('Button', {
+                  props: {
+                    type: 'warning',
+                    size: 'small'
+                  },
+                  style: {
+                    marginRight: '5px'
+                  },
+                  on: {
+                    click: () => {
+                      this.$router.push({path:'/repertory/in/edit-in'})
+                    }
+                  }
+                }, '已出库'),
+                h('Button', {
+                  props: {
+                    type: 'error',
+                    size: 'small'
+                  },
+                  style: {
+                    marginRight: '5px'
+                  },
+                  on: {
+                    click: () => {
+                      this.$router.push({path:'/repertory/out/edit-out',query:{id:params.row.id}})
+                    }
+                  }
+                }, '待出库')
+              ])
+            }
+          }
+        ],
 
 
-    }
+      }},
+    mounted(){
+      /*this.$http.get("http://192.168.31.168:8080/base/warehouse/warehouseFindAll").then(response=>{
+        console.log(response)
+        let res=response.data;
+        this.cityList=res.data;
+        this.id=res.data[0].id;
+      */
+      /*
+      new Date()
+        date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()
+var date = new Date();
+var result = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()+' '+date.getHours()+':'+date.getMinutes()+':'+date.getSeconds();
+      * */
+      let date=new Date(new Date().getTime() - 7 * 24 * 3600 * 1000);
+      this.time[0]=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+      date=new Date();
+      this.time[1]=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+      this.pagination()
     },
-      mounted() {
-        /*this.$http.get("http://192.168.31.168/base/warehouse/warehouseFindAll").then(response=>{
+    methods:{
+      timey(daterange){
+        this.time=daterange;
+        this.pagination()
+      },
+      pagination(customsParams) {
+        //console.log(this.time)
+        let defaultParams = {
+          pageSize:this.pageSize,
+          currentPage:this.currentPage,
+          startTime:this.time[0],
+          endTime:this.time[1],
+          warehouseId:'1'
+        };
+        let params = customsParams || defaultParams;
+        ///base/inventoryOutboundItem/outBound
+        ///base/inventoryOutbound/find出库单
+        // console.log(params);
+        this.$http.post("http://192.168.31.13:8080/base/inventoryOutbound/find",params).then( response =>{
           console.log(response)
           let res=response.data;
-          this.cityList=res.data;
-          this.pagination()
-        })*/
-      },
-      methods:{
-        pagination(customsParams) {
-          let defaultParams = {
-            time:[new Date(new Date().getTime() - 86400000), new Date()],
-            id:'',
-            currentPage: 1,
-            pageSize: 5
-          };
-          let params = customsParams || defaultParams;
-          /*/base/gift/findAllGift*/
-          console.log(params)
-          this.$http.post("http://192.168.31.34:8080/base/gift/findAllGift", params).then(response => {
-            console.log(response)
-          let data = response.data;
-          this.listData = data.content;
-          this.total = data.totalElements;
+          this.commodity=res.pageList;
+          if(this.commodity){
+            this.commodity.forEach(item=>{
+              item.createTime=new Date(Number(item.createTime)).toLocaleDateString();
+              console.log(item)
+            })
+          }
+          this.total=res.count;
         })
-        },
-        //点击分页
-        changePage(currentPageNum) {
-          this.currentPage = currentPageNum;
-          let params = {
-            time:this.time,
-            id:this.id,
-            currentPage: this.currentPage,
-            pageSize: this.pageSize
-          };
-
-          this.pagination(params)
-        },
-        changePageSize(currentPageSize) {
-          this.pageSize = currentPageSize;
-          this.currentPage = 1;
-          let params = {
-            time:this.time,
-            id:this.id,
-            currentPage: this.currentPage,
-            pageSize: this.pageSize
-          };
-          this.pagination(params)
-        },
-      }
+      },
+      //点击分页
+      changePage(currentPageNum) {
+        this.currentPage = currentPageNum;
+        this.pagination()
+      },
+      changePageSize(currentPageSize) {
+        this.pageSize = currentPageSize;
+        this.currentPage = 1;
+        this.pagination()
+      },
     }
+  }
 </script>
 
 <style scoped>
-  .pagination{
-    margin-top: 20px;
-    display: flex;
-    justify-content: flex-end;
-  }
 
 </style>
 
