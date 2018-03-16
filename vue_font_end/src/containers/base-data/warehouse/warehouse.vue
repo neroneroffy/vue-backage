@@ -208,7 +208,8 @@
           if(res.result){
             this.listData = res.data
           }
-        })},
+        })
+      },
     },
     computed:{
 

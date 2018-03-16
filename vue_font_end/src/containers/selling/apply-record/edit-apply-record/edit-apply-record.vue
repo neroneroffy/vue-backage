@@ -1,20 +1,7 @@
 <template>
   <div class="edit-apply-record">
     <div class="search-wrapper">
-        <Form ref="formInline"  inline>
-          <FormItem>
-            <Tag type="dot">采购单编号：{{this.$route.query.applyNo}}</Tag>
-          </FormItem>
-          <FormItem>
-            <Tag type="dot">单据日期：{{this.$route.query.date}}</Tag>
-          </FormItem>
-          <FormItem>
-            <Tag type="dot">客户名称：{{this.$route.query.customerName}}</Tag>
-          </FormItem>
-          <FormItem>
-            <Tag type="dot" :color="tagColor(status).color">状态：{{tagColor(status).txt}}</Tag>
-          </FormItem>
-        </Form>
+      <div></div>
       <div class="check-option">
         <Select v-model="submitData.status" style="width:200px;marginRight:30px">
           <Option v-for="item in statusList" :value="item.status" :key="item.status">{{ item.txt }}</Option>
@@ -108,9 +95,11 @@
           }
       },
       mounted(){
-        this.$http.get(`${this.api}/static/editApplyRecord${this.$route.query.id}.json`).then(response=>{
+        console.log(this.$route.query.id)
+        this.$http.get(`http://192.168.31.34:8080/base/goodsApplyItem/findAllGoodsApplyItem`,{params:{id:this.$route.query.id}}).then(response=>{
+          console.log(response)
           let res = response.data;
-          if(res.result){
+          if(res.result){ 
             this.listData = res.data
           }
         })
@@ -153,6 +142,13 @@
                 txt:"已拒绝"
               };
               break;
+            default:
+              return {
+                color:"#c2c99f",
+                txt:"未定义状态"
+
+              }
+
           }
         },
 

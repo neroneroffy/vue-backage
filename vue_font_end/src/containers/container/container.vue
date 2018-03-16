@@ -164,10 +164,10 @@
                 menuName:"盘点出库",
                 uri: "/repertory/out"
               },
-              {
+/*              {
                 menuName:"库存报表",
                 uri: "/repertory/statement"
-              },
+              },*/
             ]
           },
           {

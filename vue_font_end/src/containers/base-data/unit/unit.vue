@@ -137,7 +137,6 @@
             if(res){
               this.listData = res;
             }
-
           })
         }
       },

@@ -31,7 +31,7 @@
         </TabPane>
       </Tabs>
       <div class="pagination">
-        <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize"  :total="total"></Page>
+        <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize"  placement="top" :page-size-opts="pageSizeList" :page-size="pageSizeList[0]"  :total="total"></Page>
       </div>
     </div>
   </div>
@@ -43,6 +43,7 @@
     name: "stock-in-order",
     data(){
       return{
+        api:"http://192.168.1.25:8080",
         pageSizeList:[30,50,100],
         pageSize:30,
         total:0,
@@ -124,7 +125,7 @@
         ],
         currentTab:"商品",
         searchContent:{
-          code:"",
+          OrderNo:"",
           date:" "
         },
 
@@ -133,11 +134,8 @@
 
     mounted(){
       //初始请求分页
-      let params = {
-        pageNum: this.currentPage,
-        pageSize: this.pageSize
-      };
-      this.pagination(params)
+
+      this.pagination()
     },
     methods:{
       //新增
@@ -153,7 +151,7 @@
         this.currentTab = name;
         sessionStorage.setItem("currentTab",this.currentTab);
         this.pagination();
-        console.log(name);
+
       },
       //提交搜索
       handleSubmit() {
@@ -189,25 +187,25 @@
         })
       },
       //分页函数
+
       pagination(customsParams) {
+
         let defaultParams = {
-          pageNum:1,
+            ...this.searchContent,
+          inboundType:this.type,
+          pageCount:1,
           pageSize:30
         };
         let params = customsParams || defaultParams;
-        let url = "/static/materielone.json";
-        switch (this.currentTab){
-          case "goods":
-            break;
-          case "present":
-            url = "/static/presentData.json";
-            break;
-          case "material":
-            url = "/static/materialData.json";
-        }
-        this.$http.get(url).then(response => {
-          let data = response.data;
-          this.data = data.list;
+        let url = `${this.api}/base/InboundOrder/findAllInboundOrder`;
+        this.$http.post(url,params).then(response => {
+          if(response){
+            let data = response.data;
+            console.log(data);
+            this.data = data.pageList;
+            this.total = data.count
+          }
+
         })
       },
       //点击分页
@@ -216,7 +214,9 @@
 
 
         let params = {
-          pageNum: this.currentPage,
+          ...this.searchContent,
+          inboundType:this.type,
+          pageCount: this.currentPage,
           pageSize: this.pageSize
         };
         this.pagination(params)
@@ -225,13 +225,31 @@
         this.pageSize = currentPageSize;
         this.currentPage = 1;
         let params = {
-          pageNum: this.currentPage,
+          ...this.searchContent,
+          inboundType:this.type,
+          pageCount: this.currentPage,
           pageSize: this.pageSize
         };
         this.pagination(params)
       },
     },
     computed:{
+      type(){
+        switch (this.currentTab){
+          case "商品":
+            return "GOODS";
+            break;
+          case "赠品":
+            return "GIFT";
+            break;
+          case "物料":
+            return "MATERIEL";
+            break;
+          default:
+            return "GOODS";
+        }
+
+      },
       //跳转路由；由于字段都一样，所以暂时用一个页面
 /*      url(){
         switch(this.currentTab){

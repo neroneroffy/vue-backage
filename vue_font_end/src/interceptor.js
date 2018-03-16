@@ -17,8 +17,9 @@ axios.interceptors.request.use((config)=>{
 axios.interceptors.response.use((config)=>{
 
   if(config.data.flag === 'SESSION_INVALID'){
+    router.push('/login')
     console.log('失效');
-    router.push('/login');
+
     return
   }
   store.dispatch('endLoading');

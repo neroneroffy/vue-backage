@@ -30,17 +30,17 @@
       </div>
       <Tabs :value="currentTab" @on-click="tabChange">
         <TabPane label="商品" name="商品">
-          <Table :columns="columns" :data="data" class="table" v-if="data"></Table>
+          <Table :columns="columns" :data="data" class="table" ></Table>
         </TabPane>
         <TabPane label="赠品" name="赠品">
-          <Table :columns="columns" :data="data" class="table" v-if="data"></Table>
+          <Table :columns="columns" :data="data" class="table" ></Table>
         </TabPane>
         <TabPane label="物料" name="物料">
-          <Table :columns="columns" :data="data" class="table" v-if="data"></Table>
+          <Table :columns="columns" :data="data" class="table" ></Table>
         </TabPane>
       </Tabs>
       <div class="pagination">
-        <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize"  :total="total"></Page>
+        <Page show-sizer :current="currentPage" @on-change="changePage" @on-page-size-change="changePageSize"  placement="top" :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
       </div>
 
     </div>
@@ -57,7 +57,8 @@
         pageSizeList:[30,50,100],
         pageSize:30,
         total:0,
-        data:"",
+        data:[],
+        api:"http://192.168.31.222:8080",
         loading:false,
         currentPage:1,
         columns:[
@@ -210,11 +211,8 @@
 
     mounted(){
       //初始请求分页
-      let params = {
-        pageNum: this.currentPage,
-        pageSize: this.pageSize
-      };
-      this.pagination(params)
+
+      this.pagination()
     },
     methods:{
       //新增
@@ -226,7 +224,7 @@
         this.currentTab = name;
         sessionStorage.setItem("currentTab",this.currentTab);
         this.pagination();
-        console.log(name);
+        console.log(this.currentTab);
       },
       //提交搜索
       handleSubmit() {
@@ -263,45 +261,62 @@
       //分页函数
       pagination(customsParams) {
         let defaultParams = {
-          pageNum:1,
-          pageSize:30
+          currentPage:1,
+          pageSize:30,
+          purchaseType:this.tab
         };
         let params = customsParams || defaultParams;
-        let url = "/static/stockOrderGoods.json";
-        switch (this.currentTab){
-          case "goods":
-            break;
-          case "present":
-            url = "/static/stockOrderPresents.json";
-            break;
-          case "material":
-            url = "/static/stockOrderMaterial.json";
-        }
-        this.$http.get(url).then(response => {
-          let data = response.data;
-          this.data = data.list;
+        let url = `${this.api}/base/PurchaseOrder/findAllPurchaseOrder`;
+        this.$http.get(`${url}`,{
+          params:{...defaultParams}
+        }).then(response => {
+          if(response){
+            let res = response.data;
+            this.data = res.pageList;
+            this.total = res.count;
+            console.log(res);
+          }
+
+          //this.data = data.list;
         })
       },
       //点击分页
       changePage(currentPageNum) {
         this.currentPage = currentPageNum;
         let params = {
-          pageNum: this.currentPage,
+          ...this.searchContent,
+          currentPage: this.currentPage,
           pageSize: this.pageSize
         };
+        console.log(params);
         this.pagination(params)
       },
       changePageSize(currentPageSize) {
-        this.pageSize = currentPageSize;
+        this.currentPage = currentPageSize;
         this.currentPage = 1;
         let params = {
-          pageNum: this.currentPage,
+          ...this.searchContent,
+          currentPage: this.currentPage,
           pageSize: this.pageSize
         };
         this.pagination(params)
       },
     },
     computed:{
+      tab(){
+        switch (this.currentTab){
+          case "商品":
+            return 3;
+            break;
+          case "赠品":
+            return 2;
+            break;
+          case "物料":
+            return 1;
+          default:
+            return 3
+        }
+      },
       //跳转路由
 /*      url(){
         switch(this.currentTab){
