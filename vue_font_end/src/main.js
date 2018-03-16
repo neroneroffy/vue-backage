@@ -18,10 +18,9 @@ axios.create({
 Vue.prototype.$http = axios;
 Vue.prototype.$api = 'http://192.168.31.13:8080';
 //Vue.prototype.$api = '/api';
-<<<<<<< HEAD
+
 Vue.prototype.$host = 'http://192.168.31.34:8080';
-=======
->>>>>>> 3704a19a18e71033c963c6f03de5fa44c49506a3
+
 
 
 Vue.prototype.$host = 'http://192.168.31.34:8080';
