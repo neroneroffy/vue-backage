@@ -236,7 +236,7 @@
           changePage(currentPageNum) {
             this.currentPage = currentPageNum;
             let params = {
-
+              ...this.searchContent,
               currentPage: this.currentPage,
               pageSize: this.pageSize,
               isDel:this.searchContent.isHidden
@@ -248,7 +248,7 @@
             this.pageSize = currentPageSize;
             this.currentPage = 1;
             let params = {
-
+              ...this.searchContent,
               currentPage: this.currentPage,
               pageSize: this.pageSize,
               isDel:this.searchContent.isHidden
