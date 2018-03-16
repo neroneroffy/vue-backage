@@ -194,7 +194,7 @@
       },
 
       mounted(){
-        console.log(this.typeColumn);
+
         this.pagination()
       },
       methods:{
@@ -260,7 +260,7 @@
             if(response){
               let res = response.data;
               this.data = res.content;
-              console.log(this.data);
+
               /*            this.data.forEach((v,index)=>{
                             this.selection.forEach(i=>{
                               if(v.id === i.id){

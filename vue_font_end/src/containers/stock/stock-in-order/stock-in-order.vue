@@ -159,19 +159,18 @@
       },
       //提交搜索
       handleSubmit() {
-        console.log(this.searchContent);
+
         this.searchContent.inboundType = this.type;
         this.$http.post(`${this.api}/base/InboundOrder/findAllInboundOrder`,{...this.searchContent,pageCount:1,pageSize:this.pageSize}).then(response=>{
           if(response){
             let res = response.data;
             res.pageList.forEach(v=>{
-              console.log(v.createTime);
+
               v.createTime = formatDate(parseInt(v.createTime))
             });
-
             this.data = res.pageList;
             this.total = res.count;
-            console.log(res);
+
           }
         })
 
@@ -220,7 +219,7 @@
           if(response){
             let res = response.data;
             //转换时间戳
-            console.log(res);
+
             res.pageList.forEach(v=>{
               v.createTime = formatDate(parseInt(v.createTime))
             });
