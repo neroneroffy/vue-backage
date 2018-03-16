@@ -27,7 +27,7 @@
     data(){
       return{
         commodity:[],
-        time:[new Date(new Date().getTime() - 7 * 24 * 3600 * 1000).toLocaleDateString(),new Date().toLocaleDateString()],
+        time:[],
         id:"",
         cityList1:[],
         pageSizeList: [5, 10, 20],
@@ -37,7 +37,7 @@
         commodityType:[
           {
             title:'时间',
-            key:"inventoryTime"
+            key:"createTime"
           },
           {
             title: '仓库名称',
@@ -45,7 +45,7 @@
           },
           {
             title:'类型',
-            key:'inventoryType'
+            key:'outboundType'
           },
           {
             title: '负责人',
@@ -60,28 +60,30 @@
                 h('Button', {
                   props: {
                     type: 'warning',
-                    size: 'small'
+                    size: 'small',
+                    disabled:!params.row.del
                   },
                   style: {
                     marginRight: '5px'
                   },
                   on: {
                     click: () => {
-                      this.$router.push({path:'/repertory/in/edit-in'})
+                      this.$router.push({path:'/repertory/out/edit-out',query:{id:params.row.inventoryNo,ischecked:true}})
                     }
                   }
                 }, '已入库'),
                 h('Button', {
                   props: {
                     type: 'error',
-                    size: 'small'
+                    size: 'small',
+                    disabled:params.row.del
                   },
                   style: {
                     marginRight: '5px'
                   },
                   on: {
                     click: () => {
-                      this.$router.push({path:'/repertory/out/edit-out',query:{id:params.row.id}})
+                      this.$router.push({path:'/repertory/out/edit-out',query:{id:params.row.inventoryNo}})
                     }
                   }
                 }, '待入库')
@@ -99,6 +101,16 @@
         this.cityList=res.data;
         this.id=res.data[0].id;
       */
+      /*
+      new Date()
+        date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()
+var date = new Date();
+var result = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()+' '+date.getHours()+':'+date.getMinutes()+':'+date.getSeconds();
+      * */
+      let date=new Date(new Date().getTime() - 7 * 24 * 3600 * 1000);
+      this.time[0]=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
+      date=new Date();
+      this.time[1]=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
       this.pagination()
     },
     methods:{
@@ -113,16 +125,19 @@
           currentPage:this.currentPage,
           startTime:this.time[0],
           endTime:this.time[1],
-          warehouseId:'1'
+          warehouseId:"1"
         };
         let params = customsParams || defaultParams;
-        this.$http.post("http://192.168.31.34:8080/base/inventoryOutboundItem/outBound ",params).then( response =>{
-          console.log(response);
+        ///base/inventoryOutboundItem/outBound
+        ///base/inventoryOutbound/find出库单
+        // console.log(params);
+        this.$http.post("http://192.168.31.222:8080/base/inventoryInbound/find",params).then( response =>{
+          console.log(response)
           let res=response.data;
           this.commodity=res.pageList;
           if(this.commodity){
             this.commodity.forEach(item=>{
-              item.inventoryTime=new Date(item.inventoryTime).toLocaleDateString();
+              item.createTime=new Date(Number(item.createTime)).toLocaleDateString();
             })
           }
           this.total=res.count;

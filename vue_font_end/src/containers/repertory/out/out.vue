@@ -45,7 +45,7 @@
           },
           {
             title:'类型',
-            key:'inventoryType'
+            key:'outboundType'
           },
           {
             title: '负责人',
@@ -60,28 +60,30 @@
                 h('Button', {
                   props: {
                     type: 'warning',
-                    size: 'small'
+                    size: 'small',
+                    disabled:!params.row.del
                   },
                   style: {
                     marginRight: '5px'
                   },
                   on: {
                     click: () => {
-                      this.$router.push({path:'/repertory/in/edit-in'})
+                      this.$router.push({path:'/repertory/out/edit-out',query:{id:params.row.inventoryNo,ischecked:true}})
                     }
                   }
                 }, '已出库'),
                 h('Button', {
                   props: {
                     type: 'error',
-                    size: 'small'
+                    size: 'small',
+                    disabled:params.row.del
                   },
                   style: {
                     marginRight: '5px'
                   },
                   on: {
                     click: () => {
-                      this.$router.push({path:'/repertory/out/edit-out',query:{id:params.row.id}})
+                      this.$router.push({path:'/repertory/out/edit-out',query:{id:params.row.inventoryNo}})
                     }
                   }
                 }, '待出库')
@@ -136,7 +138,6 @@ var result = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()+' '+d
           if(this.commodity){
             this.commodity.forEach(item=>{
               item.createTime=new Date(Number(item.createTime)).toLocaleDateString();
-              console.log(item)
             })
           }
           this.total=res.count;
