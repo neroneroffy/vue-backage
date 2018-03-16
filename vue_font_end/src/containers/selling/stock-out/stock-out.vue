@@ -31,7 +31,7 @@
         </TabPane>
       </Tabs>
       <div class="pagination">
-        <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize"  :total="total"></Page>
+        <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize" :current="pageCount"  placement="top" :page-size-opts="pageSizeList" :page-size="pageSizeList[0]"  :total="total"></Page>
       </div>
     </div>
   </div>
@@ -39,6 +39,7 @@
 </template>
 
 <script>
+  import formatDate from '@/util/convertTime';
   export default {
     name: "stock-out",
     data() {
@@ -49,6 +50,8 @@
         total: 0,
         data: "",
         loading: false,
+        formatDate:"",
+        pageCount:1,
         currentPage: 1,
         columns: [
           {
@@ -145,16 +148,13 @@
     },
     mounted() {
       //初始请求分页
-      let params = {
-        pageCount: this.currentPage,
-        pageSize: this.pageSize
-      };
-      this.pagination(params)
+
+      this.pagination()
     },
     methods: {
       //新增
       add() {
-        this.$router.push({path: '/selling/out/edit-stock-out/', query: {name: this.currentTab}})
+        this.$router.push({path: '/selling/out/edit-stock-out/', query: {name: this.currentTab,type:this.type}})
       },
       selectDate(date) {
         this.searchContent.date = date;
@@ -169,19 +169,31 @@
       },
       //提交搜索
       handleSubmit() {
-        console.log(this.searchContent)
+        console.log(this.searchContent);
+
+        this.$http.post(`${this.api}/base/OutboundOrder/findAllOutboundOrder`,{...this.searchContent,pageCount:1,pageSize:this.pageSize}).then(response=>{
+          if(response){
+            let res = response.data;
+            res.pageList.forEach(v=>{
+              v.createTime = formatDate(parseInt(v.createTime))
+            });
+            this.data = res.pageList;
+            this.total = res.count;
+            console.log(res);
+          }
+        })
 
       },
       //查看
       show(params) {
         this.$router.push({
           path: `/selling/out/edit-stock-out`,
-          query: {id: params.row.id, checked: true, name: this.currentTab}
+          query: {id: params.row.id, checked: true, name: this.currentTab,type:this.type}
         })
       },
       //编辑
       edit(params) {
-        this.$router.push({path: `/selling/out/edit-stock-out`, query: {id: params.row.id, name: this.currentTab}})
+        this.$router.push({path: `/selling/out/edit-stock-out`, query: {id: params.row.id, name: this.currentTab,type:this.type}})
       },
       //删除
       remove(params) {
@@ -192,7 +204,7 @@
           loading: true,
           onOk: () => {
             this.$store.dispatch('modalLoading');
-            this.$http.post(`${this.$api}/materiel/delete`, {id}).then(response => {
+            this.$http.post(`${this.$api}/base/OutboundOrderItem/deleteOutboundOrderItem`, {id}).then(response => {
               let res = response.data;
               if (res.result) {
                 this.pagination();
@@ -207,7 +219,7 @@
       pagination(customsParams) {
         let defaultParams = {
           ...this.searchContent,
-          outboundType: this.outboundType,
+          outboundType: this.type,
           pageCount: 1,
           pageSize: 30
         };

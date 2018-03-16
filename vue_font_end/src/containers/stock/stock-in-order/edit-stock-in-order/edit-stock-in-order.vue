@@ -8,7 +8,7 @@
             <Tag type="dot">入库单编号：{{baseData.orderNo}}</Tag>
           </FormItem>
           <FormItem  v-if="!isNew">
-            <Tag type="dot">单据日期：{{baseData.createTime}}</Tag>
+            <Tag type="dot">单据日期：{{baseData.date}}</Tag>
           </FormItem>
           <FormItem>
             <Select v-model="baseData.supplierId" style="width:200px" :disabled="isChecked" placeholder="请选择供货商">
@@ -32,7 +32,7 @@
       <p>入库单备注</p>
       <Input type="textarea" :rows="4" placeholder="请填写单据备注" :disabled="isChecked"  v-model="baseData.mark"/>
     </div>
-    <CommodityPicker :type="type" v-if="!isChecked" :showPicker="goodsPicker" @selectDone="selectDone" @cancel="cancel"/>
+    <CommodityPicker type="goods" :showPicker="goodsPicker" @selectDone="selectDone" @cancel="cancel"/>
 
   </div>
 </template>
@@ -40,7 +40,7 @@
 <script>
   import BastTitle from  "@/components/base-title";
   import CommodityPicker from '@/components/commodity-picker/commodity-picker'
-  import formatDate from '@/util/convertTime';
+  import { Form,Select,Upload,Avatar,Button,DatePicker,Cascader } from 'iview'
   export default {
     name: "edit-stock-in-order",
     data(){
@@ -116,7 +116,7 @@
                       this.goodsPicker = true
                     },
                   }
-                },this.selectedGood[params.index].goodsName?this.selectedGood[params.index].goodsName:"请选择货物")
+                },this.selectedGood[params.index].goodsName?this.selectedGood[params.index].goodsName:"请选择商品")
               }
 
             },
@@ -136,12 +136,12 @@
                     }
                   }
                 },this.warehouse.map((item)=>{
-                  return h('Option',{
-                    props:{
-                      value:item.id || 1,
-                      label:item.warehouseName,
-                    },
-                  })
+                    return h('Option',{
+                      props:{
+                        value:item.id || 1,
+                        label:item.warehouseName,
+                      },
+                    })
                 }))
               }
             },
@@ -247,7 +247,7 @@
               }
 
             },
-          ]:
+         ]:
           [
             {
               title:"新增",
@@ -314,7 +314,7 @@
                       this.goodsPicker = true
                     },
                   }
-                },this.selectedGood[params.index].goodsName?this.selectedGood[params.index].goodsName:"请选择货物")
+                },this.selectedGood[params.index].goodsName?this.selectedGood[params.index].goodsName:"请选择商品")
               }
 
             },
@@ -330,7 +330,7 @@
                     borderRadius:"3px",
                     float:"left"
                   },
-                },this.selectedGood[params.index].goodsName?params.row.modelSize:"请先选择货物")
+                },this.selectedGood[params.index].goodsName?params.row.modelSize:"请先选择商品")
               }
 
             },
@@ -464,7 +464,7 @@
             },
           ]
         ,
-        type:this.$route.query.type,
+        type:"GOODS",
         inputStyle:{
           width:"100%",
           height:"32px",
@@ -512,12 +512,30 @@
           },
         ],
         modelSize:["NB","S"],
-        units:[],
+        units:[
+          {
+            name:"单位1",
+            value:1
+          },
+          {
+            name:"单位2",
+            value:2
+          },
+        ],
         selectedGood:[{
           goodsName:"",
           goodsId:""
         }],
-        supplierList:[],
+        supplierList:[
+          {
+            name:"供货商1",
+            id:"1"
+          },
+          {
+            name:"供货商2",
+            id:"2"
+          }
+        ],
         baseData:{
           supplier:"",
           orderNo:"",
@@ -527,62 +545,46 @@
           inboundType:"",
           userName:"",
           mark:""
-        },
-        goodsType:"productName"
+        }
       }
     },
     mounted(){
       switch (this.$route.query.name){
         case "商品":
           this.type = "GOODS";
-          this.goodsType = "productName";
           break;
         case "赠品":
           this.type = "GIFT";
-          this.goodsType = "giftName";
           break;
         case "物料":
           this.type = "MATERIEL";
-          this.goodsType = "materielName";
           break;
       };
-      //调用供货商接口
-      this.$http.post(`http://192.168.31.222:8080/base/supplier/findAll`).then(response=>{
-        if(response){
-          let res = response.data;
-          console.log(res);
-          this.supplierList = res.supplierList;
-        }
-      });
       if(this.$route.query.id){
         this.$http.get(`${this.api}/base/InboundOrder/findInboundOrderById`,{
           params:{ id:this.$route.query.id }
         }).then(response =>{
-          if(response){
-            let res = response.data;
-            console.log(res);
-            //转换时间戳
-            res.createTime = formatDate(res.createTime)
-            this.baseData = res;
+          let res = response.data;
+
+          this.baseData = res;
             this.data = res.inboundOrderItemModelList;
             this.units = res.unitsList;
             this.warehouse = res.warehouseList;
             this.supplierList = res.supplierList;
-            this.selectedGood = [];
+          console.log(this.baseData);
+          this.selectedGood = [];
+            console.log(this.data);
             this.data.forEach((v,i)=>{
-              this.selectedGood.push({
-                goodsName:v.goodsName,
-                goodsId:v.goodsId
-              })
-
+                this.selectedGood.push({
+                  goodsName:v.goodsName,
+                  goodsId:v.goodsId
+                })
             })
-
-          }
-
         })
       }else{
         //调用仓库接口
         this.$http.get(`${this.api}/base/warehouse/warehouseFindAll`).then(response=> {
+          console.log(response.data)
           let res = response.data;
           if(res.result){
             this.warehouse = res.data
@@ -603,13 +605,13 @@
     },
     methods:{
       inputValue(index){
-        // this.data[index].
+       // this.data[index].
       },
       //选择商品完毕
       selectDone(data){
-        this.selectedGood[this.currentRow].goodsName = data[this.goodsType];
+        this.selectedGood[this.currentRow].goodsName = data.productName;
         this.selectedGood[this.currentRow].goodsId = data.id;
-        this.$refs.table.rebuildData[this.currentRow].goodsName = data[this.goodsType];
+        this.$refs.table.rebuildData[this.currentRow].goodsName = data.productName;
         this.$refs.table.rebuildData[this.currentRow].modelSize = data.modelSize;
         this.$refs.table.rebuildData[this.currentRow].goodsId = data.id;
         this.goodsPicker = false
@@ -622,7 +624,7 @@
         this.baseData.date = date
       },
       addRow(params){
-
+        console.log(params);
         this.data = this.$refs.table.rebuildData;
         //this.data[params.index] = params.row;
         this.data.push(
@@ -655,12 +657,10 @@
         this.data = this.$refs.table.rebuildData;
         this.baseData.inboundType = this.type;
         let submitData = {
-          ...this.baseData,
+            ...this.baseData,
           inboundOrderItemModelList:this.data
         };
-        let url = !this.$route.query.id?`${this.api}/base/InboundOrder/addInboundOrder`:`${this.api}/base/InboundOrder/updateInboundOrder`;
-        console.log(submitData);
-        this.$http.post(url,{...submitData}).then(response=>{
+        this.$http.post(`${this.api}/base/InboundOrder/addInboundOrder`,{...submitData}).then(response=>{
           let res = response.data;
           if(res.result){
             this.$Message.success('成功');
@@ -680,6 +680,6 @@
 </script>
 
 <style scoped lang="stylus">
-  @import './edit-stock-in-order.styl'
+@import './edit-stock-in-order.styl'
 </style>
 
