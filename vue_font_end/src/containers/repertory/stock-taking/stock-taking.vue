@@ -16,11 +16,11 @@
     </Row>
     <Tabs v-model="status" :value="status" @on-click="tab()">
       <TabPane label="商品" name="GOODS" >
-           <Table :border="false" :columns="commodityType" :data="commodity"></Table>
       </TabPane>
-      <TabPane label="赠品" name="GIFT" >标签二的内容</TabPane>
-      <TabPane label="物料" name="MATERIEL" >标签三的内容</TabPane>
+      <TabPane label="赠品" name="GIFT" ></TabPane>
+      <TabPane label="物料" name="MATERIEL" ></TabPane>
     </Tabs>
+    <Table :border="false" :columns="commodityType" :data="commodity"></Table>
   </div>
 </template>
 
