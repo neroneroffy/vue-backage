@@ -5,14 +5,14 @@
       <div class="search">
         <Form ref="formInline"  inline>
           <FormItem v-if="!isNew">
-            <Tag type="dot">入库单编号：{{baseData.code}}</Tag>
+            <Tag type="dot">入库单编号：{{baseData.orderNo}}</Tag>
           </FormItem>
           <FormItem  v-if="!isNew">
             <Tag type="dot">单据日期：{{baseData.date}}</Tag>
           </FormItem>
           <FormItem>
-            <Select v-model="baseData.supplier" style="width:200px" :disabled="isChecked" placeholder="请选择供货商">
-              <Option v-for="item in supplierList" :value="item.id" :key="item.name">{{ item.name }}</Option>
+            <Select v-model="baseData.supplierId" style="width:200px" :disabled="isChecked" placeholder="请选择供货商">
+              <Option v-for="item in supplierList" :value="item.id" :key="item.id">{{ item.supplierName }}</Option>
             </Select>
           </FormItem>
           <FormItem v-if="title.indexOf('编辑')<0">
@@ -45,6 +45,7 @@
     name: "edit-stock-in-order",
     data(){
       return{
+        api:"http://192.168.1.25:8080",
         title:this.$route.query.id?this.$route.query.checked?`查看${this.$route.query.name}入库单`:`编辑${this.$route.query.name}入库单`:`新增${this.$route.query.name}入库单`,
         isChecked:this.$route.query.checked?true:false,
         isNew:this.$route.query.id?false:true,
@@ -137,10 +138,9 @@
                 },this.warehouse.map((item)=>{
                     return h('Option',{
                       props:{
-                        value:item.value,
-                        label:item.name,
+                        value:item.id || 1,
+                        label:item.warehouseName,
                       },
-
                     })
                 }))
               }
@@ -164,8 +164,8 @@
                 },this.units.map((item)=>{
                   return h('Option',{
                     props:{
-                      value:item.value,
-                      label:item.name,
+                      value:item.id || 1,
+                      label:item.units,
                     }
                   })
                 }))
@@ -352,8 +352,8 @@
                 },this.warehouse.map((item)=>{
                   return h('Option',{
                     props:{
-                      value:item.value,
-                      label:item.name,
+                      value:item.id || 1,
+                      label:item.warehouseName,
                     },
 
                   })
@@ -379,8 +379,8 @@
                 },this.units.map((item)=>{
                   return h('Option',{
                     props:{
-                      value:item.value,
-                      label:item.name,
+                      value:item.id || 1,
+                      label:item.units,
                     }
                   })
                 }))
@@ -464,7 +464,7 @@
             },
           ]
         ,
-        type:"goods",
+        type:"GOODS",
         inputStyle:{
           width:"100%",
           height:"32px",
@@ -504,22 +504,22 @@
         warehouse:[
           {
             name:"仓库1",
-            value:"1"
+            value:6
           },
           {
             name:"仓库2",
-            value:"2"
+            value:3
           },
         ],
         modelSize:["NB","S"],
         units:[
           {
             name:"单位1",
-            value:"1"
+            value:1
           },
           {
             name:"单位2",
-            value:"2"
+            value:2
           },
         ],
         selectedGood:[{
@@ -538,9 +538,12 @@
         ],
         baseData:{
           supplier:"",
-          code:"",
-          date:new Date(),
-          stockInOrder:"",
+          orderNo:"",
+          createTime:"",
+          purchaseOrderNo:"",
+          operatorId:"",
+          inboundType:"",
+          userName:"",
           mark:""
         }
       }
@@ -548,24 +551,29 @@
     mounted(){
       switch (this.$route.query.name){
         case "商品":
-          this.type = "goods";
+          this.type = "GOODS";
           break;
         case "赠品":
-          this.type = "present";
+          this.type = "GIFT";
           break;
         case "物料":
-          this.type = "material";
+          this.type = "MATERIEL";
           break;
       };
       if(this.$route.query.id){
-        this.$http.get(`/static/goodsStockShowBack${this.$route.query.id}.json`,{
+        this.$http.get(`${this.api}/base/InboundOrder/findInboundOrderById`,{
           params:{ id:this.$route.query.id }
         }).then(response =>{
           let res = response.data;
-          if(res.result){
-            this.baseData = res.data.baseData;
-            this.data = res.data.orderData;
-            this.selectedGood = [];
+
+          this.baseData = res;
+            this.data = res.inboundOrderItemModelList;
+            this.units = res.unitsList;
+            this.warehouse = res.warehouseList;
+            this.supplierList = res.supplierList;
+          console.log(this.baseData);
+          this.selectedGood = [];
+            console.log(this.data);
             this.data.forEach((v,i)=>{
                 this.selectedGood.push({
                   goodsName:v.goodsName,
@@ -573,6 +581,22 @@
                 })
 
             })
+
+        })
+      }else{
+        //调用仓库接口
+        this.$http.get(`${this.api}/base/warehouse/warehouseFindAll`).then(response=> {
+          console.log(response.data)
+          let res = response.data;
+          if(res.result){
+            this.warehouse = res.data
+          }
+        })
+        //单位接口
+        this.$http.get(`${this.$api}/base/units/findAll/`).then(response=>{
+          let res = response.data;
+          if(res){
+            this.units = res;
           }
         })
       }
@@ -628,18 +652,27 @@
       },
       //选择仓库
       selectWarahouse(e,i){
-        console.log(e.target.value);
-        console.log(i);
+
       },
       //保存入库单
       save(){
         this.data = this.$refs.table.rebuildData;
+        this.baseData.inboundType = this.type;
         let submitData = {
-          baseData:this.baseData,
-          orderData:this.data
-        }
+            ...this.baseData,
+          inboundOrderItemModelList:this.data
+        };
+        this.$http.post(`${this.api}/base/InboundOrder/addInboundOrder`,{...submitData}).then(response=>{
+          let res = response.data;
+          if(res.result){
+            this.$Message.success('成功');
+            this.$router.push(`/stock/stock-in-order`)
+          }else{
+            this.$Message.success(res.msg);
+          }
+          console.log(res);
+        })
 
-        console.log(submitData)
       },
       submit(){
 

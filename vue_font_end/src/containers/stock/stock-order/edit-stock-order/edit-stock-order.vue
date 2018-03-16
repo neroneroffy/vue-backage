@@ -6,18 +6,18 @@
       <div class="search">
         <Form ref="formInline"  inline>
           <FormItem v-if="!isNew">
-            <Tag type="dot">采购单编号：{{baseData.code}}</Tag>
+            <Tag type="dot">采购单编号：{{baseData.orderNo}}</Tag>
           </FormItem>
           <FormItem  v-if="!isNew">
-            <Tag type="dot">单据日期：{{baseData.date}}</Tag>
+            <Tag type="dot">单据日期：{{baseData.createTime}}</Tag>
           </FormItem>
           <FormItem>
             <Select v-model="baseData.supplier" style="width:200px" :disabled="isChecked" placeholder="请选择供货商">
-              <Option v-for="item in supplierList" :value="item.id" :key="item.name">{{ item.name }}</Option>
+              <Option v-for="item in supplierList" :value="item.id" :key="item.id">{{ item.supplierName }}</Option>
             </Select>
           </FormItem>
           <FormItem>
-            <Input type="text" placeholder="单据折扣率" v-model="baseData.orderRate" :disabled="isChecked" />
+            <Input type="text" placeholder="单据折扣率" v-model="baseData.discountRate" :disabled="isChecked" />
           </FormItem>
 
         </Form>
@@ -43,6 +43,7 @@
     name: "edit-stock-order",
     data(){
       return{
+        api:"http://192.168.31.222:8080",
         title:this.$route.query.id?this.$route.query.checked?`查看${this.$route.query.name}采购单`:`编辑${this.$route.query.name}采购单`:`新增${this.$route.query.name}采购单`,
         isChecked:this.$route.query.checked?true:false,
         isNew:this.$route.query.id?false:true,
@@ -132,8 +133,8 @@
                 },this.warehouse.map((item)=>{
                   return h('Option',{
                     props:{
-                      value:item.value,
-                      label:item.name,
+                      value:item.id,
+                      label:item.warehouseName,
                     },
                   })
                 }))
@@ -157,8 +158,8 @@
                 },this.units.map((item)=>{
                   return h('Option',{
                     props:{
-                      value:item.value,
-                      label:item.name,
+                      value:item.id,
+                      label:item.units,
                     }
                   })
                 }))
@@ -215,7 +216,7 @@
                   on:{
                     input:(v)=>{
                       params.row.discountRate = v
-                      params.row.discountAmount = params.row.discountRate * params.row.taxPrice
+                      params.row.discountAmount = params.row.taxPrice-params.row.discountRate * params.row.taxPrice
                     }
                   }
                 })
@@ -252,7 +253,7 @@
                   on:{
                     input:(v)=>{
                       params.row.num = v;
-                      params.row.totalPurchasePrice = params.row.num * params.row.discountAmount
+                      params.row.totalPurchasePrice = params.row.num * params.row.purchasePrice
                       params.row.totalTaxPrice = params.row.num * params.row.taxPrice
                     }
                   }
@@ -435,8 +436,8 @@
                 },this.warehouse.map((item)=>{
                   return h('Option',{
                     props:{
-                      value:item.value,
-                      label:item.name,
+                      value:item.id,
+                      label:item.warehouseName,
                     },
                   })
                 }))
@@ -460,8 +461,8 @@
                 },this.units.map((item)=>{
                   return h('Option',{
                     props:{
-                      value:item.value,
-                      label:item.name,
+                      value:item.id,
+                      label:item.units,
                     }
                   })
                 }))
@@ -511,14 +512,14 @@
               render:(h,params)=>{
                 return h('Input',{
                   props:{
-                    value:params.row.price,
+                    value:params.row.discountRate,
                     placeholder:"折扣率",
                     disabled:this.isChecked
                   },
                   on:{
                     input:(v)=>{
                       params.row.discountRate = v
-                      params.row.discountAmount = params.row.discountRate * params.row.taxPrice
+                      params.row.discountAmount = params.row.taxPrice-params.row.discountRate * params.row.taxPrice
                     }
                   }
                 })
@@ -555,7 +556,7 @@
                   on:{
                     input:(v)=>{
                       params.row.num = v;
-                      params.row.totalPurchasePrice = params.row.num * params.row.discountAmount
+                      params.row.totalPurchasePrice = params.row.num * params.row.purchasePrice
                       params.row.totalTaxPrice = params.row.num * params.row.taxPrice
                     }
                   }
@@ -642,26 +643,8 @@
           ],
         currentRow:0,
         goodsPicker:false,
-        warehouse:[
-          {
-            name:"仓库1",
-            value:"1"
-          },
-          {
-            name:"仓库2",
-            value:"2"
-          },
-        ],
-        units:[
-          {
-            name:"单位1",
-            value:"1"
-          },
-          {
-            name:"单位2",
-            value:"2"
-          },
-        ],
+        warehouse:[],
+        units:[],
         selectedGood:[{
           goodsName:"",
           goodsId:""
@@ -678,10 +661,12 @@
         ],
         baseData:{
           supplier:"",
-          code:"",
-          date:new Date(),
+          orderNo:"",
+          createTime:"",
           mark:"",
-          orderRate:""
+          discountRate:"",
+          purchaseType:"",
+          purchaseId:""
         }
       }
     },
@@ -698,13 +683,17 @@
           break;
       }
       if(this.$route.query.id){
-        this.$http.get(`/static/editGoodsStock.json`,{
+        this.$http.get(`${this.api}/base/PurchaseOrder/updatePre`,{
           params:{ id:this.$route.query.id }
         }).then(response =>{
           let res = response.data;
-          if(res.result){
-            this.baseData = res.baseData;
+          console.log(res);
+
+            this.baseData = res;
             this.data = res.orderData;
+            this.units = res.unitsList;
+            this.warehouse = res.warehouseList;
+            this.supplierList = res.supplierList;
             this.selectedGood = [];
             this.data.forEach((v,i)=>{
               this.selectedGood.push({
@@ -712,7 +701,7 @@
                 goodsId:v.goodsId
               })
             })
-          }
+
         })
       }
     },
@@ -742,10 +731,10 @@
         this.baseData.date = date
       },
       addRow(params){
-        console.log(params);
+
         this.data = this.$refs.table.rebuildData;
         //this.data[params.index] = params.row;
-        this.data.push(
+        let newItem =this.$route.query.name === "赠品"?
           {
             goodsName:"",
             purchaseOrderId:"",
@@ -758,11 +747,27 @@
             totalPurchasePrice:"",
             totalTaxPrice:"",
             warehouseId:""
-          }        );
+          }:
+          {
+            goodsName:"",
+            purchaseOrderId:"",
+            goodsId:"",
+            unipurchasePricetsId:"",
+            taxPrice:"",
+            discountRate:"",
+            modelSize:"",
+            discountAmount:"",
+            num:"",
+            totalPurchasePrice:"",
+            totalTaxPrice:"",
+            warehouseId:""
+          };
+        this.data.push(newItem);
         this.selectedGood.push({
           goodsName:"",
           goodsId:""
         })
+        console.log(this.data);
       },
       //删除一行
       closeRow(i){
@@ -778,9 +783,13 @@
       save(){
         this.data = this.$refs.table.rebuildData;
         let submitData = {
-          baseData:this.baseData,
-          orderData:this.data
-        }
+            ...this.baseData,
+          purchaseOrderItemModel:this.data
+        };
+        this.$http.post(`${this.api}/base/PurchaseOrder/addPurchaseOrder`,{...submitData}).then(response=>{
+          let res = response.data;
+          console.log(res);
+        })
         console.log(submitData)
       },
       submit(){
