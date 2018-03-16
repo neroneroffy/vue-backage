@@ -99,7 +99,7 @@
         this.$http.get(`http://192.168.31.34:8080/base/goodsApplyItem/findAllGoodsApplyItem`,{params:{id:this.$route.query.id}}).then(response=>{
           console.log(response)
           let res = response.data;
-          if(res.result){ 
+          if(res.result){
             this.listData = res.data
           }
         })

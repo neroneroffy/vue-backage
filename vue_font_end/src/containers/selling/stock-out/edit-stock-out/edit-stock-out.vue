@@ -49,198 +49,198 @@
         isChecked:this.$route.query.checked?true:false,
         isNew:this.$route.query.id?false:true,
         columns: [
-            {
-              title:"新增",
-              key:"add",
-              render:(h,params)=>{
-                return h('div', [
-                  h('Button',{
-                    props:{
-                      type:"primary",
-                      icon:"plus-round",
-                      size:"small",
-                      disabled:this.isChecked
-                    },
-                    style:{
-                      fontSize:"14px"
-                    },
-                    on:{
-                      click:()=>{
-
-                        this.addRow(params)
-                      }
-                    }
-                  }),
-                  h('Button',{
-                    props:{
-                      type:"error",
-                      icon:"close-round",
-                      size:"small",
-                      disabled:this.isChecked
-                    },
-                    style:{
-                      marginLeft:"10px",
-                      fontSize:"14px"
-                    },
-                    on:{
-                      click:()=>{
-                        this.closeRow(params.index)
-                      }
-                    }
-                  }),
-                ])
-              }
-            },
-            {
-              title:"货物名称",
-              key:"goodsId",
-              render:(h,params)=>{
-                return h("div",{
-                  style:{
-                    padding:"3px 5px",
-                    cursor:"pointer",
-                    background:"#f0f0f0",
-                    borderRadius:"3px",
-                    float:"left"
+          {
+            title:"新增",
+            key:"add",
+            render:(h,params)=>{
+              return h('div', [
+                h('Button',{
+                  props:{
+                    type:"primary",
+                    icon:"plus-round",
+                    size:"small",
+                    disabled:this.isChecked
                   },
-
+                  style:{
+                    fontSize:"14px"
+                  },
                   on:{
                     click:()=>{
-                      if(this.isChecked){
-                        return
-                      }
 
-                      this.currentRow = params.index
-                      this.goodsPicker = true
-                    },
-                  }
-                },this.selectedGood[params.index].goodsName?this.selectedGood[params.index].goodsName:"请选择商品")
-              }
-
-            },
-
-            {
-              title:"单位",
-              key:"unitsId",
-              render:(h,params)=>{
-                return h('Select',{
-                  props:{
-                    value:this.data[params.index].unitsId,
-                    placeholder:"选择单位",
-                    disabled:this.isChecked
-                  },
-                  on:{
-                    input:(e)=>{
-                      params.row.unitsId = e
-
+                      this.addRow(params)
                     }
                   }
-                },this.units.map((item)=>{
-                  return h('Option',{
-                    props:{
-                      value:item.value,
-                      label:item.name,
-                    }
-                  })
-                }))
-              }
-            },
-            {
-              title:"出库单价",
-              key:"price",
-              render:(h,params)=>{
-                return h('Input',{
+                }),
+                h('Button',{
                   props:{
-                    value:params.row.price,
-                    placeholder:"入库单价",
+                    type:"error",
+                    icon:"close-round",
+                    size:"small",
                     disabled:this.isChecked
                   },
-
+                  style:{
+                    marginLeft:"10px",
+                    fontSize:"14px"
+                  },
                   on:{
-                    input:(v)=>{
-                      params.row.price = v
+                    click:()=>{
+                      this.closeRow(params.index)
                     }
+                  }
+                }),
+              ])
+            }
+          },
+          {
+            title:"货物名称",
+            key:"goodsId",
+            render:(h,params)=>{
+              return h("div",{
+                style:{
+                  padding:"3px 5px",
+                  cursor:"pointer",
+                  background:"#f0f0f0",
+                  borderRadius:"3px",
+                  float:"left"
+                },
+
+                on:{
+                  click:()=>{
+                    if(this.isChecked){
+                      return
+                    }
+
+                    this.currentRow = params.index
+                    this.goodsPicker = true
+                  },
+                }
+              },this.selectedGood[params.index].goodsName?this.selectedGood[params.index].goodsName:"请选择商品")
+            }
+
+          },
+
+          {
+            title:"单位",
+            key:"unitsId",
+            render:(h,params)=>{
+              return h('Select',{
+                props:{
+                  value:this.data[params.index].unitsId,
+                  placeholder:"选择单位",
+                  disabled:this.isChecked
+                },
+                on:{
+                  input:(e)=>{
+                    params.row.unitsId = e
+
+                  }
+                }
+              },this.units.map((item)=>{
+                return h('Option',{
+                  props:{
+                    value:item.value,
+                    label:item.name,
                   }
                 })
-              }
-            },
-            {
-              title:"出库数量",
-              key:"num",
-              render:(h,params)=>{
-                return h('Input',{
-                  props:{
-                    value:params.row.num,
-                    placeholder:"入库数量",
-                    disabled:this.isChecked
-                  },
-                  on:{
-                    input:(v)=>{
-                      params.row.num = v;
-                      params.row.total = params.row.num * params.row.price
-                    }
-                  }
-                })
-              }
-            },
-            {
-              title:"总金额",
-              key:"total",
-              render:(h,params)=>{
-                return h('Input',{
-                  props:{
-                    value:params.row.total,
-                    placeholder:"总金额",
-                    disabled:this.isChecked
-                  },
+              }))
+            }
+          },
+          {
+            title:"出库单价",
+            key:"price",
+            render:(h,params)=>{
+              return h('Input',{
+                props:{
+                  value:params.row.price,
+                  placeholder:"入库单价",
+                  disabled:this.isChecked
+                },
 
-                  on:{
-                    input:(v)=>{
-                      params.row.total = v
-                    }
+                on:{
+                  input:(v)=>{
+                    params.row.price = v
                   }
-                })
-              }
-            },
-            {
-              title:"实付金额",
-              key:"realPay",
-              render:(h,params)=>{
-                return h('Input',{
-                  props:{
-                    value:params.row.realPay,
-                    placeholder:"总金额",
-                    disabled:this.isChecked
-                  },
+                }
+              })
+            }
+          },
+          {
+            title:"出库数量",
+            key:"num",
+            render:(h,params)=>{
+              return h('Input',{
+                props:{
+                  value:params.row.num,
+                  placeholder:"入库数量",
+                  disabled:this.isChecked
+                },
+                on:{
+                  input:(v)=>{
+                    params.row.num = v;
+                    params.row.total = params.row.num * params.row.price
+                  }
+                }
+              })
+            }
+          },
+          {
+            title:"总金额",
+            key:"total",
+            render:(h,params)=>{
+              return h('Input',{
+                props:{
+                  value:params.row.total,
+                  placeholder:"总金额",
+                  disabled:this.isChecked
+                },
 
-                  on:{
-                    input:(v)=>{
-                      params.row.realPay = v
-                    }
+                on:{
+                  input:(v)=>{
+                    params.row.total = v
                   }
-                })
-              }
-            },
-            {
-              title:"备注",
-              key:"mark",
-              render:(h,params)=>{
-                return h('Input',{
-                  props:{
-                    value:this.data[params.index].mark,
-                    placeholder:"备注",
-                    disabled:this.isChecked
-                  },
-                  on:{
-                    input:(v)=>{
-                      params.row.mark = v
-                    }
-                  }
-                })
-              }
+                }
+              })
+            }
+          },
+          {
+            title:"实付金额",
+            key:"realPay",
+            render:(h,params)=>{
+              return h('Input',{
+                props:{
+                  value:params.row.realPay,
+                  placeholder:"总金额",
+                  disabled:this.isChecked
+                },
 
-            },
-         ]
+                on:{
+                  input:(v)=>{
+                    params.row.realPay = v
+                  }
+                }
+              })
+            }
+          },
+          {
+            title:"备注",
+            key:"mark",
+            render:(h,params)=>{
+              return h('Input',{
+                props:{
+                  value:this.data[params.index].mark,
+                  placeholder:"备注",
+                  disabled:this.isChecked
+                },
+                on:{
+                  input:(v)=>{
+                    params.row.mark = v
+                  }
+                }
+              })
+            }
+
+          },
+        ]
         ,
         type:"goods",
         inputStyle:{
@@ -251,16 +251,16 @@
           borderRadius:"5px"
         },
         data: [
-            {
-              "goodsId":"",
-              "unitsId":"",
-              "price":"",
-              "num":"",
-              "total":"",
-              "realPay":"",
-              "mark":""
-            }
-          ]
+          {
+            "goodsId":"",
+            "unitsId":"",
+            "price":"",
+            "num":"",
+            "total":"",
+            "realPay":"",
+            "mark":""
+          }
+        ]
         ,
         currentRow:0,
         goodsPicker:false,
@@ -331,10 +331,10 @@
             this.data = res.orderData;
             this.selectedGood = [];
             this.data.forEach((v,i)=>{
-                this.selectedGood.push({
-                  goodsName:v.goodsName,
-                  goodsId:v.goodsId
-                })
+              this.selectedGood.push({
+                goodsName:v.goodsName,
+                goodsId:v.goodsId
+              })
 
             })
           }
@@ -347,7 +347,7 @@
     },
     methods:{
       inputValue(index){
-       // this.data[index].
+        // this.data[index].
       },
       //选择商品完毕
       selectDone(data){
@@ -412,6 +412,6 @@
 </script>
 
 <style scoped lang="stylus">
-@import './edit-stock-out.styl'
+  @import './edit-stock-out.styl'
 </style>
 

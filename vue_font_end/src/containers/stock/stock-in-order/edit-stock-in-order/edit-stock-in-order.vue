@@ -579,9 +579,7 @@
                   goodsName:v.goodsName,
                   goodsId:v.goodsId
                 })
-
             })
-
         })
       }else{
         //调用仓库接口

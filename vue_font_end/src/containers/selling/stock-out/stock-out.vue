@@ -1,5 +1,5 @@
 <template>
-  <div class="stock-in-order">
+  <div class="stock-out">
     <div class="materiel">
       <!--新增 表单搜索部分-->
       <div class="search-wrapper">
@@ -41,15 +41,16 @@
 <script>
   export default {
     name: "stock-out",
-    data(){
-      return{
-        pageSizeList:[30,50,100],
-        pageSize:30,
-        total:0,
-        data:"",
-        loading:false,
-        currentPage:1,
-        columns:[
+    data() {
+      return {
+        api:"http://192.168.1.25:8080",
+        pageSizeList: [30, 50, 100],
+        pageSize: 30,
+        total: 0,
+        data: "",
+        loading: false,
+        currentPage: 1,
+        columns: [
           {
             title: '出库单编号',
             key: 'outboundOrderNo',
@@ -83,7 +84,7 @@
           {
             title: '操作',
             key: 'action',
-            width:180,
+            width: 180,
             align: 'center',
             render: (h, params) => {
               return h('div', [
@@ -135,34 +136,34 @@
         ],
         currentTab:"商品",
         searchContent:{
-          code:"",
-          date:" "
+          outboundOrderNo:"",
+          receiveTime:"",
+
         },
 
       }
     },
-
-    mounted(){
+    mounted() {
       //初始请求分页
       let params = {
-        pageNum: this.currentPage,
+        pageCount: this.currentPage,
         pageSize: this.pageSize
       };
       this.pagination(params)
     },
-    methods:{
+    methods: {
       //新增
-      add(){
-        this.$router.push({path:'/selling/out/edit-stock-out',query:{name:this.currentTab}})
+      add() {
+        this.$router.push({path: '/selling/out/edit-stock-out/', query: {name: this.currentTab}})
       },
-      selectDate(date){
+      selectDate(date) {
         this.searchContent.date = date;
         console.log(this.searchContent.date)
       },
       //切换tabs的时候
-      tabChange(name){
+      tabChange(name) {
         this.currentTab = name;
-        sessionStorage.setItem("currentTab",this.currentTab);
+        sessionStorage.setItem("currentTab", this.currentTab);
         this.pagination();
         console.log(name);
       },
@@ -172,25 +173,28 @@
 
       },
       //查看
-      show(params){
-        this.$router.push({path:`/selling/out/edit-stock-out`,query:{id:params.row.id,checked:true,name:this.currentTab}})
+      show(params) {
+        this.$router.push({
+          path: `/selling/out/edit-stock-out`,
+          query: {id: params.row.id, checked: true, name: this.currentTab}
+        })
       },
       //编辑
-      edit(params){
-        this.$router.push({path:`/selling/out/edit-stock-out`,query:{id:params.row.id,name:this.currentTab}})
+      edit(params) {
+        this.$router.push({path: `/selling/out/edit-stock-out`, query: {id: params.row.id, name: this.currentTab}})
       },
       //删除
-      remove(params){
+      remove(params) {
         //获取id
-        let id =  params.row.id;
+        let id = params.row.id;
         this.$Modal.confirm({
-          content:'<p>确认删除此条数据吗?</p>',
-          loading:true,
-          onOk:()=>{
+          content: '<p>确认删除此条数据吗?</p>',
+          loading: true,
+          onOk: () => {
             this.$store.dispatch('modalLoading');
-            this.$http.post(`${this.$api}/materiel/delete`,{id}).then(response  => {
+            this.$http.post(`${this.$api}/materiel/delete`, {id}).then(response => {
               let res = response.data;
-              if(res.result){
+              if (res.result) {
                 this.pagination();
                 this.$Modal.remove();
                 this.$Message.info("删除成功");
@@ -202,25 +206,19 @@
       //分页函数
       pagination(customsParams) {
         let defaultParams = {
-          pageNum:1,
-          pageSize:30
+          ...this.searchContent,
+          outboundType: this.outboundType,
+          pageCount: 1,
+          pageSize: 30
         };
         let params = customsParams || defaultParams;
-        let url = "/static/stockOutData.json";
-/*        switch (this.currentTab){
-          case "goods":
-            break;
-          case "present":
-            url = "/static/presentData.json";
-            break;
-          case "material":
-            url = "/static/materialData.json";
-        }*/
-        this.$http.get(url).then(response => {
-          let res = response.data;
-          console.log(res)
-          if(res.result){
-            this.data = res.data;
+        let url = `${this.api}/base/OutboundOrder/findAllOutboundOrder`;
+        this.$http.post(url, params).then(response => {
+          if (response) {
+            let data = response.data;
+            console.log(data);
+            this.data = data.pageList;
+            this.total = data.count
           }
         })
       },
@@ -230,7 +228,9 @@
 
 
         let params = {
-          pageNum: this.currentPage,
+          ...this.searchContent,
+          outboundType: this.type,
+          pageCount: this.currentPage,
           pageSize: this.pageSize
         };
         this.pagination(params)
@@ -239,15 +239,31 @@
         this.pageSize = currentPageSize;
         this.currentPage = 1;
         let params = {
-          pageNum: this.currentPage,
+          ...this.searchContent,
+          outboundType: this.type,
+          pageCount: this.currentPage,
           pageSize: this.pageSize
         };
         this.pagination(params)
       },
     },
-    computed:{
-      //跳转路由；由于字段都一样，所以暂时用一个页面
-/*      url(){
+    computed: {
+      type() {
+        switch (this.currentTab) {
+          case "商品":
+            return "GOODS";
+            break;
+          case "赠品":
+            return "GIFT";
+            break;
+          case "物料":
+            return "MATERIEL";
+            break;
+          default:
+            return "GOODS";
+        }
+        //跳转路由；由于字段都一样，所以暂时用一个页面
+        /*      url(){
         switch(this.currentTab){
           case "goods":
             return `/stock/stock-in-order/edit-stock-in-order`;
@@ -258,6 +274,7 @@
         }
 
       }*/
+      }
     }
   }
 </script>
