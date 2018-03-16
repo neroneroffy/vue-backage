@@ -168,7 +168,7 @@
             }
             let params = {
               ...this.searchContent,
-              currentPage: this.currentPage,
+              currentPage: 1,
               pageSize: this.pageSize,
               isDel:this.searchContent.isHidden
             };

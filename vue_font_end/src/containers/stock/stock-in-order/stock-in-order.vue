@@ -7,7 +7,7 @@
         <div class="search">
           <Form ref="formInline" :model="searchContent" inline>
             <FormItem>
-              <Input type="text" v-model="searchContent.code" placeholder="请输入编号"/>
+              <Input type="text" v-model="searchContent.orderNo" placeholder="请输入编号"/>
             </FormItem>
             <FormItem>
               <DatePicker type="date" placeholder="选择日期" @on-change="selectDate" style="width: 200px"></DatePicker>
@@ -31,7 +31,7 @@
         </TabPane>
       </Tabs>
       <div class="pagination">
-        <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize"  placement="top" :page-size-opts="pageSizeList" :page-size="pageSizeList[0]"  :total="total"></Page>
+        <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize" :current="pageCount"  placement="top" :page-size-opts="pageSizeList" :page-size="pageSizeList[0]"  :total="total"></Page>
       </div>
     </div>
   </div>
@@ -39,17 +39,18 @@
 </template>
 
 <script>
+  import formatDate from '@/util/convertTime';
   export default {
     name: "stock-in-order",
     data(){
       return{
         api:"http://192.168.1.25:8080",
-        pageSizeList:[30,50,100],
-        pageSize:30,
+        pageSizeList:[5,50,100],
+        pageSize:5,
         total:0,
         data:"",
         loading:false,
-        currentPage:1,
+        pageCount:1,
         columns:[
           {
             title: '单据编码',
@@ -59,6 +60,10 @@
           {
             title: '关联采购单',
             key: 'purchaseOrderNo'
+          },
+          {
+            title: '单据日期',
+            key: 'createTime'
           },
 
           {
@@ -125,8 +130,8 @@
         ],
         currentTab:"商品",
         searchContent:{
-          OrderNo:"",
-          date:" "
+          orderNo:"",
+          createTime:""
         },
 
       }
@@ -140,11 +145,10 @@
     methods:{
       //新增
       add(){
-        this.$router.push({path:'/stock/stock-in-order/edit-stock-in-order',query:{name:this.currentTab}})
+        this.$router.push({path:'/stock/stock-in-order/edit-stock-in-order',query:{name:this.currentTab,type:this.type}})
       },
       selectDate(date){
-        this.searchContent.date = date;
-        console.log(this.searchContent.date)
+        this.searchContent.createTime = date;
       },
       //切换tabs的时候
       tabChange(name){
@@ -155,7 +159,17 @@
       },
       //提交搜索
       handleSubmit() {
-        console.log(this.searchContent)
+        console.log(this.searchContent);
+        this.searchContent.inboundType = this.type;
+        this.$http.post(`${this.api}/base/InboundOrder/findAllInboundOrder`,{...this.searchContent,pageCount:1,pageSize:this.pageSize}).then(response=>{
+          if(response){
+            let res = response.data;
+            res.createTime = formatDate(res.createTime)
+            this.data = res.pageList;
+            this.total = res.count;
+            console.log(res);
+          }
+        })
 
       },
       //查看
@@ -164,7 +178,7 @@
       },
       //编辑
       edit(params){
-        this.$router.push({path:`/stock/stock-in-order/edit-stock-in-order`,query:{id:params.row.id,name:this.currentTab}})
+        this.$router.push({path:`/stock/stock-in-order/edit-stock-in-order`,query:{id:params.row.id,name:this.currentTab,type:this.type}})
       },
       //删除
       remove(params){
@@ -194,40 +208,41 @@
             ...this.searchContent,
           inboundType:this.type,
           pageCount:1,
-          pageSize:30
+          pageSize:5
         };
         let params = customsParams || defaultParams;
         let url = `${this.api}/base/InboundOrder/findAllInboundOrder`;
         this.$http.post(url,params).then(response => {
           if(response){
-            let data = response.data;
-            console.log(data);
-            this.data = data.pageList;
-            this.total = data.count
+            let res = response.data;
+            //转换时间戳
+            res.pageList.forEach(v=>{
+              v.createTime = formatDate(v.createTime)
+            });
+            this.data = res.pageList;
+            this.total = res.count
           }
 
         })
       },
       //点击分页
       changePage(currentPageNum) {
-        this.currentPage = currentPageNum;
-
-
+        this.pageCount = currentPageNum;
+        this.searchContent.inboundType = this.type;
         let params = {
           ...this.searchContent,
-          inboundType:this.type,
-          pageCount: this.currentPage,
+          pageCount: this.pageCount,
           pageSize: this.pageSize
         };
         this.pagination(params)
       },
       changePageSize(currentPageSize) {
         this.pageSize = currentPageSize;
-        this.currentPage = 1;
+        this.pageCount = 1;
         let params = {
           ...this.searchContent,
           inboundType:this.type,
-          pageCount: this.currentPage,
+          pageCount: this.pageCount,
           pageSize: this.pageSize
         };
         this.pagination(params)
