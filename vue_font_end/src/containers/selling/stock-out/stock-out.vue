@@ -7,7 +7,7 @@
         <div class="search">
           <Form ref="formInline" :model="searchContent" inline>
             <FormItem>
-              <Input type="text" v-model="searchContent.code" placeholder="请输入编号"/>
+              <Input type="text" v-model="searchContent.outboundOrderNo" placeholder="请输入编号"/>
             </FormItem>
             <FormItem>
               <DatePicker type="date" placeholder="选择日期" @on-change="selectDate" style="width: 200px"></DatePicker>
@@ -44,13 +44,13 @@
     name: "stock-out",
     data() {
       return {
-        api:"http://192.168.1.25:8080",
-        pageSizeList: [30, 50, 100],
-        pageSize: 30,
+        api:"http://192.168.31.168:8080",
+        pageSizeList: [5, 50, 100],
+        pageSize: 5,
         total: 0,
         data: "",
         loading: false,
-        formatDate:"",
+
         pageCount:1,
         currentPage: 1,
         columns: [
@@ -157,43 +157,43 @@
         this.$router.push({path: '/selling/out/edit-stock-out/', query: {name: this.currentTab,type:this.type}})
       },
       selectDate(date) {
-        this.searchContent.date = date;
-        console.log(this.searchContent.date)
+        this.searchContent.receiveTime = date;
+
       },
       //切换tabs的时候
       tabChange(name) {
         this.currentTab = name;
         sessionStorage.setItem("currentTab", this.currentTab);
         this.pagination();
-        console.log(name);
+
       },
       //提交搜索
       handleSubmit() {
-        console.log(this.searchContent);
 
-        this.$http.post(`${this.api}/base/OutboundOrder/findAllOutboundOrder`,{...this.searchContent,pageCount:1,pageSize:this.pageSize}).then(response=>{
-          if(response){
+        this.searchContent.outboundType = this.type;
+        this.$http.post(`${this.api}/base/OutboundOrder/findAllOutboundOrder`, {
+          ...this.searchContent,
+          pageCount: 1,
+          pageSize: this.pageSize
+        }).then(response => {
+          if (response) {
             let res = response.data;
+            console.log(res);
             res.pageList.forEach(v=>{
-              v.createTime = formatDate(parseInt(v.createTime))
-            });
+              v.receiveTime = formatDate(parseInt(v.receiveTime))
+            })
             this.data = res.pageList;
             this.total = res.count;
-            console.log(res);
           }
         })
-
       },
       //查看
       show(params) {
-        this.$router.push({
-          path: `/selling/out/edit-stock-out`,
-          query: {id: params.row.id, checked: true, name: this.currentTab,type:this.type}
-        })
+        this.$router.push({path:`/selling/out/edit-stock-out`,query:{id:params.row.id,checked:true,name:this.currentTab,type:this.type}})
       },
       //编辑
       edit(params) {
-        this.$router.push({path: `/selling/out/edit-stock-out`, query: {id: params.row.id, name: this.currentTab,type:this.type}})
+        this.$router.push({path:`/selling/out/edit-stock-out`,query:{id:params.row.id,name:this.currentTab,type:this.type}})
       },
       //删除
       remove(params) {
@@ -206,6 +206,7 @@
             this.$store.dispatch('modalLoading');
             this.$http.post(`${this.$api}/base/OutboundOrderItem/deleteOutboundOrderItem`, {id}).then(response => {
               let res = response.data;
+              res.receiveTime = formatDate(parseInt(res.receiveTime))
               if (res.result) {
                 this.pagination();
                 this.$Modal.remove();
@@ -221,39 +222,42 @@
           ...this.searchContent,
           outboundType: this.type,
           pageCount: 1,
-          pageSize: 30
+          pageSize: 5
         };
         let params = customsParams || defaultParams;
-        let url = `${this.api}/base/OutboundOrder/findAllOutboundOrder`;
+        let url = `http://192.168.31.34:8080/base/OutboundOrder/findAllOutboundOrder`;
         this.$http.post(url, params).then(response => {
           if (response) {
-            let data = response.data;
-            console.log(data);
-            this.data = data.pageList;
-            this.total = data.count
+            //转换时间戳
+            let res = response.data;
+            res.pageList.forEach(v=>{
+              v.receiveTime = formatDate(parseInt(v.receiveTime))
+            })
+
+            this.data = res.pageList;
+            this.total = res.count
           }
         })
       },
       //点击分页
       changePage(currentPageNum) {
-        this.currentPage = currentPageNum;
-
-
+        this.pageCount = currentPageNum;
         let params = {
           ...this.searchContent,
           outboundType: this.type,
-          pageCount: this.currentPage,
+          pageCount: this.pageCount,
           pageSize: this.pageSize
         };
         this.pagination(params)
       },
       changePageSize(currentPageSize) {
         this.pageSize = currentPageSize;
-        this.currentPage = 1;
+        // this.currentPage = 1;
+        this.pageCount = 1;
         let params = {
           ...this.searchContent,
           outboundType: this.type,
-          pageCount: this.currentPage,
+          pageCount: this.pageCount,
           pageSize: this.pageSize
         };
         this.pagination(params)

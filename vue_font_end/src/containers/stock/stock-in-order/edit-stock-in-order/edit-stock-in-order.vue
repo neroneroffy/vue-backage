@@ -8,15 +8,15 @@
             <Tag type="dot">入库单编号：{{baseData.orderNo}}</Tag>
           </FormItem>
           <FormItem  v-if="!isNew">
-            <Tag type="dot">单据日期：{{baseData.date}}</Tag>
+            <Tag type="dot">单据日期：{{baseData.createTime}}</Tag>
           </FormItem>
           <FormItem>
             <Select v-model="baseData.supplierId" style="width:200px" :disabled="isChecked" placeholder="请选择供货商">
               <Option v-for="item in supplierList" :value="item.id" :key="item.id">{{ item.supplierName }}</Option>
             </Select>
           </FormItem>
-          <FormItem v-if="title.indexOf('编辑')<0">
-            <Input type="text" v-model="baseData.stockInOrder" placeholder="关联采购单"/>
+          <FormItem >
+            <Input type="text" v-model="baseData.purchaseOrderNo" :disabled="title.indexOf('新增')<0"  placeholder="关联采购单"/>
           </FormItem>
 
         </Form>
@@ -32,7 +32,7 @@
       <p>入库单备注</p>
       <Input type="textarea" :rows="4" placeholder="请填写单据备注" :disabled="isChecked"  v-model="baseData.mark"/>
     </div>
-    <CommodityPicker type="goods" :showPicker="goodsPicker" @selectDone="selectDone" @cancel="cancel"/>
+    <CommodityPicker :type="type" v-if="!isChecked" :showPicker="goodsPicker" @selectDone="selectDone" @cancel="cancel"/>
 
   </div>
 </template>
@@ -40,7 +40,7 @@
 <script>
   import BastTitle from  "@/components/base-title";
   import CommodityPicker from '@/components/commodity-picker/commodity-picker'
-  import { Form,Select,Upload,Avatar,Button,DatePicker,Cascader } from 'iview'
+  import formatDate from '@/util/convertTime';
   export default {
     name: "edit-stock-in-order",
     data(){
@@ -68,7 +68,6 @@
                     },
                     on:{
                       click:()=>{
-
                         this.addRow(params)
                       }
                     }
@@ -86,7 +85,7 @@
                     },
                     on:{
                       click:()=>{
-                        this.closeRow(params.index)
+                        this.closeRow(params)
                       }
                     }
                   }),
@@ -116,7 +115,7 @@
                       this.goodsPicker = true
                     },
                   }
-                },this.selectedGood[params.index].goodsName?this.selectedGood[params.index].goodsName:"请选择商品")
+                },this.selectedGood[params.index].goodsName?this.selectedGood[params.index].goodsName:"请选择货物")
               }
 
             },
@@ -136,12 +135,12 @@
                     }
                   }
                 },this.warehouse.map((item)=>{
-                    return h('Option',{
-                      props:{
-                        value:item.id || 1,
-                        label:item.warehouseName,
-                      },
-                    })
+                  return h('Option',{
+                    props:{
+                      value:item.id || 1,
+                      label:item.warehouseName,
+                    },
+                  })
                 }))
               }
             },
@@ -247,7 +246,7 @@
               }
 
             },
-         ]:
+          ]:
           [
             {
               title:"新增",
@@ -284,7 +283,7 @@
                     },
                     on:{
                       click:()=>{
-                        this.closeRow(params.index)
+                        this.closeRow(params)
                       }
                     }
                   }),
@@ -314,7 +313,7 @@
                       this.goodsPicker = true
                     },
                   }
-                },this.selectedGood[params.index].goodsName?this.selectedGood[params.index].goodsName:"请选择商品")
+                },this.selectedGood[params.index].goodsName?this.selectedGood[params.index].goodsName:"请选择货物")
               }
 
             },
@@ -330,7 +329,7 @@
                     borderRadius:"3px",
                     float:"left"
                   },
-                },this.selectedGood[params.index].goodsName?params.row.modelSize:"请先选择商品")
+                },this.selectedGood[params.index].goodsName?params.row.modelSize:"请先选择货物")
               }
 
             },
@@ -464,7 +463,7 @@
             },
           ]
         ,
-        type:"GOODS",
+        type:this.$route.query.type,
         inputStyle:{
           width:"100%",
           height:"32px",
@@ -472,33 +471,21 @@
           border:"1px solid #e4e4e4",
           borderRadius:"5px"
         },
-        data:this.$route.query.name === "物料"?
-          [
-            {
-              warehouseId:"",
-              goodsId:"",
-              goodsName:"",
-              unitsId:"",
-              price:"",
-              num:"",
-              total:"",
-              mark:""
-            }
-          ]:
-          [
-            {
-              warehouseId:"",
-              goodsId:"",
-              modelSize:"",
-              goodsName:"",
-              unitsId:"",
-              price:"",
-              num:"",
-              total:"",
-              mark:""
-            }
-          ]
-        ,
+        data: [
+          {
+            warehouseId:"",
+            goodsId:"",
+            goodsName:"",
+            unitsId:"",
+            modelSize:"",
+            price:"",
+            num:"",
+            total:"",
+            mark:"",
+            purchaseOrderNo:"",
+            isDel:false
+          }
+        ],
         currentRow:0,
         goodsPicker:false,
         warehouse:[
@@ -512,79 +499,75 @@
           },
         ],
         modelSize:["NB","S"],
-        units:[
-          {
-            name:"单位1",
-            value:1
-          },
-          {
-            name:"单位2",
-            value:2
-          },
-        ],
+        units:[],
         selectedGood:[{
           goodsName:"",
           goodsId:""
         }],
-        supplierList:[
-          {
-            name:"供货商1",
-            id:"1"
-          },
-          {
-            name:"供货商2",
-            id:"2"
-          }
-        ],
+        supplierList:[],
         baseData:{
-          supplier:"",
+          supplierId:"",
           orderNo:"",
           createTime:"",
           purchaseOrderNo:"",
           operatorId:"",
           inboundType:"",
           userName:"",
-          mark:""
-        }
+          mark:"",
+
+        },
+        goodsType:"productName"
       }
     },
     mounted(){
       switch (this.$route.query.name){
         case "商品":
           this.type = "GOODS";
+          this.goodsType = "productName";
           break;
         case "赠品":
           this.type = "GIFT";
+          this.goodsType = "giftName";
           break;
         case "物料":
           this.type = "MATERIEL";
+          this.goodsType = "materielName";
           break;
       };
+      //调用供货商接口
+      this.$http.post(`http://192.168.31.222:8080/base/supplier/findAll`).then(response=>{
+        if(response){
+          let res = response.data;
+          this.supplierList = res;
+        }
+      });
       if(this.$route.query.id){
         this.$http.get(`${this.api}/base/InboundOrder/findInboundOrderById`,{
           params:{ id:this.$route.query.id }
         }).then(response =>{
-          let res = response.data;
-
-          this.baseData = res;
+          if(response){
+            let res = response.data;
+            console.log(res);
+            //转换时间戳
+            res.createTime = formatDate(parseInt(res.createTime))
+            this.baseData = res;
             this.data = res.inboundOrderItemModelList;
             this.units = res.unitsList;
             this.warehouse = res.warehouseList;
             this.supplierList = res.supplierList;
-          console.log(this.baseData);
-          this.selectedGood = [];
-            console.log(this.data);
+            this.selectedGood = [];
             this.data.forEach((v,i)=>{
-                this.selectedGood.push({
-                  goodsName:v.goodsName,
-                  goodsId:v.goodsId
-                })
+              this.selectedGood.push({
+                goodsName:v.goodsName,
+                goodsId:v.goodsId
+              })
+
             })
+          }
         })
       }else{
         //调用仓库接口
         this.$http.get(`${this.api}/base/warehouse/warehouseFindAll`).then(response=> {
-          console.log(response.data)
           let res = response.data;
           if(res.result){
             this.warehouse = res.data
@@ -605,13 +588,13 @@
     },
     methods:{
       inputValue(index){
-       // this.data[index].
+        // this.data[index].
       },
       //选择商品完毕
       selectDone(data){
-        this.selectedGood[this.currentRow].goodsName = data.productName;
+        this.selectedGood[this.currentRow].goodsName = data[this.goodsType];
         this.selectedGood[this.currentRow].goodsId = data.id;
-        this.$refs.table.rebuildData[this.currentRow].goodsName = data.productName;
+        this.$refs.table.rebuildData[this.currentRow].goodsName = data[this.goodsType];
         this.$refs.table.rebuildData[this.currentRow].modelSize = data.modelSize;
         this.$refs.table.rebuildData[this.currentRow].goodsId = data.id;
         this.goodsPicker = false
@@ -624,18 +607,22 @@
         this.baseData.date = date
       },
       addRow(params){
-        console.log(params);
         this.data = this.$refs.table.rebuildData;
         //this.data[params.index] = params.row;
+
         this.data.push(
           {
-            warehouseId:"1",
+            warehouseId:"",
             goodsId:"",
-            unitsId:"1",
+            modelSize:"",
+            goodsName:"",
+            unitsId:"",
             price:"",
             num:"",
             total:"",
-            mark:""
+            mark:"",
+            purchaseOrderNo:"",
+            isDel:false
           }
         );
         this.selectedGood.push({
@@ -644,9 +631,23 @@
         })
       },
       //删除一行
-      closeRow(i){
-        this.data.splice(i,1);
-        this.selectedGood.splice(i,1)
+      closeRow(params){
+        if(this.$refs.table.rebuildData.length === 1){
+          this.$Modal.error({
+            title: "失败",
+            content: "只有一条时候不可删除"
+          });
+          return
+        }
+        this.$http.get(`${this.api}/base/InboundOrderItem/deleteInboundOrderItem`,{params:{
+            id:params.row.id
+          }}).then(response=>{
+          let res = response.data;
+          console.log(res);
+          this.data.splice(params.index,1);
+          this.selectedGood.splice(params.index,1)
+        })
+
       },
       //选择仓库
       selectWarahouse(e,i){
@@ -655,12 +656,22 @@
       //保存入库单
       save(){
         this.data = this.$refs.table.rebuildData;
+        if(this.data.length === 0) {
+          this.$Modal.error({
+            title: "失败",
+            content: "保存时清单不能为空"
+          });
+          return
+        }
         this.baseData.inboundType = this.type;
         let submitData = {
-            ...this.baseData,
+          ...this.baseData,
           inboundOrderItemModelList:this.data
         };
-        this.$http.post(`${this.api}/base/InboundOrder/addInboundOrder`,{...submitData}).then(response=>{
+        console.log(submitData);
+        let url = !this.$route.query.id?`${this.api}/base/InboundOrder/addInboundOrder`:`${this.api}/base/InboundOrder/updateInboundOrder`;
+
+        this.$http.post(url,{...submitData}).then(response=>{
           let res = response.data;
           if(res.result){
             this.$Message.success('成功');
@@ -668,7 +679,7 @@
           }else{
             this.$Message.success(res.msg);
           }
-          console.log(res);
+
         })
 
       },
@@ -680,6 +691,6 @@
 </script>
 
 <style scoped lang="stylus">
-@import './edit-stock-in-order.styl'
+  @import './edit-stock-in-order.styl'
 </style>
 

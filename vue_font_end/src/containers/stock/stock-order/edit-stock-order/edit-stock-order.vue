@@ -771,6 +771,13 @@
       },
       //删除一行
       closeRow(i){
+        if(this.$refs.table.rebuildData.length === 1){
+          this.$Modal.error({
+            title: "失败",
+            content: "只有一条时候不可删除"
+          });
+          return
+        }
         this.data.splice(i,1);
         this.selectedGood.splice(i,1)
       },
