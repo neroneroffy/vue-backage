@@ -742,7 +742,7 @@
       };
       //回显数据
       if(this.$route.query.id){
-        this.$http.get(`${this.api}/base/PurchaseOrder/updatePre`,{
+        this.$http.get(`${this.api}/base/PurchaseOrderItem/updatePre`,{
           params:{ id:this.$route.query.id }
         }).then(response =>{
           let res = response.data;
