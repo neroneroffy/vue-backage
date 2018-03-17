@@ -15,8 +15,8 @@
               <Option v-for="item in supplierList" :value="item.id" :key="item.id">{{ item.supplierName }}</Option>
             </Select>
           </FormItem>
-          <FormItem v-if="title.indexOf('编辑')<0">
-            <Input type="text" v-model="baseData.purchaseOrderNo" placeholder="关联采购单"/>
+          <FormItem >
+            <Input type="text" v-model="baseData.purchaseOrderNo" :disabled="title.indexOf('新增')<0"  placeholder="关联采购单"/>
           </FormItem>
 
         </Form>
@@ -471,36 +471,21 @@
           border:"1px solid #e4e4e4",
           borderRadius:"5px"
         },
-        data:this.$route.query.name === "物料"?
-          [
+        data: [
             {
               warehouseId:"",
               goodsId:"",
               goodsName:"",
               unitsId:"",
-              taxPrice:"",
-              totalPurchasePrice:"",
-              totalTaxPrice:"",
-              unipurchasePricetsId:"",
-              num:"",
-              total:"",
-              mark:""
-            }
-          ]:
-          [
-            {
-              warehouseId:"",
-              goodsId:"",
               modelSize:"",
-              goodsName:"",
-              unitsId:"",
               price:"",
               num:"",
               total:"",
-              mark:""
+              mark:"",
+              purchaseOrderNo:"",
+              isDel:false
             }
-          ]
-        ,
+          ],
         currentRow:0,
         goodsPicker:false,
         warehouse:[
@@ -648,15 +633,20 @@
 
         this.data = this.$refs.table.rebuildData;
         //this.data[params.index] = params.row;
+
         this.data.push(
           {
-            warehouseId:"1",
+            warehouseId:"",
             goodsId:"",
-            unitsId:"1",
+            modelSize:"",
+            goodsName:"",
+            unitsId:"",
             price:"",
             num:"",
             total:"",
-            mark:""
+            mark:"",
+            purchaseOrderNo:"",
+            isDel:false
           }
         );
         this.selectedGood.push({

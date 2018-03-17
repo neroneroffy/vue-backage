@@ -39,7 +39,7 @@
 <script>
   import BastTitle from  "@/components/base-title";
   import CommodityPicker from '@/components/commodity-picker/commodity-picker';
-
+  import formatDate from '@/util/convertTime';
   export default {
     name: "edit-stock-order",
     data(){
@@ -663,7 +663,7 @@
               unitsId:"",
               totalTaxPrice:"",
               warehouseId:"",
-              mark:""
+              mark:"",
             }
           ]:
           [
@@ -742,13 +742,15 @@
       };
       //回显数据
       if(this.$route.query.id){
-        this.$http.get(`${this.api}/base/PurchaseOrderItem/updatePre`,{
+        this.$http.get(`${this.api}/base/PurchaseOrder/updatePre`,{
           params:{ id:this.$route.query.id }
         }).then(response =>{
           let res = response.data;
           console.log(res);
+          //转换时间戳
+          res.createTime = formatDate(parseInt(res.createTime))
           this.baseData = res;
-          this.data = res.orderData;
+          this.data = res.purchaseOrderItem;
           this.units = res.unitsList;
           this.warehouse = res.warehouseList;
           this.supplierList = res.supplierList;
