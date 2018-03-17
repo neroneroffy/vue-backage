@@ -463,6 +463,7 @@
           {
             "goodsId":"",
             "goodsName":"",
+            "modelSize":"",
             "unitsId":"",
             "price":"",
             "num":"",
@@ -483,9 +484,8 @@
         supplierList:[],
         baseData:{
 
-          outboundType:"",
           receiveTime:"",
-          stockInOrder:"",
+
           mark:"",
           outboundType:this.$route.query.type
         },
@@ -532,8 +532,8 @@
         }
       });*/
       if(this.$route.query.id){
-        this.$http.post(`${this.api}/base/OutboundOrder/findOutboundOrderById`,{
-          id:this.$route.query.id
+        this.$http.get(`${this.api}/base/OutboundOrder/findOutboundOrderById`,{
+          params:{ id:this.$route.query.id }
         }).then(response =>{
           let res = response.data;
           console.log(res);
