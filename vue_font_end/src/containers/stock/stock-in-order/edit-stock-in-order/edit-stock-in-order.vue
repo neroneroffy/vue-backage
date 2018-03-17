@@ -472,6 +472,7 @@
           borderRadius:"5px"
         },
         data: [
+
           {
             warehouseId:"",
             goodsId:"",
@@ -516,7 +517,8 @@
           mark:"",
 
         },
-        goodsType:"productName"
+        goodsType:"productName",
+
       }
     },
     mounted(){
@@ -534,6 +536,7 @@
           this.goodsType = "materielName";
           break;
       };
+
       //调用供货商接口
       this.$http.post(`http://192.168.31.222:8080/base/supplier/findAll`).then(response=>{
         if(response){
@@ -541,22 +544,33 @@
           this.supplierList = res;
         }
       });
+
       if(this.$route.query.id){
         this.$http.get(`${this.api}/base/InboundOrder/findInboundOrderById`,{
           params:{ id:this.$route.query.id }
         }).then(response =>{
+
           if(response){
-            let res = response.data;
-            console.log(res);
+
+
             //转换时间戳
             res.createTime = formatDate(parseInt(res.createTime))
-            this.baseData = res;
-            this.data = res.inboundOrderItemModelList;
-            this.units = res.unitsList;
-            this.warehouse = res.warehouseList;
+
             this.supplierList = res.supplierList;
             this.selectedGood = [];
-            this.data.forEach((v,i)=>{
+
+
+
+          this.baseData = res;
+          this.data = res.inboundOrderItemModelList;
+          this.units = res.unitsList;
+          this.warehouse = res.warehouseList;
+          this.supplierList = res.supplierList;
+
+          this.selectedGood = [];
+
+          this.data.forEach((v,i)=>{
+
               this.selectedGood.push({
                 goodsName:v.goodsName,
                 goodsId:v.goodsId
@@ -565,6 +579,7 @@
             })
           }
         })
+
       }else{
         //调用仓库接口
         this.$http.get(`${this.api}/base/warehouse/warehouseFindAll`).then(response=> {
@@ -607,6 +622,8 @@
         this.baseData.date = date
       },
       addRow(params){
+        console.log(params);
+
         this.data = this.$refs.table.rebuildData;
         //this.data[params.index] = params.row;
 
@@ -632,6 +649,7 @@
       },
       //删除一行
       closeRow(params){
+
         if(this.$refs.table.rebuildData.length === 1){
           this.$Modal.error({
             title: "失败",
@@ -639,6 +657,7 @@
           });
           return
         }
+
         this.$http.get(`${this.api}/base/InboundOrderItem/deleteInboundOrderItem`,{params:{
             id:params.row.id
           }}).then(response=>{
@@ -668,10 +687,13 @@
           ...this.baseData,
           inboundOrderItemModelList:this.data
         };
+
         console.log(submitData);
         let url = !this.$route.query.id?`${this.api}/base/InboundOrder/addInboundOrder`:`${this.api}/base/InboundOrder/updateInboundOrder`;
 
         this.$http.post(url,{...submitData}).then(response=>{
+
+
           let res = response.data;
           if(res.result){
             this.$Message.success('成功');

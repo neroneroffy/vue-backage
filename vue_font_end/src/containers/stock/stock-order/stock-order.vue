@@ -205,19 +205,19 @@
             id: 'PASS',
             name: '已审核'
           },
-        ]
+        ],
+        type:"GOODS"
       }
     },
 
     mounted(){
       //初始请求分页
-
       this.pagination()
     },
     methods:{
       //新增
       add(){
-        this.$router.push({path:`/stock/stock-order/edit-stock-order`,query:{name:this.currentTab}})
+        this.$router.push({path:`/stock/stock-order/edit-stock-order`,query:{name:this.currentTab,type:this.type}})
       },
       //切换tabs的时候
       tabChange(name){
@@ -232,11 +232,11 @@
       },
       //查看
       show(params){
-        this.$router.push({path:`/stock/stock-order/edit-stock-order`,query:{id:params.row.id,checked:true,name:this.currentTab}})
+        this.$router.push({path:`/stock/stock-order/edit-stock-order`,query:{id:params.row.id,checked:true,name:this.currentTab,type:this.type}})
       },
       //编辑
       edit(params){
-        this.$router.push({path:`/stock/stock-order/edit-stock-order`,query:{id:params.row.id,name:this.currentTab}})
+        this.$router.push({path:`/stock/stock-order/edit-stock-order`,query:{id:params.row.id,name:this.currentTab,type:this.type}})
       },
       //删除
       remove(params){
@@ -274,7 +274,7 @@
             let res = response.data;
             this.data = res.pageList;
             this.total = res.count;
-            console.log(res);
+
           }
 
           //this.data = data.list;
@@ -306,14 +306,18 @@
       tab(){
         switch (this.currentTab){
           case "商品":
+            this.type="GOODS";
             return 3;
             break;
           case "赠品":
+            this.type="GIFT";
             return 2;
             break;
           case "物料":
+            this.type="MATERIEL";
             return 1;
           default:
+            this.type="GOODS";
             return 3
         }
       },

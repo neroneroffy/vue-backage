@@ -497,7 +497,7 @@
             value:3
           },
         ],
-        modelSize:["NB","S"], 
+        modelSize:["NB","S"],
         units:[
           {
             name:"单位1",
