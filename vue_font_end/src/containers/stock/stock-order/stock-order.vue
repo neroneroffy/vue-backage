@@ -274,7 +274,7 @@
             let res = response.data;
             this.data = res.pageList;
             this.total = res.count;
-            console.log(res);
+
           }
 
           //this.data = data.list;

@@ -740,11 +740,13 @@
           this.goodsType = "materielName";
           break;
       };
+      //回显数据
       if(this.$route.query.id){
         this.$http.get(`${this.api}/base/PurchaseOrder/updatePre`,{
           params:{ id:this.$route.query.id }
         }).then(response =>{
           let res = response.data;
+          console.log(res);
           this.baseData = res;
           this.data = res.orderData;
           this.units = res.unitsList;
@@ -841,6 +843,13 @@
       //保存入库单
       save(){
         this.data = this.$refs.table.rebuildData;
+        if(this.data.length === 0){
+          this.$Modal.error({
+            title: "失败",
+            content: "保存时清单不能为空"
+          });
+          return
+        }
         let submitData = {
             ...this.baseData,
           purchaseOrderItemModel:this.data
@@ -850,7 +859,7 @@
           let res = response.data;
           if(res.result){
             this.$Message.success('成功');
-            this.$route.push('/stock/stock-order')
+            this.$router.push('/stock/stock-order')
           }else{
             this.$Message.error(res.msg);
           }

@@ -659,6 +659,13 @@
       //保存入库单
       save(){
         this.data = this.$refs.table.rebuildData;
+        if(this.data.length === 0) {
+          this.$Modal.error({
+            title: "失败",
+            content: "保存时清单不能为空"
+          });
+          return
+        }
         this.baseData.inboundType = this.type;
         let submitData = {
             ...this.baseData,
