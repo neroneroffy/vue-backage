@@ -12,7 +12,7 @@
             <Tag type="dot">单据日期：{{baseData.createTime}}</Tag>
           </FormItem>
           <FormItem>
-            <Select v-model="baseData.supplier" style="width:200px" :disabled="isChecked" placeholder="请选择供货商">
+            <Select v-model="baseData.supplierId" style="width:200px" :disabled="isChecked" placeholder="请选择供货商">
               <Option v-for="item in supplierList" :value="item.id" :key="item.id">{{ item.supplierName }}</Option>
             </Select>
           </FormItem>
@@ -38,7 +38,8 @@
 
 <script>
   import BastTitle from  "@/components/base-title";
-  import CommodityPicker from '@/components/commodity-picker/commodity-picker'
+  import CommodityPicker from '@/components/commodity-picker/commodity-picker';
+
   export default {
     name: "edit-stock-order",
     data(){
@@ -47,8 +48,8 @@
         title:this.$route.query.id?this.$route.query.checked?`查看${this.$route.query.name}采购单`:`编辑${this.$route.query.name}采购单`:`新增${this.$route.query.name}采购单`,
         isChecked:this.$route.query.checked?true:false,
         isNew:this.$route.query.id?false:true,
-        type:"goods",
-        columns:this.$route.query.name === "赠品"?
+        type:this.$route.query.type,
+        columns:this.$route.query.name === "物料"?
           [
             {
               title:"新增",
@@ -297,6 +298,25 @@
                 })
               }
             },
+            {
+              title:"备注",
+              key:"mark",
+              width:120,
+              render:(h,params)=>{
+                return h('Input',{
+                  props:{
+                    value:params.row.mark,
+                    placeholder:"备注",
+                    disabled:this.isChecked
+                  },
+                  on:{
+                    input:(v)=>{
+                      params.row.mark = v
+                    }
+                  }
+                })
+              }
+            }
           ]
           :
           [
@@ -600,6 +620,25 @@
                 })
               }
             },
+            {
+              title:"备注",
+              key:"mark",
+              width:120,
+              render:(h,params)=>{
+                return h('Input',{
+                  props:{
+                    value:params.row.mark,
+                    placeholder:"备注",
+                    disabled:this.isChecked
+                  },
+                  on:{
+                    input:(v)=>{
+                      params.row.mark = v
+                    }
+                  }
+                })
+              }
+            }
           ]
         ,
         inputStyle:{
@@ -609,36 +648,39 @@
           border:"1px solid #e4e4e4",
           borderRadius:"5px"
         },
-        data:this.$route.query.name === "赠品"?
+        data:this.$route.query.name === "物料"?
           [
             {
-              goodsName:"",
-              purchaseOrderId:"",
-              goodsId:"",
-              unipurchasePricetsId:"",
-              taxPrice:"",
-              discountRate:"",
               discountAmount:"",
+              discountRate:"",
+              goodsId:"",
+              goodsName:"",
+              modelSize:"",
               num:"",
+              purchasePrice:"",
+              taxPrice:"",
               totalPurchasePrice:"",
+              unitsId:"",
               totalTaxPrice:"",
-              warehouseId:""
+              warehouseId:"",
+              mark:""
             }
           ]:
           [
             {
-              goodsName:"",
-              purchaseOrderId:"",
-              goodsId:"",
-              unipurchasePricetsId:"",
-              modelSize:"",
-              taxPrice:"",
-              discountRate:"",
               discountAmount:"",
+              discountRate:"",
+              goodsId:"",
+              goodsName:"",
+              modelSize:"",
               num:"",
+              purchasePrice:"",
+              taxPrice:"",
               totalPurchasePrice:"",
+              unitsId:"",
               totalTaxPrice:"",
-              warehouseId:""
+              warehouseId:"",
+              mark:""
             }
           ],
         currentRow:0,
@@ -649,58 +691,74 @@
           goodsName:"",
           goodsId:""
         }],
-        supplierList:[
-          {
-            name:"供货商1",
-            id:"1"
-          },
-          {
-            name:"供货商2",
-            id:"2"
-          }
-        ],
+        supplierList:[],
         baseData:{
-          supplier:"",
+          supplierId:"",
           orderNo:"",
           createTime:"",
           mark:"",
           discountRate:"",
-          purchaseType:"",
-          purchaseId:""
-        }
+          purchaseType:this.$route.query.type,
+          purchaseId:"",
+        },
+        goodsType:"productName"
       }
     },
     mounted(){
+      //调用供货商
+      this.$http.post(`http://192.168.31.222:8080/base/supplier/findAll`).then(response=>{
+        if(response){
+          let res = response.data;
+          this.supplierList = res;
+        }
+      });
+      //调用仓库接口
+      this.$http.get(`${this.api}/base/warehouse/warehouseFindAll`).then(response=> {
+        let res = response.data;
+        if(res.result){
+          this.warehouse = res.data
+        }
+      });
+      //单位接口
+      this.$http.get(`${this.$api}/base/units/findAll/`).then(response=>{
+        let res = response.data;
+        if(res){
+          this.units = res;
+        }
+      });
       switch (this.$route.query.name){
         case "商品":
-          this.type = "goods";
+          this.type = "GOODS";
+          this.goodsType = "productName";
           break;
         case "赠品":
-          this.type = "present";
+          this.type = "GIFT";
+          this.goodsType = "giftName";
           break;
         case "物料":
-          this.type = "material";
+          this.type = "MATERIEL";
+          this.goodsType = "materielName";
           break;
-      }
+      };
+      //回显数据
       if(this.$route.query.id){
-        this.$http.get(`${this.api}/base/PurchaseOrder/updatePre`,{
+        this.$http.get(`${this.api}/base/PurchaseOrderItem/updatePre`,{
           params:{ id:this.$route.query.id }
         }).then(response =>{
           let res = response.data;
           console.log(res);
-
-            this.baseData = res;
-            this.data = res.orderData;
-            this.units = res.unitsList;
-            this.warehouse = res.warehouseList;
-            this.supplierList = res.supplierList;
-            this.selectedGood = [];
-            this.data.forEach((v,i)=>{
+          this.baseData = res;
+          this.data = res.orderData;
+          this.units = res.unitsList;
+          this.warehouse = res.warehouseList;
+          this.supplierList = res.supplierList;
+          this.selectedGood = [];
+/*            this.data.forEach((v,i)=>{
               this.selectedGood.push({
                 goodsName:v.goodsName,
                 goodsId:v.goodsId
               })
-            })
+            })*/
 
         })
       }
@@ -715,9 +773,9 @@
       },
       //选择商品完毕
       selectDone(data){
-        this.selectedGood[this.currentRow].goodsName = data.productName;
+        this.selectedGood[this.currentRow].goodsName = data[this.goodsType];
         this.selectedGood[this.currentRow].goodsId = data.id;
-        this.$refs.table.rebuildData[this.currentRow].goodsName = data.productName;
+        this.$refs.table.rebuildData[this.currentRow].goodsName = data[this.goodsType];
         this.$refs.table.rebuildData[this.currentRow].modelSize = data.modelSize;
         this.$refs.table.rebuildData[this.currentRow].goodsId = data.id;
         this.goodsPicker = false
@@ -731,37 +789,41 @@
         this.baseData.date = date
       },
       addRow(params){
-
         this.data = this.$refs.table.rebuildData;
         //this.data[params.index] = params.row;
         let newItem =this.$route.query.name === "赠品"?
           {
-            goodsName:"",
-            purchaseOrderId:"",
-            goodsId:"",
-            unipurchasePricetsId:"",
-            taxPrice:"",
-            discountRate:"",
             discountAmount:"",
-            num:"",
-            totalPurchasePrice:"",
-            totalTaxPrice:"",
-            warehouseId:""
-          }:
-          {
-            goodsName:"",
-            purchaseOrderId:"",
-            goodsId:"",
-            unipurchasePricetsId:"",
-            taxPrice:"",
             discountRate:"",
+            goodsId:"",
+            goodsName:"",
             modelSize:"",
-            discountAmount:"",
             num:"",
+            purchasePrice:"",
+            taxPrice:"",
             totalPurchasePrice:"",
+            unitsId:"",
             totalTaxPrice:"",
-            warehouseId:""
-          };
+            warehouseId:"",
+            mark:""
+          }
+          :
+          {
+            discountAmount:"",
+            discountRate:"",
+            goodsId:"",
+            goodsName:"",
+            modelSize:"",
+            num:"",
+            purchasePrice:"",
+            taxPrice:"",
+            totalPurchasePrice:"",
+            unitsId:"",
+            totalTaxPrice:"",
+            warehouseId:"",
+            mark:""
+          }
+        ;
         this.data.push(newItem);
         this.selectedGood.push({
           goodsName:"",
@@ -776,18 +838,31 @@
       },
       //选择仓库
       selectWarahouse(e,i){
-        console.log(e.target.value);
-        console.log(i);
+
       },
       //保存入库单
       save(){
         this.data = this.$refs.table.rebuildData;
+        if(this.data.length === 0){
+          this.$Modal.error({
+            title: "失败",
+            content: "保存时清单不能为空"
+          });
+          return
+        }
         let submitData = {
             ...this.baseData,
           purchaseOrderItemModel:this.data
         };
-        this.$http.post(`${this.api}/base/PurchaseOrder/addPurchaseOrder`,{...submitData}).then(response=>{
+        let url = this.$route.query.id?`${this.api}/base/PurchaseOrder/updatePurchaseOrder`:`${this.api}/base/PurchaseOrder/addPurchaseOrder`
+        this.$http.post(url,{...submitData}).then(response=>{
           let res = response.data;
+          if(res.result){
+            this.$Message.success('成功');
+            this.$router.push('/stock/stock-order')
+          }else{
+            this.$Message.error(res.msg);
+          }
           console.log(res);
         })
         console.log(submitData)

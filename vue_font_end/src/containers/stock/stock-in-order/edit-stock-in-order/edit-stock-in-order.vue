@@ -16,7 +16,7 @@
             </Select>
           </FormItem>
           <FormItem v-if="title.indexOf('编辑')<0">
-            <Input type="text" v-model="baseData.stockInOrder" placeholder="关联采购单"/>
+            <Input type="text" v-model="baseData.purchaseOrderNo" placeholder="关联采购单"/>
           </FormItem>
 
         </Form>
@@ -68,7 +68,6 @@
                     },
                     on:{
                       click:()=>{
-
                         this.addRow(params)
                       }
                     }
@@ -86,7 +85,7 @@
                     },
                     on:{
                       click:()=>{
-                        this.closeRow(params.index)
+                        this.closeRow(params)
                       }
                     }
                   }),
@@ -284,7 +283,7 @@
                     },
                     on:{
                       click:()=>{
-                        this.closeRow(params.index)
+                        this.closeRow(params)
                       }
                     }
                   }),
@@ -479,7 +478,10 @@
               goodsId:"",
               goodsName:"",
               unitsId:"",
-              price:"",
+              taxPrice:"",
+              totalPurchasePrice:"",
+              totalTaxPrice:"",
+              unipurchasePricetsId:"",
               num:"",
               total:"",
               mark:""
@@ -537,15 +539,20 @@
           }
         ],
         baseData:{
-          supplier:"",
+          supplierId:"",
           orderNo:"",
           createTime:"",
           purchaseOrderNo:"",
           operatorId:"",
           inboundType:"",
           userName:"",
+
           mark:""
-        }
+
+
+        },
+        goodsType:"productName"
+
       }
     },
     mounted(){
@@ -560,6 +567,15 @@
           this.type = "MATERIEL";
           break;
       };
+
+      //调用供货商接口
+      this.$http.post(`http://192.168.31.222:8080/base/supplier/findAll`).then(response=>{
+        if(response){
+          let res = response.data;
+          this.supplierList = res;
+        }
+      });
+
       if(this.$route.query.id){
         this.$http.get(`${this.api}/base/InboundOrder/findInboundOrderById`,{
           params:{ id:this.$route.query.id }
@@ -567,20 +583,23 @@
           let res = response.data;
 
           this.baseData = res;
-            this.data = res.inboundOrderItemModelList;
-            this.units = res.unitsList;
-            this.warehouse = res.warehouseList;
-            this.supplierList = res.supplierList;
+          this.data = res.inboundOrderItemModelList;
+          this.units = res.unitsList;
+          this.warehouse = res.warehouseList;
+          this.supplierList = res.supplierList;
           console.log(this.baseData);
           this.selectedGood = [];
-            console.log(this.data);
-            this.data.forEach((v,i)=>{
-                this.selectedGood.push({
-                  goodsName:v.goodsName,
-                  goodsId:v.goodsId
-                })
-            })
-        })
+          console.log(this.data);
+          this.data.forEach((v,i)=>{
+              this.selectedGood.push({
+                goodsName:v.goodsName,
+                goodsId:v.goodsId
+              })
+          })
+
+          })
+
+
       }else{
         //调用仓库接口
         this.$http.get(`${this.api}/base/warehouse/warehouseFindAll`).then(response=> {
@@ -624,7 +643,9 @@
         this.baseData.date = date
       },
       addRow(params){
+
         console.log(params);
+
         this.data = this.$refs.table.rebuildData;
         //this.data[params.index] = params.row;
         this.data.push(
@@ -644,9 +665,16 @@
         })
       },
       //删除一行
-      closeRow(i){
-        this.data.splice(i,1);
-        this.selectedGood.splice(i,1)
+      closeRow(params){
+        this.$http.get(`${this.api}/base/InboundOrderItem/deleteInboundOrderItem`,{params:{
+            id:params.row.id
+          }}).then(response=>{
+          let res = response.data;
+          console.log(res);
+          this.data.splice(params.index,1);
+          this.selectedGood.splice(params.index,1)
+        })
+
       },
       //选择仓库
       selectWarahouse(e,i){
@@ -655,12 +683,24 @@
       //保存入库单
       save(){
         this.data = this.$refs.table.rebuildData;
+        if(this.data.length === 0) {
+          this.$Modal.error({
+            title: "失败",
+            content: "保存时清单不能为空"
+          });
+          return
+        }
         this.baseData.inboundType = this.type;
         let submitData = {
             ...this.baseData,
           inboundOrderItemModelList:this.data
         };
+
         this.$http.post(`${this.api}/base/InboundOrder/addInboundOrder`,{...submitData}).then(response=>{
+        let url = !this.$route.query.id?`${this.api}/base/InboundOrder/addInboundOrder`:`${this.api}/base/InboundOrder/updateInboundOrder`;
+
+        this.$http.post(url,{...submitData}).then(response=>{
+
           let res = response.data;
           if(res.result){
             this.$Message.success('成功');
@@ -668,10 +708,10 @@
           }else{
             this.$Message.success(res.msg);
           }
-          console.log(res);
+
         })
 
-      },
+      })},
       submit(){
 
       }
