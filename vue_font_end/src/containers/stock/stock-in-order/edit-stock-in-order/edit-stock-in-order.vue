@@ -45,7 +45,7 @@
     name: "edit-stock-in-order",
     data(){
       return{
-        api:"http://192.168.1.25:8080",
+        api:"http://192.168.31.168:8080",
         title:this.$route.query.id?this.$route.query.checked?`查看${this.$route.query.name}入库单`:`编辑${this.$route.query.name}入库单`:`新增${this.$route.query.name}入库单`,
         isChecked:this.$route.query.checked?true:false,
         isNew:this.$route.query.id?false:true,
@@ -337,6 +337,7 @@
               title:"仓库",
               key:"warehouseId",
               render:(h,params)=>{
+
                 return h('Select',{
                   props:{
                     value:this.data[params.index].warehouseId,
@@ -483,7 +484,7 @@
               total:"",
               mark:"",
               purchaseOrderNo:"",
-              isDel:false
+              del:false
             }
           ],
         currentRow:0,
@@ -567,14 +568,14 @@
         })
       }else{
         //调用仓库接口
-        this.$http.get(`${this.api}/base/warehouse/warehouseFindAll`).then(response=> {
+        this.$http.get(`http://192.168.31.222:8080/base/warehouse/warehouseFindAll`).then(response=> {
           let res = response.data;
           if(res.result){
             this.warehouse = res.data
           }
         });
         //单位接口
-        this.$http.get(`${this.$api}/base/units/findAll/`).then(response=>{
+        this.$http.get(`http://192.168.31.222:8080/base/units/findAll/`).then(response=>{
           let res = response.data;
           if(res){
             this.units = res;
@@ -612,6 +613,7 @@
 
         this.data.push(
           {
+            del:false,
             warehouseId:"",
             goodsId:"",
             modelSize:"",
@@ -621,8 +623,7 @@
             num:"",
             total:"",
             mark:"",
-            purchaseOrderNo:"",
-            isDel:false
+            purchaseOrderNo:""
           }
         );
         this.selectedGood.push({
@@ -636,7 +637,7 @@
             id:params.row.id
           }}).then(response=>{
           let res = response.data;
-          console.log(res);
+
           this.data.splice(params.index,1);
           this.selectedGood.splice(params.index,1)
         })
@@ -661,7 +662,7 @@
             ...this.baseData,
           inboundOrderItemModelList:this.data
         };
-        console.log(submitData);
+
         let url = !this.$route.query.id?`${this.api}/base/InboundOrder/addInboundOrder`:`${this.api}/base/InboundOrder/updateInboundOrder`;
 
         this.$http.post(url,{...submitData}).then(response=>{
@@ -670,7 +671,7 @@
             this.$Message.success('成功');
             this.$router.push(`/stock/stock-in-order`)
           }else{
-            this.$Message.success(res.msg);
+            this.$Message.error(res.msg);
           }
 
         })

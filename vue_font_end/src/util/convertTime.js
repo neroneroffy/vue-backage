@@ -4,6 +4,9 @@ export default function formatDate(date){
   var month=now.getMonth()+1;
   var date=now.getDate();
   var hour=now.getHours();
+  if(month<10){
+    month = "0"+month
+  }
   if(hour<10){
     hour = "0"+hour
   }

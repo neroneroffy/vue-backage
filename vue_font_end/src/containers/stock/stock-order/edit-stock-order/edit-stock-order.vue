@@ -11,6 +11,7 @@
           <FormItem  v-if="!isNew">
             <Tag type="dot">单据日期：{{baseData.createTime}}</Tag>
           </FormItem>
+
           <FormItem>
             <Select v-model="baseData.supplierId" style="width:200px" :disabled="isChecked" placeholder="请选择供货商">
               <Option v-for="item in supplierList" :value="item.id" :key="item.id">{{ item.supplierName }}</Option>
@@ -85,7 +86,7 @@
                     },
                     on:{
                       click:()=>{
-                        this.closeRow(params.index)
+                        this.closeRow(params)
                       }
                     }
                   }),
@@ -210,7 +211,7 @@
               render:(h,params)=>{
                 return h('Input',{
                   props:{
-                    value:params.row.price,
+                    value:params.row.discountRate,
                     placeholder:"折扣率",
                     disabled:this.isChecked
                   },
@@ -354,7 +355,7 @@
                     },
                     on:{
                       click:()=>{
-                        this.closeRow(params.index)
+                        this.closeRow(params)
                       }
                     }
                   }),
@@ -378,44 +379,7 @@
                       if(this.isChecked){
                         return
                       }
-                      this.goodsData = [
-                        {
-                          name:"纸尿裤1",
-                          id:"1"
-                        },
-                        {
-                          name:"纸尿裤2",
-                          id:"2"
-                        },
-                        {
-                          name:"纸尿裤3",
-                          id:"3"
-                        },
-                        {
-                          name:"纸尿裤4",
-                          id:"4"
-                        },
-                        {
-                          name:"纸尿裤5",
-                          id:"5"
-                        },
-                        {
-                          name:"纸尿裤6",
-                          id:"6"
-                        },
-                        {
-                          name:"纸尿裤7",
-                          id:"7"
-                        },
-                        {
-                          name:"纸尿裤8",
-                          id:"8"
-                        },
-                        {
-                          name:"纸尿裤9",
-                          id:"9"
-                        },
-                      ];
+
                       this.currentRow = params.index
                       this.goodsPicker = true
                     },
@@ -442,6 +406,7 @@
               title:"仓库",
               key:"warehouseId",
               render:(h,params)=>{
+
                 return h('Select',{
                   props:{
                     value:this.data[params.index].warehouseId,
@@ -686,7 +651,12 @@
         currentRow:0,
         goodsPicker:false,
         warehouse:[],
-        units:[],
+        units:[
+          {
+            units:"个",
+            id:"32  "
+          }
+        ],
         selectedGood:[{
           goodsName:"",
           goodsId:""
@@ -706,21 +676,23 @@
     },
     mounted(){
       //调用供货商
+      console.log('调用供货商')
       this.$http.post(`http://192.168.31.222:8080/base/supplier/findAll`).then(response=>{
         if(response){
           let res = response.data;
           this.supplierList = res;
+          console.log(this.supplierList);
         }
       });
       //调用仓库接口
-      this.$http.get(`${this.api}/base/warehouse/warehouseFindAll`).then(response=> {
+      this.$http.get(`http://192.168.31.222:8080/base/warehouse/warehouseFindAll`).then(response=> {
         let res = response.data;
         if(res.result){
-          this.warehouse = res.data
+          this.warehouse = res.data;
         }
       });
       //单位接口
-      this.$http.get(`${this.$api}/base/units/findAll/`).then(response=>{
+      this.$http.get(`http://192.168.31.222:8080/base/units/findAll/`).then(response=>{
         let res = response.data;
         if(res){
           this.units = res;
@@ -748,19 +720,16 @@
           let res = response.data;
           console.log(res);
           //转换时间戳
-          res.createTime = formatDate(parseInt(res.createTime))
+/*          res.createTime = formatDate(parseInt(res.createTime))*/
           this.baseData = res;
-          this.data = res.purchaseOrderItem;
-          this.units = res.unitsList;
-          this.warehouse = res.warehouseList;
-          this.supplierList = res.supplierList;
+          this.data = res.purchaseOrderItemModel;
           this.selectedGood = [];
-/*            this.data.forEach((v,i)=>{
+            this.data.forEach((v,i)=>{
               this.selectedGood.push({
                 goodsName:v.goodsName,
                 goodsId:v.goodsId
               })
-            })*/
+            })
 
         })
       }
@@ -831,12 +800,20 @@
           goodsName:"",
           goodsId:""
         })
-        console.log(this.data);
+
       },
       //删除一行
-      closeRow(i){
-        this.data.splice(i,1);
-        this.selectedGood.splice(i,1)
+      closeRow(params){
+        console.log(333);
+
+        this.$http.get(`${this.api}/base/PurchaseOrderItem/deletePurchaseOrderItem`,{params:{
+            id:params.row.id
+          }}).then(response=>{
+          let res = response.data;
+          console.log(res)
+          this.data.splice(params.index,1);
+          this.selectedGood.splice(params.index,1)
+        })
       },
       //选择仓库
       selectWarahouse(e,i){
@@ -865,9 +842,9 @@
           }else{
             this.$Message.error(res.msg);
           }
-          console.log(res);
+
         })
-        console.log(submitData)
+
       },
       submit(){
       }

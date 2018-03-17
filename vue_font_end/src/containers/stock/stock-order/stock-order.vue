@@ -7,10 +7,10 @@
         <div class="search">
           <Form ref="formInline" :model="searchContent" inline>
             <FormItem>
-              <Input type="text" v-model="searchContent.materielName" placeholder="采购单编号"/>
+              <Input type="text" v-model="searchContent.orderNo" placeholder="采购单编号"/>
             </FormItem>
             <FormItem>
-              <Input type="text" v-model="searchContent.materielCode" placeholder="请输入采购员"/>
+              <Input type="text" v-model="searchContent.name" placeholder="请输入采购员"/>
             </FormItem>
             <FormItem>
               <Select v-model="searchContent.status" style="width:200px" placeholder="采购单状态">
@@ -18,7 +18,7 @@
               </Select>
             </FormItem>
             <FormItem>
-              <Select v-model="searchContent.checkStatus" style="width:200px" placeholder="审核状态">
+              <Select v-model="searchContent.auditStatus" style="width:200px" placeholder="审核状态">
                 <Option v-for="item in checkStatus" :value="item.id" :key="item.id">{{ item.name }}</Option>
               </Select>
             </FormItem>
@@ -40,7 +40,7 @@
         </TabPane>
       </Tabs>
       <div class="pagination">
-        <Page show-sizer :current="currentPage" @on-change="changePage" @on-page-size-change="changePageSize"  placement="top" :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
+        <Page show-sizer :current="pageCount" @on-change="changePage" @on-page-size-change="changePageSize"  placement="top" :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
       </div>
 
     </div>
@@ -49,33 +49,31 @@
 </template>
 
 <script>
-
+  import formatDate from '@/util/convertTime';
   export default {
     name: "stock-order",
     data(){
       return{
-        pageSizeList:[30,50,100],
-        pageSize:30,
+        pageSizeList:[5,50,100],
+        pageSize:5,
         total:0,
         data:[],
         api:"http://192.168.31.222:8080",
         loading:false,
-        currentPage:1,
+        pageCount:1,
         columns:[
           {
             title: '采购单编号',
             key: 'orderNo',
-            width:120,
+            width:"180"
           },
           {
             title: '供货商',
             key: 'supplierId',
-            width:120,
           },
           {
             title: '采购员',
             key: 'purchaseId',
-            width:120,
           },
           {
             title: '采购总价',
@@ -83,11 +81,13 @@
           },
           {
             title: '采购单含税总价',
-            key: 'totalTaxPrice'
+            key: 'totalTaxPrice',
+            width:"150"
           },
           {
             title: '折扣率',
-            key: 'discountRate'
+            key: 'discountRate',
+            width:"90"
           },
           {
             title: '优惠金额',
@@ -95,11 +95,13 @@
           },
           {
             title: '实际采购总金额',
-            key: 'realTotalPrice'
+            key: 'realTotalPrice',
+            width:"150"
           },
           {
             title: '交货日期',
-            key: 'receiveTime'
+            key: 'receiveTime',
+            width:150
           },
           {
             title: '采购单状态',
@@ -169,40 +171,45 @@
         currentTab:"商品",
         searchContent:{
           name:"",
-          code:"",
-          barCode:"",
+          orderNo:"",
           status:"",
-          checkStatus:""
+          auditStatus:"",
+          purchaseType:"GOODS",
+
         },
         status: [
           {
-            id: '',
-            name: '采购单状态'
+            name: '采购单状态',
+            id:""
           },
           {
-            id: 'NO',
-            name: '未入库'
+            name: '未入库',
+            id:"UNSTORAGE"
           },
           {
-            id: 'SOME',
-            name: '部分入库'
+            name: '部分入库',
+            id:"STORAGE"
           },
           {
-            id: 'ALL',
-            name: '全部入库'
+            name: '全部入库',
+            id:"ALLSTORAGE"
+          },
+          {
+            name: '已关闭',
+            id:"CLOSE"
           },
         ],
         checkStatus: [
           {
-            id: '',
+            id: "",
             name: '审核状态'
           },
           {
-            id: 'NO',
+            id: 'UNAUDIT',
             name: '未审核'
           },
           {
-            id: 'PASS',
+            id: 'AUDIT',
             name: '已审核'
           },
         ],
@@ -228,7 +235,22 @@
       },
       //提交搜索
       handleSubmit() {
-        console.log(this.searchContent)
+        this.searchContent.purchaseType = this.type;
+        this.searchContent.pageCount = 1;
+        this.searchContent.pageSize = this.pageSize;
+
+        this.$http.post(`${this.api}/base/PurchaseOrder/findAllPurchaseOrder`,{...this.searchContent}).then(response=>{
+          let res = response.data;
+          res.pageList.forEach(v=>{
+            v.status = this.storageStatus(v.status);
+            v.auditStatus = this.auditStatus(v.auditStatus);
+            v.receiveTime = formatDate(v.receiveTime)
+          })
+
+          this.data = res.pageList;
+          this.total = res.count;
+          console.log(res);
+        })
       },
       //查看
       show(params){
@@ -258,20 +280,53 @@
           }
         })
       },
+      storageStatus(status){
+        switch (status){
+          case "UNSTORAGE":
+            return "未入库";
+            break;
+          case "STORAGE":
+            return "部分入库";
+            break;
+          case "ALLSTORAGE":
+            return "全部入库";
+            break;
+          case "CLOSE":
+            return "已关闭";
+        }
+      },
+      auditStatus(status){
+        switch (status){
+          case "UNAUDIT":
+            return "未审核";
+            break;
+          case "AUDIT":
+            return "已审核";
+        }
+      },
       //分页函数
       pagination(customsParams) {
         let defaultParams = {
-          currentPage:1,
-          pageSize:30,
+          name:"",
+          orderNo:"",
+          status:"",
+          auditStatus:"",
+          pageCount:1,
+          pageSize:5,
           purchaseType:this.tab
         };
         let params = customsParams || defaultParams;
         let url = `${this.api}/base/PurchaseOrder/findAllPurchaseOrder`;
-        this.$http.get(`${url}`,{
-          params:{...defaultParams}
+        this.$http.post(`${url}`,{
+          ...params
         }).then(response => {
           if(response){
             let res = response.data;
+            res.pageList.forEach(v=>{
+              v.status = this.storageStatus(v.status);
+              v.auditStatus = this.auditStatus(v.auditStatus);
+              v.receiveTime = formatDate(v.receiveTime)
+            })
             this.data = res.pageList;
             this.total = res.count;
 
@@ -282,21 +337,27 @@
       },
       //点击分页
       changePage(currentPageNum) {
-        this.currentPage = currentPageNum;
+        console.log(currentPageNum);
+        this.pageCount = currentPageNum;
         let params = {
           ...this.searchContent,
-          currentPage: this.currentPage,
+          pageCount: this.pageCount,
           pageSize: this.pageSize
         };
-        console.log(params);
+/*        this.$http.post(`${this.api}/base/PurchaseOrder/findAllPurchaseOrder`,{...this.params}).then(response=>{
+          let res = response;
+          this.data = res.pageList;
+          this.total = res.count;
+        })
+        console.log(params);*/
         this.pagination(params)
       },
       changePageSize(currentPageSize) {
-        this.currentPage = currentPageSize;
-        this.currentPage = 1;
+        this.pageSize = currentPageSize;
+        this.pageCount = 1;
         let params = {
           ...this.searchContent,
-          currentPage: this.currentPage,
+          pageCount: this.pageCount,
           pageSize: this.pageSize
         };
         this.pagination(params)
@@ -307,20 +368,21 @@
         switch (this.currentTab){
           case "商品":
             this.type="GOODS";
-            return 3;
+            return "GOODS";
             break;
           case "赠品":
             this.type="GIFT";
-            return 2;
+            return "GIFT";
             break;
           case "物料":
             this.type="MATERIEL";
-            return 1;
+            return "MATERIEL";
           default:
             this.type="GOODS";
-            return 3
+            return "GOODS"
         }
       },
+
       //跳转路由
 /*      url(){
         switch(this.currentTab){

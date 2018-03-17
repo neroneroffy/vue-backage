@@ -44,7 +44,7 @@
     name: "stock-in-order",
     data(){
       return{
-        api:"http://192.168.1.25:8080",
+        api:"http://192.168.31.168:8080",
         pageSizeList:[5,50,100],
         pageSize:5,
         total:0,
