@@ -31,7 +31,7 @@
     </div>
       <Table :columns="columns" :data="listData" class="table" v-if="listData"></Table>
       <div class="pagination">
-        <Page show-sizer @on-change="changePage" @on-page-size-change="changePageSize" placement="top" :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
+        <Page show-sizer @on-change="changePage" :current="currentPage" @on-page-size-change="changePageSize" placement="top" :page-size-opts="pageSizeList" :page-size="pageSizeList[0]" :total="total"></Page>
       </div>
 
 
