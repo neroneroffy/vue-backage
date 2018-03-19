@@ -69,7 +69,7 @@
           },
           {
             title: '供货商',
-            key: 'supplierId',
+            key: 'supplierName',
           },
           {
             title: '采购员',
