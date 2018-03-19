@@ -322,6 +322,7 @@
         }).then(response => {
           if(response){
             let res = response.data;
+            console.log(res);
             res.pageList.forEach(v=>{
               v.status = this.storageStatus(v.status);
               v.auditStatus = this.auditStatus(v.auditStatus);
