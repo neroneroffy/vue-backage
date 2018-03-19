@@ -73,7 +73,7 @@
           },
           {
             title: '采购员',
-            key: 'purchaseId',
+            key: 'nickName',
           },
           {
             title: '采购总价',
