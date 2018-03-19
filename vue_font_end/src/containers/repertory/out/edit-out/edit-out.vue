@@ -4,7 +4,7 @@
     <Table :border="false" :columns="commodityType" :data="commodity"></Table>
     <Form justify="end">
       <FormItem>
-        <Button type="primary" v-if='!checkout' icon="plus-circled" @click="make()">确认出库</Button>
+        <Button type="primary" v-if='checkout' icon="plus-circled" @click="make()">确认出库</Button>
       </FormItem>
     </Form>
   </div>

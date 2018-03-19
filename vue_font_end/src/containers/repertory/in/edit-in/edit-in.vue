@@ -17,7 +17,7 @@
     data(){
       return {
         checkout:this.$route.query.ischecked,
-        title:this.$route.query.ischecked?'已出库':'待出库',
+        title:this.$route.query.ischecked?'已入库':'待入库',
         commodity:[] ,
         commodityType:[
           {
@@ -48,7 +48,7 @@
     },
     mounted(){
       ///base/inventoryOutboundItem/find this.$route.query.id
-      this.$http.get("http://192.168.31.222:8080/base/InventoryInboundItem/find",{params:{id:this.$route.query.id}}).then(response => {
+      this.$http.get("http://192.168.31.222:8080/base/inventoryInboundItem/find",{params:{id:this.$route.query.id}}).then(response => {
         console.log(response);
         let res=response.data;
         this.commodity=res;
@@ -56,7 +56,7 @@
     },
     methods:{
       make(){
-        this.$http.get('http://192.168.31.222:8080/base/inventoryOutboundItem/outBound',{params:{id:this.$route.query.id}}).then(response => {
+        this.$http.get('http://192.168.31.222:8080/base/inventoryInboundItem/inBound',{params:{id:this.$route.query.id}}).then(response => {
           console.log(response);
           let res=response.data;
           this.commodity=res.pageList;
