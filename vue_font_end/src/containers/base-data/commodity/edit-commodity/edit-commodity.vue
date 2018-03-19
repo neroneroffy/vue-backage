@@ -13,24 +13,24 @@
      -->
       <Form ref="editData" :model="editData" :label-width="80" v-if="editData">
         <FormItem label="名称" prop="productName">
-          <Input v-model="editData.productName" placeholder="请输入名称" />
+          <Input v-model="editData.productName" :disabled="isChecked" placeholder="请输入名称" />
         </FormItem>
         <FormItem label="编号" prop="productCode">
-          <Input v-model="editData.productCode" placeholder="请输入编号"/>
+          <Input v-model="editData.productCode" :disabled="isChecked" placeholder="请输入编号"/>
         </FormItem>
         <FormItem label="条形码" prop="barCode">
-          <Input v-model="editData.barCode" placeholder="请输入条形码"/>
+          <Input v-model="editData.barCode" :disabled="isChecked" placeholder="请输入条形码"/>
         </FormItem>
         <FormItem label="请选择类型" prop="category">
-          <Input v-model="editData.category" placeholder="请输入类型"/>
+          <Input v-model="editData.category" :disabled="isChecked" placeholder="请输入类型"/>
         </FormItem>
         <FormItem label="请选择型号" prop="modelSize">
-          <Select v-model="editData.modelSize" style="width:200px" placeholder="请选择型号">
+          <Select v-model="editData.modelSize":value="editData.modelSize" :disabled="isChecked" style="width:200px" placeholder="请选择型号">
             <Option v-for="item in modelSize" :value="item.value" :key="item.value">{{ item .label}}</Option>
           </Select>
         </FormItem>
         <FormItem label="备注" prop="mark">
-          <Input v-model="editData.mark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请填写备注"/>
+          <Input v-model="editData.mark" type="textarea" :disabled="isChecked" :autosize="{minRows: 2,maxRows: 5}" placeholder="请填写备注"/>
         </FormItem>
         <FormItem>
           <Button type="primary" @click="submit">提交</Button>
@@ -46,6 +46,7 @@
       name: "edit-commodity",
       data(){
         return {
+          isChecked:this.$route.query.checked,
           title:this.$route.query.id?'编辑商品':'新增商品',
           editData:{
             productName:'',

@@ -17,7 +17,7 @@
 
       <FormItem label="赠品型号" prop="modelSize">
         <Select v-model="editData.modelSize" style="width:200px" :value="editData.modelSize" :disabled="isChecked" placeholder="请选择客户类型">
-          <Option v-for="item in status" :value="item.id" :key="item.id">{{ item.name }}</Option>
+          <Option v-for="item in status" :value="item.label" :key="item.label">{{ item.value }}</Option>
         </Select>
       </FormItem>
       <FormItem label="备注" prop="mark">
