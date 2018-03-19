@@ -542,6 +542,7 @@
       //调用供货商接口
       this.$http.post(`http://192.168.31.222:8080/base/supplier/findAll`).then(response=>{
         if(response){
+
           let res = response.data;
           this.supplierList = res;
         }
@@ -551,10 +552,10 @@
         this.$http.get(`${this.api}/base/InboundOrder/findInboundOrderById`,{
           params:{ id:this.$route.query.id }
         }).then(response =>{
-
+          console.log(response);
           if(response){
 
-
+            let res = response.data
             //转换时间戳
             res.createTime = formatDate(parseInt(res.createTime))
 
