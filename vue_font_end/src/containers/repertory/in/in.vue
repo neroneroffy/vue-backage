@@ -1,7 +1,7 @@
 <template>
   <!--盘点查询-->
   <div class="stock">
-    <Row type="flex" justify="space-between">
+    <Row type="flex" justify="end">
       <Form  inline>
         <DatePicker type="daterange" :value="time" @on-change="timey"></DatePicker>
       </Form >
@@ -27,7 +27,7 @@
     data(){
       return{
         commodity:[],
-        time:[],
+        time:[new Date(new Date().getTime() - 7 * 24 * 3600 * 1000).toLocaleDateString(),new Date().toLocaleDateString()],
         id:"",
         cityList1:[],
         pageSizeList: [5, 10, 20],
@@ -95,12 +95,11 @@
 
       }},
     mounted(){
-      /*this.$http.get("http://192.168.31.168:8080/base/warehouse/warehouseFindAll").then(response=>{
-        console.log(response)
+      this.$http.get("http://192.168.31.168:8080/base/warehouse/warehouseFindAll").then(response=>{
         let res=response.data;
         this.cityList=res.data;
         this.id=res.data[0].id;
-      */
+      }
       /*
       new Date()
         date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()
@@ -125,7 +124,7 @@ var result = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()+' '+d
           currentPage:this.currentPage,
           startTime:this.time[0],
           endTime:this.time[1],
-          warehouseId:"1"
+          warehouseId:this.id
         };
         let params = customsParams || defaultParams;
         ///base/inventoryOutboundItem/outBound
@@ -158,6 +157,11 @@ var result = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()+' '+d
 </script>
 
 <style scoped>
+  .pagination{
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+  }
 
 </style>
 
