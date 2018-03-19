@@ -138,11 +138,11 @@
               }
             ]
           },
-          {
+/*          {
             menuName:"财务管理",
             uri:"/finance",
             icon:"cash",
-          },
+          },*/
           {
             menuName:"库存管理",
             uri:"/repertory",

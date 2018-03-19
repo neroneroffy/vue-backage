@@ -167,13 +167,13 @@
             res.pageList.forEach(v=>{
 
               v.createTime = formatDate(parseInt(v.createTime))
-            });
+
+
             this.data = res.pageList;
             this.total = res.count;
-
-          }
         })
-
+      }
+        })
       },
       //查看
       show(params){

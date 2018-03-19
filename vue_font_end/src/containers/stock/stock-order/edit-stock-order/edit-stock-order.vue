@@ -803,6 +803,7 @@
 
       },
       //删除一行
+
       closeRow(params){
         console.log(333);
 
@@ -814,6 +815,7 @@
           this.data.splice(params.index,1);
           this.selectedGood.splice(params.index,1)
         })
+
       },
       //选择仓库
       selectWarahouse(e,i){
