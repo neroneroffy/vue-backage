@@ -16,11 +16,11 @@
     </Row>
     <Tabs v-model="status" :value="status" @on-click="tab()">
       <TabPane label="商品" name="GOODS" >
-           <Table :border="false" :columns="commodityType" :data="commodity"></Table>
       </TabPane>
-      <TabPane label="赠品" name="GIFT" >标签二的内容</TabPane>
-      <TabPane label="物料" name="MATERIEL" >标签三的内容</TabPane>
+      <TabPane label="赠品" name="GIFT" ></TabPane>
+      <TabPane label="物料" name="MATERIEL" ></TabPane>
     </Tabs>
+    <Table :border="false" :columns="commodityType" :data="commodity"></Table>
   </div>
 </template>
 
@@ -90,7 +90,7 @@
                     //赋值行内数据
                     console.log(params)
                     params.row.inventoryNum = val;
-                    params.row.inventoryResult=parseInt(params.row.num)-parseInt(params.row.inventoryNum);
+                    params.row.inventoryResult=parseInt(params.row.inventoryNum)-parseInt(params.row.num);
                     this.commodity[params.index]=params.row;
                     console.log(this.commodity)
                   }
@@ -109,12 +109,12 @@
     },
     mounted(){
        ///base/warehouse/warehouseFindAll查询仓库http://192.168.31.222:8080
-       this.$http.get("http://192.168.31.168:8080/base/warehouse/warehouseFindAll").then(response=>{
+       /*this.$http.get("http://192.168.31.168:8080/base/warehouse/warehouseFindAll").then(response=>{
           console.log(response)
           let res=response.data;
           this.cityList=res.data;
           this.id=res.data[0].id;
-       })
+       })*/
       let params= {
         warehouseId:"1",
         stockType:this.status
