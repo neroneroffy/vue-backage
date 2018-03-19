@@ -60,6 +60,7 @@
           console.log(response);
           let res=response.data;
           this.commodity=res.pageList;
+          this.$router.push('/')
         })
       },
     }

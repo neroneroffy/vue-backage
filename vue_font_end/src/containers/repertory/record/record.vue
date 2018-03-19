@@ -7,8 +7,8 @@
       </Form >
       <Form>
       <FormItem prop="id">
-        <Select v-model="id" :value="id" style="width:200px" placeholder="请选择仓库">
-          <Option v-for="item in cityList1" :value="item.id" :key="item.id">{{ item.contacts }}</Option>
+        <Select v-model="id" :value="id" style="width:200px;margin-left:30px" placeholder="请选择仓库">
+          <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.contacts }}</Option>
         </Select>
       </FormItem>
       </Form >
@@ -29,7 +29,7 @@
             commodity:[],
             time:[new Date(new Date().getTime() - 7 * 24 * 3600 * 1000).toLocaleDateString(),new Date().toLocaleDateString()],
             id:"",
-            cityList1:[],
+            cityList:[],
             pageSizeList: [5, 10, 20],
             pageSize: 5,
             total: 0,
@@ -108,17 +108,17 @@
 
         }},
         mounted(){
-          this.$http.get("http://192.168.31.168:8080/base/warehouse/warehouseFindAll").then(response=>{
-            console.log(response)
-            let res=response.data;
-            this.cityList=res.data;
-            this.id=res.data[0].id;
-          }
           let date=new Date(new Date().getTime() - 7 * 24 * 3600 * 1000);
           this.time[0]=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
           date=new Date();
           this.time[1]=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
-          this.pagination()
+          this.$http.get("http://192.168.1.8:8080/base/warehouse/warehouseFindAll").then(response=>{
+            console.log(response)
+            let res=response.data;
+            this.cityList=res.data;
+            this.id=res.data[0].id;
+            this.pagination()
+          })
         },
         methods:{
           timey(daterange){

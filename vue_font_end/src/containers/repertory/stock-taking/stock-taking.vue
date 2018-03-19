@@ -3,7 +3,7 @@
     <Row type="flex" justify="space-between">
       <Form inline>
         <FormItem prop="id">
-          <Select v-model="id" :value="id" style="width:200px" placeholder="请选择仓库">
+          <Select v-model="id" :value="id" @on-change="tab" style="width:200px" placeholder="所有">
             <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.contacts }}</Option>
           </Select>
         </FormItem>
@@ -104,32 +104,40 @@
           },
         ],
         status:"GOODS",
-        cityList:[]
+        cityList:[
+          {
+            id:"",
+            contacts:"所有"
+          }
+        ]
       }
     },
     mounted(){
        ///base/warehouse/warehouseFindAll查询仓库http://192.168.31.222:8080
-       /*this.$http.get("http://192.168.31.168:8080/base/warehouse/warehouseFindAll").then(response=>{
+       this.$http.get("http://192.168.1.8:8080/base/warehouse/warehouseFindAll").then(response=>{
           console.log(response)
           let res=response.data;
-          this.cityList=res.data;
-          this.id=res.data[0].id;
-       })*/
+          this.cityList=this.cityList.concat(res.data);
+          console.log(this.cityList);
+       })
       let params= {
-        warehouseId:"1",
+        warehouseId:this.id,
         stockType:this.status
       }
-      this.$http.post("http://192.168.31.13:8080/base/stockInfo/search",params).then(response=>{
+      this.$http.post("http://192.168.1.8:8080/base/stockInfo/search",params).then(response=>{
         console.log(response)
         let res = response.data;
-        res.forEach((item)=>{
-          console.log(item)
-          item['inventoryNum']='';
-          item['inventoryResult']='';
-          item['inventoryType']=item['stockType'];
-        })
-        console.log(res)
-        this.commodity=res;
+        if(res){
+          res.forEach((item)=>{
+            console.log(item)
+            item['inventoryNum']='';
+            item['inventoryResult']='';
+            item['inventoryType']=item['stockType'];
+          })
+          this.commodity=res;
+        }else{
+          this.commodity=[];
+        }
       })
     },
     methods:{
@@ -168,26 +176,28 @@
         this.$http.post("http://192.168.31.13:8080/base/inventoryRecord/addInventoryRecord",params).then(response => {
           console.log(response)
           console.log('保存成功')
-
         })
       },
       tab(){
         console.log(this.status)
         let params={
-          status:this.status,
-          id:this.id
+          stockType:this.status,
+          warehouseId:this.id
         }
-        this.$http.post("http://192.168.1.25:8080/base/stockInfo/search",params).then(response=>{
+        this.$http.post("http://192.168.1.8:8080/base/stockInfo/search",params).then(response=>{
           console.log(response)
           let res = response.data;
-          res.forEach((item)=>{
-            console.log(item)
-            item['inventoryNum']='';
-            item['inventoryResult']='';
-            item['inventoryType']=item['stockType'];
-          })
-          console.log(res)
-          this.commodity=res;
+          if(res){
+            res.forEach((item)=>{
+              item['inventoryNum']='';
+              item['inventoryResult']='';
+              item['inventoryType']=item['stockType'];
+            })
+            this.commodity=res;
+          }else{
+            this.commodity=[];
+          }
+
         })
       }
     }
