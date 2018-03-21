@@ -39,7 +39,7 @@
 </template>
 
 <script>
-  import formatDate from '@/util/convertTime';
+  import formatDate from '@/util/convertTime.js';
   export default {
     name: "stock-out",
     data() {

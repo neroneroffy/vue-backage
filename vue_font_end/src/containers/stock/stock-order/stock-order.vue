@@ -10,7 +10,7 @@
               <Input type="text" v-model="searchContent.orderNo" placeholder="采购单编号"/>
             </FormItem>
             <FormItem>
-              <Input type="text" v-model="searchContent.name" placeholder="请输入采购员"/>
+              <Input type="text" v-model="searchContent.nickName" placeholder="请输入采购员"/>
             </FormItem>
             <FormItem>
               <Select v-model="searchContent.status" style="width:200px" placeholder="采购单状态">
@@ -69,11 +69,11 @@
           },
           {
             title: '供货商',
-            key: 'supplierId',
+            key: 'supplierName',
           },
           {
             title: '采购员',
-            key: 'purchaseId',
+            key: 'nickName',
           },
           {
             title: '采购总价',
