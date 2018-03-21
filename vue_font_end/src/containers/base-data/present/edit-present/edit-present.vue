@@ -16,7 +16,7 @@
       </FormItem>
 
       <FormItem label="赠品型号" prop="modelSize">
-        <Select v-model="editData.modelSize" style="width:200px" :value="editData.modelSize" :disabled="isChecked" placeholder="请选择客户类型">
+        <Select v-model="editData.modelSize" style="width:200px" :value="editData.modelSize" :disabled="isChecked" placeholder="请选择赠品型号">
           <Option v-for="item in status" :value="item.label" :key="item.label">{{ item.value }}</Option>
         </Select>
       </FormItem>
@@ -121,7 +121,6 @@
         this.$http.post(`http://192.168.31.34:8080${url}`,this.editData).then(response=>{
           let res = response.data;
           if(res.result){
-            this.$Message.info('修改成功');
             this.$router.push('/baseData/present')
           }else{
             this.$Message.info(res.msg);

@@ -33,7 +33,7 @@
           <Input v-model="editData.mark" type="textarea" :disabled="isChecked" :autosize="{minRows: 2,maxRows: 5}" placeholder="请填写备注"/>
         </FormItem>
         <FormItem>
-          <Button type="primary" @click="submit">提交</Button>
+          <Button type="primary" v-if="!isChecked" @click="submit">提交</Button>
         </FormItem>
       </Form>
     </div>

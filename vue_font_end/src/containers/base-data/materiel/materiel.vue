@@ -16,7 +16,7 @@
         <div class="search">
           <Form ref="formInline" :model="searchContent" inline>
             <FormItem prop="user">
-            <Checkbox v-model="searchContent.isHidden" >是否已删除</Checkbox>
+            <Checkbox v-model="searchContent.isDel" >是否已删除</Checkbox>
             </FormItem>
             <FormItem prop="user">
               <Input type="text" v-model="searchContent.materielName" placeholder="请输入名称"/>
@@ -131,7 +131,7 @@
               materielName:"",
               materielCode:"",
               category:"",
-              isHidden:false
+              isDel:false
             },
 
           }
@@ -139,9 +139,9 @@
         mounted(){
           //初始请求分页
           let params = {
+            ...this.searchContent,
             currentPage: this.currentPage,
             pageSize: this.pageSize,
-            isDel:this.searchContent.isHidden
           };
           this.pagination(params)
         },
@@ -162,22 +162,18 @@
           },
           //提交搜索
           handleSubmit() {
-            if(this.searchContent.materielName === "" && this.searchContent.materielCode === "" && this.searchContent.category ===""){
-              this.pagination();
-              return
-            }
-            let params = {
-              ...this.searchContent,
-              currentPage: 1,
-              pageSize: this.pageSize,
-              isDel:this.searchContent.isHidden
-            };
-            this.$http.post("http://192.168.31.34:8080/base/materiel/findAllMateriel",params).then(response => {
-              let data = response.data;
-              this.listData = data.content;
-              this.total=data.totalElements;
-              this.currentPage=1;
-            })
+              let params = {
+                ...this.searchContent,
+                currentPage: 1,
+                pageSize: this.pageSize,
+              };
+              console.log(params)
+              this.$http.post("http://192.168.31.34:8080/base/materiel/findAllMateriel",params).then(response => {
+                let data = response.data;
+                this.listData = data.content;
+                this.total=data.totalElements;
+                this.currentPage=1;
+              })
           },
           //查看
           show(params){
@@ -239,7 +235,6 @@
               ...this.searchContent,
               currentPage: this.currentPage,
               pageSize: this.pageSize,
-              isDel:this.searchContent.isHidden
             };
 
             this.pagination(params)
@@ -251,7 +246,6 @@
               ...this.searchContent,
               currentPage: this.currentPage,
               pageSize: this.pageSize,
-              isDel:this.searchContent.isHidden
             };
             this.pagination(params)
           },

@@ -61,7 +61,7 @@
     },
     mounted(){
       if(this.$route.query.id){
-        this.$http.get(`${this.api}/base/warehouse/warehousefindById`,{
+        this.$http.get(`${this.api}/base/warehouse/updatePre`,{
           params:{ id:this.$route.query.id }
         }).then(response=>{
           let res = response.data;

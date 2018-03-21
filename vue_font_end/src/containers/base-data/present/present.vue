@@ -141,15 +141,14 @@
           pageSize: 5
         };
         if(this.searchContent.giftName === "" && this.searchContent.giftCode === "" && this.searchContent.giftCode ===""){
-          this.pagination();
-          return
+          this.pagination(params);
+        }else{
+          this.$http.post("http://192.168.31.34:8080/base/gift/findAllGift", params).then(response=>{
+            let data = response.data;
+            this.listData = data.content;
+            this.total = data.totalElements;
+          })
         }
-        this.$http.post("http://192.168.31.34:8080/base/gift/findAllGift", params).then(response=>{
-          let data = response.data;
-          this.listData = data.content;
-          this.total = data.totalElements;
-        })
-
       },
       //查看
       show (params) {

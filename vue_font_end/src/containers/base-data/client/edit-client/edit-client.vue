@@ -103,7 +103,7 @@
           console.log(this.areaData);
         });
         if(this.$route.query.id){
-          this.$http.get(`${this.$api}/base/customer/updatePre`,{
+          this.$http.get(`${this.api}/base/customer/updatePre`,{
             params:{ id:this.$route.query.id }
           }).then(response=>{
             let res = response.data;
@@ -193,7 +193,7 @@
           if(this.$route.query.id){
             this.editData.id = this.$route.query.id
           }
-          this.$http.post(`${this.$api}/base/customer/add`,this.editData).then(response=>{
+          this.$http.post(`${this.api}/base/customer/add`,this.editData).then(response=>{
             let res = response.data;
             console.log(response.data)
             if(!res.result){

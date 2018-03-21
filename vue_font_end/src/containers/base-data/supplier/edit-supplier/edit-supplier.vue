@@ -53,7 +53,7 @@
             mark:"",
             wechat:""
           },
-          api:"http://192.168.31.222:8080"
+          api:"http://192.168.31.168:8080"
 
         }
       },
@@ -62,7 +62,7 @@
       },
       mounted(){
         if(this.$route.query.id){
-          this.$http.get(`${this.api}/base/supplier/SupplierfindById`,{
+          this.$http.get(`${this.api}/base/supplier/updatePre`,{
             params:{ id:this.$route.query.id }
           }).then(response=>{
             let res = response.data;

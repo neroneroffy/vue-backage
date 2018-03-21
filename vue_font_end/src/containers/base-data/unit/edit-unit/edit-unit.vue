@@ -140,7 +140,7 @@
               this.$Message.info('成功');
               this.$router.push('/baseData/unit')
             }else{
-              this.$Message.info(`${res.msg}`);
+              this.$Message.info(`编辑失败`);
             }
           });
           console.log(submitData)
