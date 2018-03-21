@@ -51,7 +51,7 @@
         },
         mounted(){
           //base/inventoryRecordItem/findInventoryRecordItem this.$route.query.id
-          this.$http.get("http://192.168.31.34:8080/base/inventoryRecordItem/findInventoryRecordItem",{params:{id:this.$route.query.id}}).then(response => {
+          this.$http.get("http://192.168.31.168:8080/base/inventoryRecordItem/findInventoryRecordItem",{params:{id:this.$route.query.id}}).then(response => {
             console.log(response);
             let res=response.data;
             this.commodity=res.pageList;

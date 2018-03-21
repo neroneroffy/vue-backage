@@ -100,7 +100,6 @@
             v.loading = false;
             v.children = []
           })
-          console.log(this.areaData);
         });
         if(this.$route.query.id){
           this.$http.get(`${this.api}/base/customer/updatePre`,{
@@ -108,9 +107,9 @@
           }).then(response=>{
             let res = response.data;
             if(res){
+              console.log(res)
               this.editData = res;
-              console.log(this.editData);
-              this.setCascader(`${this.editData.address[0]}/${this.editData.address[1]}/${this.editData.address[2]}`,"block","")
+              this.setCascader(`${this.editData.addressIds[0]}/${this.editData.addressIds[1]}/${this.editData.addressIds[2]}`,"block","")
 
             }
           });
@@ -184,16 +183,20 @@
         },
         selectAreaDone(val){
           this.editData.address = val;
+          console.log(val)
           this.setCascader("","block","")
         },
         dateChange(date){
           this.editData.firstPurchaseTime = date
         },
         submit(){
+          let url="/base/customer/add";
           if(this.$route.query.id){
-            this.editData.id = this.$route.query.id
+            this.editData.id = this.$route.query.id;
+            url="/base/customer/update";
           }
-          this.$http.post(`${this.api}/base/customer/add`,this.editData).then(response=>{
+
+          this.$http.post(`${this.api}${url}`,this.editData).then(response=>{
             let res = response.data;
             console.log(response.data)
             if(!res.result){

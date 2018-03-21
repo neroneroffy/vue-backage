@@ -190,7 +190,7 @@
 
           this.searchContent.currentPage = `${this.currentPage}`;
           this.searchContent.pageSize= `${this.pageSize}`;
-          this.$http.post(`http:192.168.31.13:8080/base/customer/search`,{
+          this.$http.post(`http://192.168.31.13:8080/base/customer/search`,{
             ...this.searchContent
           }).then(response=>{
 
@@ -220,7 +220,7 @@
             loading: true,
             onOk: () => {
               this.$store.dispatch('modalLoading');
-              this.$http.get(`http:192.168.31.13:8080/base/customer/del`,{params:{ id }}).then(response=>{
+              this.$http.get(`http://192.168.31.13:8080/base/customer/del`,{params:{ id }}).then(response=>{
                 let res = response.data;
                 console.log(res)
                 if(res.result){
@@ -236,12 +236,13 @@
         //分页函数
         pagination(customsParams){
           let defaultParams = {
-            currentPage :1,
-            pageSize : 10
+            currentPage :'1',
+            pageSize : '10'
           };
           let params = customsParams || defaultParams;
 
-          this.$http.get(`http:192.168.31.13:8080/base/customer/findAll`,{params}).then(response=>{
+          this.$http.get(`http://192.168.31.13:8080/base/customer/findAll`,{params}).then(response=>{
+            console.log(response)
             let res = response.data;
             if(res.count === 0){
               this.listData = []

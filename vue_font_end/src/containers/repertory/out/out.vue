@@ -124,7 +124,7 @@
         ///base/inventoryOutboundItem/outBound
         ///base/inventoryOutbound/find出库单
         // console.log(params);
-        this.$http.post("http://192.168.31.13:8080/base/inventoryOutbound/find",params).then( response =>{
+        this.$http.post("http://192.168.31.168:8080/base/inventoryOutbound/find",params).then( response =>{
           console.log(response)
           let res=response.data;
           this.commodity=res.pageList;

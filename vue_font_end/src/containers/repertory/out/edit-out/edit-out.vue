@@ -48,7 +48,7 @@
       },
       mounted(){
         ///base/inventoryOutboundItem/find this.$route.query.id
-        this.$http.get("http://192.168.31.13:8080/base/inventoryOutboundItem/find",{params:{id:this.$route.query.id}}).then(response => {
+        this.$http.get("http://192.168.31.168:8080/base/inventoryOutboundItem/find",{params:{id:this.$route.query.id}}).then(response => {
           console.log(response);
           let res=response.data;
           this.commodity=res;
@@ -56,7 +56,7 @@
       },
       methods:{
         make(){
-          this.$http.get('http://192.168.31.13:8080/base/inventoryOutboundItem/outBound',{params:{id:this.$route.query.id}}).then(response => {
+          this.$http.get('http://192.168.31.168:8080/base/inventoryOutboundItem/outBound',{params:{id:this.$route.query.id}}).then(response => {
             console.log(response);
             let res=response.data;
             this.commodity=res.pageList;

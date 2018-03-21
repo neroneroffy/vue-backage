@@ -27,7 +27,7 @@
     data(){
       return{
         commodity:[],
-        time:[new Date(new Date().getTime() - 7 * 24 * 3600 * 1000).toLocaleDateString(),new Date().toLocaleDateString()],
+        time:[new Date(new Date().getTime() - 7 * 24 * 3600 * 1000).toLocaleDateString(),new Date(Number(new Date().getTime()) +  24 * 3600 * 1000)],
         id:"",
         cityList:[],
         pageSizeList: [5, 10, 20],
@@ -97,7 +97,8 @@
     mounted(){
       let date=new Date(new Date().getTime() - 7 * 24 * 3600 * 1000);
       this.time[0]=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
-      date=new Date();
+      date=new Date(Number(new Date().getTime()) +  24 * 3600 * 1000);
+      console.log(date)
       this.time[1]=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
       this.$http.get("http://192.168.31.168:8080/base/warehouse/warehouseFindAll").then(response=>{
         let res=response.data;
@@ -124,7 +125,7 @@
         ///base/inventoryOutboundItem/outBound
         ///base/inventoryOutbound/find出库单
         // console.log(params);
-        this.$http.post("http://192.168.31.222:8080/base/inventoryInbound/find",params).then( response =>{
+        this.$http.post("http://192.168.31.168:8080/base/inventoryInbound/find",params).then( response =>{
           console.log(response)
           let res=response.data;
           this.commodity=res.pageList;

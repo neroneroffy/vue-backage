@@ -7,7 +7,7 @@
       </Form >
       <Form>
       <FormItem prop="id">
-        <Select v-model="id" :value="id" style="width:200px;margin-left:30px" placeholder="请选择仓库">
+        <Select @on-change="select" v-model="id" :value="id" style="width:200px;margin-left:30px" placeholder="请选择仓库">
           <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.contacts }}</Option>
         </Select>
       </FormItem>
@@ -112,7 +112,7 @@
           this.time[0]=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
           date=new Date();
           this.time[1]=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
-          this.$http.get("http://192.168.1.8:8080/base/warehouse/warehouseFindAll").then(response=>{
+          this.$http.get("http://192.168.31.168:8080/base/warehouse/warehouseFindAll").then(response=>{
             console.log(response)
             let res=response.data;
             this.cityList=res.data;
@@ -125,6 +125,9 @@
             this.time=daterange;
             this.pagination()
           },
+          select(){
+            this.pagination()
+          },
           pagination(customsParams) {
             //console.log(this.time)
             let defaultParams = {
@@ -135,7 +138,7 @@
               warehouseId:this.id
             };
             let params = customsParams || defaultParams;
-            this.$http.post("http://192.168.31.34:8080/base/inventoryRecord/findAllInventoryRecord ",params).then( response =>{
+            this.$http.post("http://192.168.31.168:8080/base/inventoryRecord/findAllInventoryRecord ",params).then( response =>{
               console.log(response);
               let res=response.data;
               this.commodity=res.pageList;
