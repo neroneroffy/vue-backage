@@ -24,7 +24,12 @@
         </Input>
       </FormItem>
       <FormItem label="仓库地址" prop="addressld">
-        <Input v-model="editData.addressld" :disabled="checked"  placeholder="请输入地址"/>
+        <Cascader :data="areaData" :load-data="loadData" @on-change="selectAreaDone" :disabled="isChecked" ></Cascader>
+      </FormItem>
+      <FormItem label="详细地址">
+        <div class="detail-address">
+          <Input v-model="editData.address" :disabled="isChecked" type="textarea" placeholder="请填写详细地址"></Input>
+        </div>
       </FormItem>
       <FormItem v-if="!checked">
         <Button type="primary" @click="submit">提交</Button>
@@ -52,14 +57,25 @@
           telephone:'',
           wechat:'',
           acreage:'',
-          addressld:'',
-        }
+          addressList:"",
+          address:'',
+        },
+        areaData:[]
       }
     },
     components:{
       BastTitle
     },
     mounted(){
+      this.$http.get(`${this.api}/base/area/province`).then(response => {
+        this.areaData = response.data;
+        this.areaData.forEach(v=>{
+          v.label = v.areaName;
+          v.value = v.id;
+          v.loading = false;
+          v.children = []
+        })
+      });
       if(this.$route.query.id){
         this.$http.get(`${this.api}/base/warehouse/updatePre`,{
           params:{ id:this.$route.query.id }
@@ -67,15 +83,57 @@
           let res = response.data;
           if(res){
             this.editData = res;
+            this.setCascader(`${this.editData.addressList[0]}/${this.editData.addressList[1]}/${this.editData.addressList[2]}`,"block","")
           }
         });
       }
     },
     methods:{
+      loadData (item, callback) {
+        item.loading = true;
+        this.$http.get(`${this.api}/base/area/cityOrDistrict`,{
+          params:{parentId:item.value}
+        }).then(response=>{
+          let res = response.data;
+          item.children = res;
+          //请求回来，展开列表
+          item.children.forEach(v=>{
+            v.value = v.id;
+            v.label = v.areaName;
+            v.children = [];
+            if(v.areaType !== "DISTRICT"){
+              v.loading = false
+            }
+          });
+          callback();
+          item.loading = false;
+        });
+      },
+      setCascader(val,style,placeholoder){
+        document.getElementsByClassName("ivu-cascader-label")[0].innerHTML = val;
+        document.getElementsByClassName("ivu-cascader-label")[0].style.display = style;
+        if(this.isChecked){
+          document.getElementsByClassName("ivu-cascader-label")[0].style.color = "#ccc";
+        }
+        document.getElementsByClassName("ivu-cascader-rel")[0].getElementsByClassName("ivu-input-wrapper")[0].getElementsByClassName("ivu-input")[0].placeholder = placeholoder
+
+      },
+      selectAreaDone(val){
+        this.editData.addressList = val;
+        console.log(val)
+        this.setCascader("","block","")
+      },
       submit(){
         ///base/warehouse/saveWareHouse添加接口
+        ///base/warehouse/updateWareHouse更新接口
         console.log(this.editData);
-        this.$http.post(`${this.api}/base/warehouse/saveWareHouse`,{...this.editData}).then(response=>{
+        let url='/base/warehouse/saveWareHouse';
+        if(this.$route.query.id){
+          url="/base/warehouse/updateWareHouse"
+          delete this.editData['addressList'];
+          delete this.editData['address'];
+        }
+        this.$http.post(`${this.api}${url}`,{...this.editData}).then(response=>{
           let res = response.data;
           console.log(res)
           if(res.result){

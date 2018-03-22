@@ -697,7 +697,13 @@
 
 
           let res = response.data;
+
           if(res.result){
+            if(res.msg === "已入库不能更改"){
+              this.$Message.success('已入库不能更改');
+              this.$router.push(`/stock/stock-in-order`)
+              return
+            }
             this.$Message.success('成功');
             this.$router.push(`/stock/stock-in-order`)
           }else{

@@ -79,7 +79,7 @@
           },
           {
             title: '仓库地址',
-            key: 'addressId',
+            key: 'address',
           },
           {
             title: '负责人',
@@ -205,8 +205,8 @@
         this.$http.get(`${this.api}/base/warehouse/warehouseFindAll`).then(response=> {
           console.log(response.data)
           let res = response.data;
-          if(res.result){
-            this.listData = res.data
+          if(res){
+            this.listData = res
           }
         })
       },

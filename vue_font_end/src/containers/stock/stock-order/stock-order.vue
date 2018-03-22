@@ -58,7 +58,7 @@
         pageSize:5,
         total:0,
         data:[],
-        api:"http://192.168.31.222:8080",
+        api:"http://192.168.31.168:8080",
         loading:false,
         pageCount:1,
         columns:[
@@ -323,13 +323,13 @@
           if(response){
             let res = response.data;
             console.log(res);
-            res.pageList.forEach(v=>{
+            res.content.forEach(v=>{
               v.status = this.storageStatus(v.status);
               v.auditStatus = this.auditStatus(v.auditStatus);
               v.receiveTime = formatDate(v.receiveTime)
             })
-            this.data = res.pageList;
-            this.total = res.count;
+            this.data = res.content;
+            this.total = res.numberOfElements;
 
           }
 

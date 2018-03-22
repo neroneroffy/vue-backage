@@ -34,7 +34,9 @@
           <Input v-model="editData.user" placeholder="请输入关联账号" :disabled="isChecked"/>
         </FormItem>
         <FormItem label="地址" prop="address">
-          <Cascader :data="areaData" :load-data="loadData" @on-change="selectAreaDone" :disabled="isChecked" ></Cascader>
+          <Cascader :data="areaData" :load-data="loadData" @on-change="selectAreaDone" :disabled="checked" ></Cascader>
+        </FormItem>
+        <FormItem label="详细地址">
           <div class="detail-address">
             <Input v-model="editData.detailAddress" :disabled="isChecked" type="textarea" placeholder="请填写详细地址"></Input>
           </div>
@@ -64,7 +66,7 @@
             "telephone":"",
             "wechat":"",
             "id":"",
-            "address":"",
+            "addressIds":"",
             "detailAddress":"",
             "price":"",
             "userAccount":""
@@ -85,6 +87,7 @@
           ],
           status:["请选择客户状态","初次拜访","二次拜访","多次拜访","已签约"],
           isChecked:this.$route.query.checked?true:false,
+          checked:this.$route.query.id?true:false,
           areaData:[]
         }
       },
@@ -109,7 +112,7 @@
             if(res){
               console.log(res)
               this.editData = res;
-              this.setCascader(`${this.editData.addressIds[0]}/${this.editData.addressIds[1]}/${this.editData.addressIds[2]}`,"block","")
+              this.setCascader(`${this.editData.address[0]}/${this.editData.address[1]}/${this.editData.address[2]}`,"block","")
 
             }
           });
@@ -122,8 +125,9 @@
       methods:{
         loadData (item, callback) {
           item.loading = true;
+          console.log(item.value)
           this.$http.get(`${this.api}/base/area/cityOrDistrict`,{
-            params:{id:item.value}
+            params:{parentId:item.value}
           }).then(response=>{
             let res = response.data;
             item.children = res;
@@ -139,38 +143,6 @@
             callback();
             item.loading = false;
           });
-          /*setTimeout(() => {
-            if (item.value === 'beijing') {
-              item.children = [
-                {
-                  value: 'talkingdata',
-                  label: 'TalkingData'
-                },
-                {
-                  value: 'baidu',
-                  label: '百度'
-                },
-                {
-                  value: 'sina',
-                  label: '新浪'
-                }
-              ];
-
-            } else if (item.value === 'hangzhou') {
-              item.children = [
-                {
-                  value: 'ali',
-                  label: '阿里巴巴'
-                },
-                {
-                  value: '163',
-                  label: '网易'
-                }
-              ];
-            }
-            item.loading = false;
-            callback();
-          }, 1000);*/
         },
         setCascader(val,style,placeholoder){
           document.getElementsByClassName("ivu-cascader-label")[0].innerHTML = val;
@@ -182,7 +154,7 @@
 
         },
         selectAreaDone(val){
-          this.editData.address = val;
+          this.editData.addressIds = val;
           console.log(val)
           this.setCascader("","block","")
         },
