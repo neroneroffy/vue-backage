@@ -329,6 +329,33 @@
 
             },
             {
+              title:"仓库",
+              key:"warehouseId",
+              render:(h,params)=>{
+
+                return h('Select',{
+                  props:{
+                    value:this.data[params.index].warehouseId,
+                    placeholder:"选择仓库",
+                    disabled:this.isChecked
+                  },
+                  on:{
+                    input:(e)=>{
+                      params.row.warehouseId = e;
+                    }
+                  }
+                },this.warehouse.map((item)=>{
+                  return h('Option',{
+                    props:{
+                      value:item.id ,
+                      label:item.warehouseName,
+                    },
+
+                  })
+                }))
+              }
+            },
+            {
               title:"单位",
               key:"unitsId",
               render:(h,params)=>{
@@ -487,27 +514,9 @@
           ],
         currentRow:0,
         goodsPicker:false,
-        warehouse:[
-          {
-            name:"仓库1",
-            value:6
-          },
-          {
-            name:"仓库2",
-            value:3
-          },
-        ],
+        warehouse:[],
         modelSize:["NB","S"],
-        units:[
-          {
-            name:"单位1",
-            value:1
-          },
-          {
-            name:"单位2",
-            value:2
-          },
-        ],
+        units:[],
         selectedGood:[{
           goodsName:"",
           goodsId:""
@@ -544,7 +553,7 @@
       };
 
       if(this.$route.query.id){
-        this.$http.get(`${this.api}/base/OutboundOrder/findOutboundOrderById`,{
+        this.$http.get(`${this.api}/base/outboundOrder/findOutboundOrderById`,{
           params:{ id:this.$route.query.id }
         }).then(response =>{
           let res = response.data;
@@ -565,24 +574,26 @@
             })
           })
         })
+
       }else{
         //调用仓库接口
         this.$http.get(`${this.$api}/base/warehouse/warehouseFindAll`).then(response=> {
-
           let res = response.data;
-          if(res.result){
-            this.warehouse = res.data
-          }
+          this.warehouse = res
+
         });
-      //单位接口
+
+        //单位接口
       this.$http.get(`${this.$api}/base/units/findAll/`).then(response=>{
 
         let res = response.data;
         if(res){
           this.units = res;
+
         }
       })
       }
+
     },
       //调用供货商接口
 /*      this.$http.post(`http://192.168.31.222:8080/base/supplier/findAll`).then(response=>{
@@ -593,7 +604,7 @@
         }
       });*/
     //   if(this.$route.query.id){
-    //     this.$http.get(`${this.api}/base/OutboundOrder/findOutboundOrderById`,{
+    //     this.$http.get(`${this.api}/base/outboundOrder/findOutboundOrderById`,{
     //       params:{ id:this.$route.query.id }
     //     }).then(response =>{
     //       let res = response.data;
@@ -684,13 +695,18 @@
       },
       //保存出库单
       save(){
+        if(this.baseData.orderNo === ""){
+          this.$Message.error("关联客户订单不能为空")
+          return
+        }
         this.data = this.$refs.table.rebuildData;
         this.baseData.outboundType = this.type;
         let submitData = {
           ...this.baseData,
           outboundOrderItemModelList:this.data
         };
-        let url = this.$route.query.id?`${this.api}/base/OutboundOrder/updateOutboundOrder`:`${this.api}/base/OutboundOrder/addOutboundOrder`;
+        console.log(submitData);
+        let url = this.$route.query.id?`${this.api}/base/outboundOrder/updateOutboundOrder`:`${this.api}/base/outboundOrder/addOutboundOrder`;
         this.$http.post(url,{...submitData}).then(response=>{
           let res = response.data;
           if(res.result){

@@ -24,7 +24,9 @@
         </Form>
       </div>
     </div>
-    <Table :columns="columns" :data="data" ref="table" > </Table>
+    <Table :columns="columns" :data="data" ref="table"  >
+    <div slot="header">供货商：123</div>
+    </Table>
 
   </div>
 </template>
@@ -151,6 +153,9 @@
         exportData() {
             this.$refs.table.exportCsv({
               filename: '导出数据',
+              original:true,
+              noHeader:false,
+
             });
       },
       //提交搜索

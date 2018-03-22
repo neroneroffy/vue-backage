@@ -2,6 +2,7 @@
   <div class="stock">
     <Row type="flex" justify="space-between">
       <Form inline>
+
         <FormItem prop="id">
           <Select v-model="id" :value="id" @on-change="tab" style="width:200px" placeholder="所有">
             <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.contacts }}</Option>
@@ -27,7 +28,7 @@
 <script>
   import iview from 'iview'
   import Collapse from "iview/src/components/collapse/collapse"
-
+  import BaseTitle from "@/components/base-title"
   export default {
     components: {Collapse},
     name: "stock-taking",
@@ -120,19 +121,18 @@
        this.$http.get("http://192.168.31.168:8080/base/warehouse/warehouseFindAll").then(response=>{
           console.log(response)
           let res=response.data;
-          this.cityList=this.cityList.concat(res.data);
-          console.log(this.cityList);
+          this.cityList=this.cityList.concat(res);
        })
       let params= {
         warehouseId:this.id,
         stockType:this.status
       }
       this.$http.post("http://192.168.31.168:8080/base/stockInfo/search",params).then(response=>{
-        console.log(response)
+
         let res = response.data;
         if(res){
+          console.log(res);
           res.forEach((item)=>{
-            console.log(item)
             item['inventoryNum']='';
             item['inventoryResult']='';
             item['inventoryType']=item['stockType'];

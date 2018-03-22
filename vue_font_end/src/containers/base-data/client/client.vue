@@ -190,18 +190,38 @@
 
           this.searchContent.currentPage = `${this.currentPage}`;
           this.searchContent.pageSize= `${this.pageSize}`;
-          this.$http.post(`http://192.168.31.13:8080/base/customer/search`,{
+          this.$http.post(`http://192.168.31.13:8080/base/customer/find`,{
             ...this.searchContent
           }).then(response=>{
-
-            let res = response.data;
-            console.log(res)
+            if(response){
+              let res = response.data;
+              res.pageList.forEach(v=>{
+                v.customerType = this.type(v.customerType)
+              })
               this.listData = res.pageList;
-            //记录总页数
+              //记录总页数
+
               this.total = res.count;
+              if(res.count.length===0){
+                this.listData = []
+              }
+
+            }
 
 
           })
+        },
+        type(type){
+          switch (type){
+            case "STORE":
+              return "门店";
+              break;
+            case "AGENT":
+              return "代理商";
+              break;
+            case "BIGCUSTOMER":
+              return "大客户";
+          }
         },
         //查看信息
         show (params) {
@@ -214,7 +234,7 @@
         //删除
         remove (params) {
           let id = params.row.id;
-          console.log(typeof id)
+
           this.$Modal.confirm({
             content: '<p>确认删除此条数据吗？</p>',
             loading: true,
@@ -222,7 +242,7 @@
               this.$store.dispatch('modalLoading');
               this.$http.get(`http://192.168.31.13:8080/base/customer/del`,{params:{ id }}).then(response=>{
                 let res = response.data;
-                console.log(res)
+
                 if(res.result){
                   this.pagination();//请求列表数据
                   this.$Modal.remove();
@@ -241,12 +261,16 @@
           };
           let params = customsParams || defaultParams;
 
-          this.$http.get(`http://192.168.31.13:8080/base/customer/findAll`,{params}).then(response=>{
-            console.log(response)
+          this.$http.post(`http://192.168.31.13:8080/base/customer/find`,params).then(response=>{
+
             let res = response.data;
             if(res.count === 0){
               this.listData = []
             }else{
+              res.pageList.forEach(v=>{
+                v.customerType = this.type(v.customerType)
+              })
+
               this.listData = res.pageList;
               this.total = res.count;
             }
@@ -255,7 +279,7 @@
         },
         searchPagination(pageParams){
           let params={...pageParams,...this.searchContent}
-          console.log(params)
+
         },
         //点击分页
         changePage(currentPageNum){

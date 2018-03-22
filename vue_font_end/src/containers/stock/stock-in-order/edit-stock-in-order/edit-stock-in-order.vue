@@ -491,16 +491,7 @@
 
         currentRow:0,
         goodsPicker:false,
-        warehouse:[
-          {
-            name:"仓库1",
-            value:6
-          },
-          {
-            name:"仓库2",
-            value:3
-          },
-        ],
+        warehouse:[],
         modelSize:["NB","S"],
         units:[],
         selectedGood:[{
@@ -549,7 +540,7 @@
       });
 
       if(this.$route.query.id){
-        this.$http.get(`${this.api}/base/InboundOrder/findInboundOrderById`,{
+        this.$http.get(`${this.api}/base/inboundOrder/findInboundOrderById`,{
           params:{ id:this.$route.query.id }
         }).then(response =>{
           console.log(response);
@@ -587,9 +578,8 @@
         //调用仓库接口
         this.$http.get(`http://192.168.31.222:8080/base/warehouse/warehouseFindAll`).then(response=> {
           let res = response.data;
-          if(res.result){
-            this.warehouse = res.data
-          }
+
+          this.warehouse = res
         });
         //单位接口
         this.$http.get(`http://192.168.31.222:8080/base/units/findAll/`).then(response=>{
@@ -661,7 +651,7 @@
           return
         }
 
-        this.$http.get(`${this.api}/base/InboundOrderItem/deleteInboundOrderItem`,{params:{
+        this.$http.get(`${this.api}/base/inboundOrderItem/deleteInboundOrderItem`,{params:{
             id:params.row.id
           }}).then(response=>{
           let res = response.data;
@@ -677,6 +667,11 @@
       },
       //保存入库单
       save(){
+        if(this.baseData.purchaseOrderNo === ""){
+          this.$Message.error("关联客户订单不能为空")
+          return
+
+        }
         this.data = this.$refs.table.rebuildData;
         if(this.data.length === 0) {
           this.$Modal.error({
@@ -691,7 +686,7 @@
           inboundOrderItemModelList:this.data
         };
 
-        let url = !this.$route.query.id?`${this.api}/base/InboundOrder/addInboundOrder`:`${this.api}/base/InboundOrder/updateInboundOrder`;
+        let url = !this.$route.query.id?`${this.api}/base/inboundOrder/addInboundOrder`:`${this.api}/base/inboundOrder/updateInboundOrder`;
 
         this.$http.post(url,{...submitData}).then(response=>{
 

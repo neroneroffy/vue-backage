@@ -26,7 +26,7 @@
     </div>
     <Table :columns="columns" :data="data"  > </Table>
     <div class="pagination">
-      <Page  show-sizer @on-change="changePage" @on-page-size-change="changePageSize"  :total="total"></Page>
+      <Page  show-sizer @on-change="changePage" @on-page-size-change="changePageSize"  :total="total" :current="currentPage" :page-size-opts="pageSizeList" :page-size="pageSizeList[0]"></Page>
     </div>
   </div>
 
@@ -180,11 +180,11 @@
           pageSize: 5
         }
         ///base/order/seek单条查询
-        this.$http.post(`http://192.168.31.13:8080/base/order/seek`,{...data}).then(response => {
+        this.$http.post(`http://192.168.31.13:8080/base/order/find`,{...data}).then(response => {
           console.log(response)
           let res = response.data;
           this.data = res.pageList;
-          this.total = res.content;
+          this.total = res.count;
         })
       },
       //分页函数
@@ -199,13 +199,10 @@
         };
         let params = customsParams || defaultParams;
         ///base/order/findAll  查询所有产品
-        this.$http.get(`http://192.168.31.13:8080/base/order/findAll`, {
-          params:params
-        }).then(response => {
-          console.log(response.data)
+        this.$http.post(`http://192.168.31.13:8080/base/order/find`, params).then(response => {
           let res = response.data;
           this.data = res.pageList;
-          this.total = res.content;
+          this.total = res.count;
         })
       },
       //点击分页

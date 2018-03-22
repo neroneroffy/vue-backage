@@ -171,7 +171,7 @@
       handleSubmit() {
 
         this.searchContent.outboundType = this.type;
-        this.$http.post(`${this.api}/base/OutboundOrder/findAllOutboundOrder`, {
+        this.$http.post(`${this.api}/base/outboundOrder/findAllOutboundOrder`, {
           ...this.searchContent,
           pageCount: 1,
           pageSize: this.pageSize
@@ -204,7 +204,7 @@
           loading: true,
           onOk: () => {
             this.$store.dispatch('modalLoading');
-            this.$http.post(`${this.$api}/base/OutboundOrderItem/deleteOutboundOrderItem`, {id}).then(response => {
+            this.$http.post(`${this.$api}/base/outboundOrderItem/deleteOutboundOrderItem`, {id}).then(response => {
               let res = response.data;
               res.receiveTime = formatDate(parseInt(res.receiveTime))
               if (res.result) {
@@ -225,7 +225,7 @@
           pageSize: 5
         };
         let params = customsParams || defaultParams;
-        let url = `http://192.168.31.34:8080/base/OutboundOrder/findAllOutboundOrder`;
+        let url = `http://192.168.31.168:8080/base/outboundOrder/findAllOutboundOrder`;
         this.$http.post(url, params).then(response => {
           if (response) {
             //转换时间戳
