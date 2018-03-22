@@ -687,9 +687,7 @@
       //调用仓库接口
       this.$http.get(`http://192.168.31.222:8080/base/warehouse/warehouseFindAll`).then(response=> {
         let res = response.data;
-        if(res.result){
-          this.warehouse = res.data;
-        }
+        this.warehouse = res;
       });
       //单位接口
       this.$http.get(`http://192.168.31.222:8080/base/units/findAll/`).then(response=>{

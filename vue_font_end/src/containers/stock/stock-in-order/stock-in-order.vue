@@ -159,16 +159,15 @@
       },
       //提交搜索
       handleSubmit() {
-
         this.searchContent.inboundType = this.type;
         this.$http.post(`${this.api}/base/inboundOrder/findAllInboundOrder`,{...this.searchContent,pageCount:1,pageSize:this.pageSize}).then(response=>{
           if(response){
             let res = response.data;
             res.pageList.forEach(v=>{
               v.createTime = formatDate(parseInt(v.createTime))
-            })
-                this.data = res.pageList;
-                this.total = res.count;
+            });
+              this.data = res.pageList;
+        this.total = res.count;
           }
         })
       },
