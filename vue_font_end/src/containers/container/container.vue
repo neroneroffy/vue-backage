@@ -37,7 +37,7 @@
                 </MenuItem>
               </router-link>
             </Submenu>
-            <Submenu name="/dataAnalyze">
+<!--            <Submenu name="/dataAnalyze">
                 <template slot="title">
                   <Icon type="stats-bars"></Icon>
                   数据分析
@@ -62,7 +62,7 @@
                     销量比例
                   </MenuItem>
                 </router-link>
-              </Submenu>
+              </Submenu>-->
             <Submenu v-for="v in subMenu" :name="v.uri" :key ="v.uri">
                 <template slot="title">
                   <Icon :type="v.icon"></Icon>
