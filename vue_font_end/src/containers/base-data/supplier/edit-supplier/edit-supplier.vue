@@ -22,11 +22,11 @@
           <Input v-model="editData.taxRate" placeholder="请输入税率"/>
         </FormItem>
         <FormItem label="地址" prop="address">
-          <Cascader :data="areaData" :load-data="loadData" @on-change="selectAreaDone" ></Cascader>
+          <Cascader :data="areaData" :load-data="loadData" @on-change="selectAreaDone" :disabled="title==='编辑供货商'"></Cascader>
         </FormItem>
         <FormItem label="详细地址">
           <div class="detail-address">
-            <Input v-model="editData.address" type="textarea" placeholder="请填写详细地址"></Input>
+            <Input v-model="editData.address" type="textarea" placeholder="请填写详细地址" :disabled="title==='编辑供货商'"></Input>
           </div>
         </FormItem>
         <FormItem label="备注" prop="mark">
@@ -133,11 +133,13 @@
         },
 
         submit(){
+          let url = `${this.api}/base/supplier/saveSupplier`;
           if(this.$route.query.id){
-            delete this.editData.addressList
-            delete this.editData.address
+            delete this.editData.addressList;
+            delete this.editData.address;
+            url = `${this.api}/base/supplier/updateSupplier`
           }
-          this.$http.post(`${this.api}/base/supplier/saveSupplier`,{...this.editData}).then(response=>{
+          this.$http.post(url,{...this.editData}).then(response=>{
             let res = response.data;
             console.log(res);
             if(res.result){

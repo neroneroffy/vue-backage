@@ -50,6 +50,7 @@
         title:this.$route.query.id?this.$route.query.checked?'查看仓库':'编辑仓库':'新增仓库',
         api:'http://192.168.31.222:8080',
         checked:this.$route.query.checked,
+        isChecked:this.$route.query.checked?true:false,
         editData:{
           warehouseName:'',
           contacts:'',
