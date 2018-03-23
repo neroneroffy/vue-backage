@@ -58,7 +58,7 @@
         pageSize:5,
         total:0,
         data:[],
-        api:"http://192.168.31.168:8080",
+        api:"http://192.168.31.222:8080",
         loading:false,
         pageCount:1,
         columns:[
@@ -241,13 +241,13 @@
 
         this.$http.post(`${this.api}/base/PurchaseOrder/findAllPurchaseOrder`,{...this.searchContent}).then(response=>{
           let res = response.data;
-          res.pageList.forEach(v=>{
+          res.content.forEach(v=>{
             v.status = this.storageStatus(v.status);
             v.auditStatus = this.auditStatus(v.auditStatus);
             v.receiveTime = formatDate(v.receiveTime)
           })
 
-          this.data = res.pageList;
+          this.data = res.content;
           this.total = res.count;
           console.log(res);
         })

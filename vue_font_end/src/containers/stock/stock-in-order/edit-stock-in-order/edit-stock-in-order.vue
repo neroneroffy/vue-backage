@@ -683,7 +683,8 @@
         this.baseData.inboundType = this.type;
         let submitData = {
           ...this.baseData,
-          inboundOrderItemModelList:this.data
+          inboundOrderItemModelList:this.data,
+         //inboundOrderId:
         };
 
         let url = !this.$route.query.id?`${this.api}/base/inboundOrder/addInboundOrder`:`${this.api}/base/inboundOrder/updateInboundOrder`;
