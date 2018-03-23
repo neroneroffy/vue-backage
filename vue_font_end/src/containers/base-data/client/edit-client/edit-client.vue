@@ -34,7 +34,7 @@
           <Input v-model="editData.user" placeholder="请输入关联账号" :disabled="isChecked"/>
         </FormItem>
         <FormItem label="地址" prop="address">
-          <Cascader :data="areaData" :load-data="loadData" @on-change="selectAreaDone" :disabled="checked" ></Cascader>
+          <Cascader :data="areaData" :load-data="loadData" @on-change="selectAreaDone" :disabled="isChecked" ></Cascader>
         </FormItem>
         <FormItem label="详细地址">
           <div class="detail-address">
@@ -95,6 +95,8 @@
         BastTitle
       },
       mounted(){
+        //三级联动
+
         this.$http.get(`${this.api}/base/area/province`).then(response => {
           this.areaData = response.data;
           this.areaData.forEach(v=>{
@@ -123,6 +125,7 @@
 
       },
       methods:{
+        //三级联动
         loadData (item, callback) {
           item.loading = true;
           console.log(item.value)
@@ -162,22 +165,23 @@
           this.editData.firstPurchaseTime = date
         },
         submit(){
-          let url="/base/customer/add";
-          if(this.$route.query.id){
-            this.editData.id = this.$route.query.id;
-            url="/base/customer/update";
-          }
+          console.log(this.editData);
+          /*          let url="/base/customer/add";
+                    if(this.$route.query.id){
+                      this.editData.id = this.$route.query.id;
+                      url="/base/customer/update";
+                    }
 
-          this.$http.post(`${this.api}${url}`,this.editData).then(response=>{
-            let res = response.data;
-            console.log(response.data)
-            if(!res.result){
-              this.$Message.error('手机号已注册');
-            }else{
-             this.$Message.info('添加成功');
-             this.$router.push('/baseData/client')
-            }
-          })
+                    this.$http.post(`${this.api}${url}`,this.editData).then(response=>{
+                      let res = response.data;
+                      console.log(response.data)
+                      if(!res.result){
+                        this.$Message.error('手机号已注册');
+                      }else{
+                       this.$Message.info('添加成功');
+                       this.$router.push('/baseData/client')
+                      }
+                    })*/
 
         }
       }

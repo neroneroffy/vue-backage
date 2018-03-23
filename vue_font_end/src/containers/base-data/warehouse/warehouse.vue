@@ -12,6 +12,7 @@
   -->
   <div class="warehouse">
     <div class="search-wrapper">
+      <BaseTitle title="仓库管理"></BaseTitle>
       <Button type="primary" icon="plus-round" @click="addMember" class="add">新增</Button>
      <!-- <div class="search">
         <Form ref="formInline" :model="searchContent" inline>
@@ -41,6 +42,7 @@
 
 <script>
   import { Table,Page,Form,Input,Select,Modal,Row,Col } from 'iview';
+  import BaseTitle from "@/components/base-title"
   export default {
     name: "warehouse",
     data(){
@@ -155,6 +157,9 @@
         listData:[],
         api:"http://192.168.31.222:8080"
       }
+    },
+    components:{
+      BaseTitle
     },
     mounted(){
       //初始请求数据

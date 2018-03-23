@@ -21,8 +21,13 @@
         <FormItem label="税率" prop="taxRate">
           <Input v-model="editData.taxRate" placeholder="请输入税率"/>
         </FormItem>
-        <FormItem label="地址" prop="addressId">
-          <Input v-model="editData.addressId" placeholder="请输入地址"/>
+        <FormItem label="地址" prop="address">
+          <Cascader :data="areaData" :load-data="loadData" @on-change="selectAreaDone" ></Cascader>
+        </FormItem>
+        <FormItem label="详细地址">
+          <div class="detail-address">
+            <Input v-model="editData.address" type="textarea" placeholder="请填写详细地址"></Input>
+          </div>
         </FormItem>
         <FormItem label="备注" prop="mark">
           <Input v-model="editData.mark" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请填写备注"/>
@@ -49,18 +54,29 @@
             mobilePhone:"",
             telephone:"",
             taxRate:"",
-            addressId:"",
             mark:"",
-            wechat:""
+            wechat:"",
+            address:"",
           },
-          api:"http://192.168.31.168:8080"
-
+          api:"http://192.168.31.222:8080",
+          areaData:[]
         }
       },
       components:{
         BastTitle
       },
       mounted(){
+        //三级联动
+        this.$http.get(`${this.api}/base/area/province`).then(response => {
+          this.areaData = response.data;
+          this.areaData.forEach(v=>{
+            v.label = v.areaName;
+            v.value = v.id;
+            v.loading = false;
+            v.children = []
+          })
+        });
+
         if(this.$route.query.id){
           this.$http.get(`${this.api}/base/supplier/updatePre`,{
             params:{ id:this.$route.query.id }
@@ -69,6 +85,9 @@
 
             if(res){
               this.editData = res
+              console.log(res);
+              this.setCascader(`${this.editData.addressList[0]}/${this.editData.addressList[1]}/${this.editData.addressList[2]}`,"block","")
+
             }
           });
         }
@@ -76,7 +95,48 @@
 
       },
       methods:{
+        //三级联动
+        loadData (item, callback) {
+          item.loading = true;
+          console.log(item.value)
+          this.$http.get(`${this.api}/base/area/cityOrDistrict`,{
+            params:{parentId:item.value}
+          }).then(response=>{
+            let res = response.data;
+            item.children = res;
+            //请求回来，展开列表
+            item.children.forEach(v=>{
+              v.value = v.id;
+              v.label = v.areaName;
+              v.children = [];
+              if(v.areaType !== "DISTRICT"){
+                v.loading = false
+              }
+            });
+            callback();
+            item.loading = false;
+          });
+        },
+        setCascader(val,style,placeholoder){
+          document.getElementsByClassName("ivu-cascader-label")[0].innerHTML = val;
+          document.getElementsByClassName("ivu-cascader-label")[0].style.display = style;
+          if(this.isChecked){
+            document.getElementsByClassName("ivu-cascader-label")[0].style.color = "#ccc";
+          }
+          document.getElementsByClassName("ivu-cascader-rel")[0].getElementsByClassName("ivu-input-wrapper")[0].getElementsByClassName("ivu-input")[0].placeholder = placeholoder
+
+        },
+        selectAreaDone(val){
+          this.editData.addressList = val;
+          console.log(val)
+          this.setCascader("","block","")
+        },
+
         submit(){
+          if(this.$route.query.id){
+            delete this.editData.addressList
+            delete this.editData.address
+          }
           this.$http.post(`${this.api}/base/supplier/saveSupplier`,{...this.editData}).then(response=>{
             let res = response.data;
             console.log(res);
