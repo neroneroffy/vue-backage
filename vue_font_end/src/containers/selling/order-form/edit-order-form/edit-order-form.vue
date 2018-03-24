@@ -5,7 +5,7 @@
       <BastTitle title="客户订单管理明细"/>
       <div class="search">
         <Form ref="formInline":model="searchContent"   inline>
-          <FormItem>
+          <!--<FormItem>
             <span>供货商：</span>
             <Select  style="width:200px"  placeholder="请选择供货商">
               <Option v-for="item in supplierList" :value="item.id" :key="item.name">{{ item.name }}</Option>
@@ -19,13 +19,13 @@
           <FormItem prop="user">
           <span>交货日期：</span>
           <DatePicker type="date" placeholder="交货日期" style="width: 150px"></DatePicker>
-          </FormItem>
+          </FormItem>-->
           <Button type="primary" size="large" @click="exportData"><Icon type="ios-download-outline"></Icon>导出数据</Button>
         </Form>
       </div>
     </div>
-    <Table :columns="columns" :data="data" ref="table"  >
-    <div slot="header">供货商：123</div>
+    <Table :columns="columns" :data="data" ref="table" >
+    <div slot="header">订单详细</div>
     </Table>
 
   </div>
@@ -38,7 +38,7 @@
     name: "edit-order-form",
     data() {
       return {
-        api:"http://192.168.31.13:8080",
+        api:"http://192.168.31.34:8080",
         value4: "爸爸的选择",
         pageSizeList: [5, 10, 20],
         pageSize: 5,
@@ -134,6 +134,8 @@
     // },
     mounted(){
       let id = this.$route.query.id
+
+
       this.$http.get(`${this.api}/base/orderItem/findAll`,{
         params:{ id:this.$route.query.id }
       }).then(response => {
@@ -150,13 +152,18 @@
       cancel() {
 
       },
-        exportData() {
-            this.$refs.table.exportCsv({
+      exportData() {
+            /*this.$refs.table.exportCsv({
               filename: '导出数据',
               original:true,
               noHeader:false,
 
-            });
+            });*/
+            this.$http.post(`http://192.168.31.34:8080/base/orderItem/export`,{
+              id:this.$route.query.id
+            }).then(response=>{
+              console.log(response)
+            })
       },
       //提交搜索
       handleSubmit() {
