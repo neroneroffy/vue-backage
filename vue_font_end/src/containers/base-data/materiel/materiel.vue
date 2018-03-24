@@ -168,7 +168,7 @@
                 pageSize: this.pageSize,
               };
               console.log(params)
-              this.$http.post("http://192.168.31.34:8080/base/materiel/findAllMateriel",params).then(response => {
+              this.$http.post(`${this.$host}/base/materiel/findAllMateriel`,params).then(response => {
                 let data = response.data;
                 this.listData = data.content;
                 this.total=data.totalElements;
@@ -192,7 +192,7 @@
               loading:true,
               onOk:()=>{
                 this.$store.dispatch('modalLoading');
-                this.$http.get("http://192.168.31.34:8080/base/materiel/deleteMateriel",{params:{id:id}}).then(response  => {
+                this.$http.get(`${this.$host}/base/materiel/deleteMateriel`,{params:{id:id}}).then(response  => {
                   let res = response.data;
 
                   if(res.result){
@@ -221,7 +221,7 @@
               //删除数据 post "http://192.168.31.34:8080/base/materiel/deleteMateriel 数组形式
               //
             console.log(params)
-              this.$http.post("http://192.168.31.34:8080/base/materiel/findAllMateriel",params).then(response => {
+              this.$http.post(`${this.$host}/base/materiel/findAllMateriel`,params).then(response => {
                 console.log(response.data)
                 let data = response.data;
                 this.listData = data.content;

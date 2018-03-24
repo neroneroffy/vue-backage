@@ -161,7 +161,7 @@
       handleSubmit() {
 
         this.searchContent.inboundType = this.type;
-        this.$http.post(`${this.api}/base/inboundOrder/findAllInboundOrder`,{...this.searchContent,pageCount:1,pageSize:this.pageSize}).then(response=>{
+        this.$http.post(`${this.$host}/base/inboundOrder/findAllInboundOrder`,{...this.searchContent,pageCount:1,pageSize:this.pageSize}).then(response=>{
           if(response){
             let res = response.data;
             res.pageList.forEach(v=>{
@@ -211,7 +211,7 @@
           pageSize:5
         };
         let params = customsParams || defaultParams;
-        let url = `${this.api}/base/inboundOrder/findAllInboundOrder`;
+        let url = `${this.$host}/base/inboundOrder/findAllInboundOrder`;
         this.$http.post(url,params).then(response => {
           if(response){
             let res = response.data;

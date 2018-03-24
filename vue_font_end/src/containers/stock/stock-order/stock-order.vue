@@ -239,7 +239,7 @@
         this.searchContent.pageCount = 1;
         this.searchContent.pageSize = this.pageSize;
 
-        this.$http.post(`${this.api}/base/PurchaseOrder/findAllPurchaseOrder`,{...this.searchContent}).then(response=>{
+        this.$http.post(`${this.$host}/base/PurchaseOrder/findAllPurchaseOrder`,{...this.searchContent}).then(response=>{
           let res = response.data;
 
           res.content.forEach(v=>{
@@ -318,7 +318,7 @@
           purchaseType:this.tab
         };
         let params = customsParams || defaultParams;
-        let url = `${this.api}/base/PurchaseOrder/findAllPurchaseOrder`;
+        let url = `${this.$host}/base/PurchaseOrder/findAllPurchaseOrder`;
         this.$http.post(`${url}`,{
           ...params
         }).then(response => {
@@ -347,7 +347,7 @@
           pageCount: this.pageCount,
           pageSize: this.pageSize
         };
-/*        this.$http.post(`${this.api}/base/PurchaseOrder/findAllPurchaseOrder`,{...this.params}).then(response=>{
+/*        this.$http.post(`${this.$host}/base/PurchaseOrder/findAllPurchaseOrder`,{...this.params}).then(response=>{
           let res = response;
           this.data = res.pageList;
           this.total = res.count;

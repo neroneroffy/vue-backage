@@ -553,7 +553,7 @@
       };
 
       if(this.$route.query.id){
-        this.$http.get(`${this.api}/base/outboundOrder/findOutboundOrderById`,{
+        this.$http.get(`${this.$host}/base/outboundOrder/findOutboundOrderById`,{
           params:{ id:this.$route.query.id }
         }).then(response =>{
           let res = response.data;
@@ -604,7 +604,7 @@
         }
       });*/
     //   if(this.$route.query.id){
-    //     this.$http.get(`${this.api}/base/outboundOrder/findOutboundOrderById`,{
+    //     this.$http.get(`${this.$host}/base/outboundOrder/findOutboundOrderById`,{
     //       params:{ id:this.$route.query.id }
     //     }).then(response =>{
     //       let res = response.data;
@@ -679,7 +679,7 @@
           });
           return
         }
-        this.$http.get(`${this.api}/base/OutboundOrderItem/deleteOutboundOrderItem`,{params:{
+        this.$http.get(`${this.$host}/base/OutboundOrderItem/deleteOutboundOrderItem`,{params:{
             id:params.row.id
           }}).then(response=>{
           let res = response.data;
@@ -706,7 +706,7 @@
           outboundOrderItemModelList:this.data
         };
         console.log(submitData);
-        let url = this.$route.query.id?`${this.api}/base/outboundOrder/updateOutboundOrder`:`${this.api}/base/outboundOrder/saveOutboundOrder`;
+        let url = this.$route.query.id?`${this.$host}/base/outboundOrder/updateOutboundOrder`:`${this.$host}/base/outboundOrder/saveOutboundOrder`;
         this.$http.post(url,{...submitData}).then(response=>{
           let res = response.data;
           if(res.result){

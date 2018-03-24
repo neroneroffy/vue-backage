@@ -143,7 +143,7 @@
         if(this.searchContent.giftName === "" && this.searchContent.giftCode === "" && this.searchContent.giftCode ===""){
           this.pagination(params);
         }else{
-          this.$http.post("http://192.168.31.34:8080/base/gift/findAllGift", params).then(response=>{
+          this.$http.post(`${this.$host}/base/gift/findAllGift`, params).then(response=>{
             let data = response.data;
             this.listData = data.content;
             this.total = data.totalElements;
@@ -165,7 +165,7 @@
           loading: true,
           onOk: () => {
           this.$store.dispatch('modalLoading');
-          this.$http.get(`http://192.168.31.34:8080/base/gift/deleteGift`,{
+          this.$http.get(`${this.$host}/base/gift/deleteGift`,{
             params:{ id:params.row.id}
           }).then(response=>{
             let res = response.data;
@@ -192,7 +192,7 @@
         let params = customsParams || defaultParams;
         /*/base/gift/findAllGift*/
         console.log(params)
-        this.$http.post("http://192.168.31.34:8080/base/gift/findAllGift", params).then(response => {
+        this.$http.post(`${this.$host}/base/gift/findAllGift`, params).then(response => {
           let data = response.data;
           this.listData = data.content;
           this.total = data.totalElements;

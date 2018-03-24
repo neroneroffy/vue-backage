@@ -52,7 +52,7 @@
       },
       mounted(){
         ///base/inventoryOutboundItem/find this.$route.query.id
-        this.$http.get("http://192.168.31.168:8080/base/inventoryOutboundItem/find",{params:{id:this.$route.query.id}}).then(response => {
+        this.$http.get(`${this.$host}/base/inventoryOutboundItem/find`,{params:{id:this.$route.query.id}}).then(response => {
           console.log(response);
           let res=response.data;
           this.commodity=res;
@@ -66,7 +66,7 @@
             content: '<p>请确定信息正确</p>',
             loading: true,
             onOk: () => {
-              this.$http.get('http://192.168.31.168:8080/base/inventoryOutboundItem/outBound',{params:{id:this.$route.query.id}}).then(response => {
+              this.$http.get(`${this.$host}/base/inventoryOutboundItem/outBound`,{params:{id:this.$route.query.id}}).then(response => {
                 let res=response.data;
                 if(!res){
                   this.$Modal.remove();

@@ -181,7 +181,7 @@
           pageSize: 30
         }
         ///base/order/seek单条查询
-        this.$http.post(`http://192.168.31.13:8080/base/order/find`,{...data}).then(response => {
+        this.$http.post(`${this.$host}/base/order/find`,{...data}).then(response => {
           console.log(response)
           let res = response.data;
           this.data = res.pageList;
@@ -200,7 +200,7 @@
         };
         let params = customsParams || defaultParams;
         ///base/order/findAll  查询所有产品
-        this.$http.post(`http://192.168.31.13:8080/base/order/find`, params).then(response => {
+        this.$http.post(`${this.$host}/base/order/find`, params).then(response => {
           let res = response.data;
           res.pageList.forEach(v=>{
             v.sendTime = convertTime(parseInt(v.sendTime))

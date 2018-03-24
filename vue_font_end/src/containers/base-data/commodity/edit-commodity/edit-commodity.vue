@@ -95,7 +95,7 @@
       mounted(){
         ///base/product/updatePre  查看单条信息
         if(this.$route.query.id){
-          this.$http.get(`http://192.168.31.34:8080/base/product/updatePre`,{
+          this.$http.get(`${this.$host}/base/product/updatePre`,{
             params:{ id:this.$route.query.id }
           }).then(response=>{
             let res = response.data;
@@ -112,7 +112,7 @@
           if(this.$route.query.id){
             url = '/base/product/updateProduct';
           }
-          this.$http.post(`http://192.168.31.34:8080${url}`,data).then(response=>{
+          this.$http.post(`${this.$host}${url}`,data).then(response=>{
             let res = response.data;
             if(res.result){
               this.$Message.success("成功");

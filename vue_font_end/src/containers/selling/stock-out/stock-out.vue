@@ -171,7 +171,7 @@
       handleSubmit() {
 
         this.searchContent.outboundType = this.type;
-        this.$http.post(`${this.api}/base/outboundOrder/findAllOutboundOrder`, {
+        this.$http.post(`${this.$host}/base/outboundOrder/findAllOutboundOrder`, {
           ...this.searchContent,
           pageCount: 1,
           pageSize: this.pageSize
@@ -225,7 +225,7 @@
           pageSize: 5
         };
         let params = customsParams || defaultParams;
-        let url = `http://192.168.31.168:8080/base/outboundOrder/findAllOutboundOrder`;
+        let url = `${this.$host}/base/outboundOrder/findAllOutboundOrder`;
         this.$http.post(url, params).then(response => {
           if (response) {
             //转换时间戳

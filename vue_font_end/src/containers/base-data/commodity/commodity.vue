@@ -216,7 +216,7 @@
             currentPage :1,
             pageSize : 30
           };
-          this.$http.post(`http://192.168.31.34:8080/base/product/findAllProduct`,data).then(response=>{
+          this.$http.post(`${this.$host}/base/product/findAllProduct`,data).then(response=>{
             let res = response.data;
             this.listData = res.content;
             this.total = res.totalElements;
@@ -238,7 +238,7 @@
             onOk: () => {
               this.$store.dispatch('modalLoading');
               console.log(this)
-              this.$http.get(`http://192.168.31.34:8080/base/product/deleteProduct`,{params:{id:params.row.id}}).then(response=>{
+              this.$http.get(`${this.$host}/base/product/deleteProduct`,{params:{id:params.row.id}}).then(response=>{
                   let res = response.data;
 
                 if(res.result){
@@ -269,7 +269,7 @@
           };
           let params = customsParams || defaultParams;
           ///base/product/findAllProduct  查询所有产品
-          this.$http.post(`http://192.168.31.34:8080/base/product/findAllProduct`,params).then(response=>{
+          this.$http.post(`${this.$host}/base/product/findAllProduct`,params).then(response=>{
             console.log(response.data)
             let res = response.data;
               this.listData = res.content;

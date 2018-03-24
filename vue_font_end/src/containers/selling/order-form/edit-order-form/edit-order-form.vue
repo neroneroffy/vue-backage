@@ -137,7 +137,7 @@
     mounted(){
       let id = this.$route.query.id;
       let xAuthToken=localStorage.getItem("xAuthToken");
-      this.url=`http://192.168.31.34:8080/base/orderItem/export?id=${this.$route.query.id}&token=${xAuthToken}`;
+      this.url=`${this.$host}/base/orderItem/export?id=${this.$route.query.id}&token=${xAuthToken}`;
 
       this.$http.get(`${this.api}/base/orderItem/findAll`,{
         params:{ id:this.$route.query.id }
@@ -172,7 +172,7 @@
           currentPage: 1,
           pageSize: 5
         }
-        this.$http.post(`http://192.168.31.13:8080/base/product/findAllProduct`, data).then(response => {
+        this.$http.post(`${this.$host}/base/product/findAllProduct`, data).then(response => {
           console.log(response)
           let res = response.data;
           this.listData = res.content;
@@ -189,7 +189,7 @@
         // };
         let params = customsParams || defaultParams;
         ///base/product/findAllProduct  查询所有产品
-        this.$http.post(`http://192.168.31.13:8080/base/product/findAllProduct`, data).then(response => {
+        this.$http.post(`${this.$host}/base/product/findAllProduct`, data).then(response => {
           console.log(response.data)
           let res = response.data;
           this.listData = res.content;

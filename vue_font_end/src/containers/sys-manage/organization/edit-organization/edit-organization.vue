@@ -129,7 +129,7 @@
       }
     },
     mounted(){
-      this.$http.get(`${this.api}/sys/org/orgList`).then(response=>{
+      this.$http.get(`${this.$host}/sys/org/orgList`).then(response=>{
         let res = response.data;
         if(res.result){
           res.data.forEach(v=>{
@@ -139,7 +139,7 @@
         }
       });
       if(this.$route.query.id){
-        this.$http.get(`${this.api}/sys/org/updatePre`,{
+        this.$http.get(`${this.$host}/sys/org/updatePre`,{
           params:{id:this.$route.query.id}
         }).then(response=>{
           let res = response.data;
@@ -164,7 +164,7 @@
 
         this.$refs[name].validate((valid) => {
           if (valid) {
-            let url = this.$route.query.id?`${this.api}/sys/org/update`:`${this.api}/sys/org/add`;
+            let url = this.$route.query.id?`${this.$host}/sys/org/update`:`${this.$host}/sys/org/add`;
             this.$http.post(url,{...this.formValidate}).then(response=>{
               let res = response.data;
               if(res.result){

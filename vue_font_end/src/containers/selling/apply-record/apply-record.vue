@@ -213,7 +213,7 @@
           };
           let params = customsParams || defaultParams;
           ///base/product/findAllProduct  查询所有产品
-          this.$http.post(`http://192.168.31.34:8080/base/goodsApply/findAllGoodApply`,{...params})
+          this.$http.post(`${this.$host}/base/goodsApply/findAllGoodApply`,{...params})
             .then(response=>{
               if(response){
                 console.log(response.data);

@@ -182,7 +182,7 @@
       //切换状态
       statusEdit(params){
         //更新仓库状态
-        this.$http.get(`${this.api}/base/warehouse/updateID`,{
+        this.$http.get(`${this.$host}/base/warehouse/updateID`,{
           params:{
             id:params.row.id
           }
@@ -207,7 +207,7 @@
       },
       //请求函数
       getList(){
-        this.$http.get(`${this.api}/base/warehouse/warehouseFindAll`).then(response=> {
+        this.$http.get(`${this.$host}/base/warehouse/warehouseFindAll`).then(response=> {
           console.log(response.data)
           let res = response.data;
           if(res){

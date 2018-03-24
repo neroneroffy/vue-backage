@@ -531,7 +531,7 @@
       };
 
       //调用供货商接口
-      this.$http.post(`http://192.168.31.222:8080/base/supplier/findAll`).then(response=>{
+      this.$http.post(`${this.$host}/base/supplier/findAll`).then(response=>{
         if(response){
 
           let res = response.data;
@@ -540,7 +540,7 @@
       });
 
       if(this.$route.query.id){
-        this.$http.get(`${this.api}/base/inboundOrder/findInboundOrderById`,{
+        this.$http.get(`${this.$host}/base/inboundOrder/findInboundOrderById`,{
           params:{ id:this.$route.query.id }
         }).then(response =>{
           console.log(response);
@@ -576,13 +576,13 @@
 
       }else{
         //调用仓库接口
-        this.$http.get(`http://192.168.31.222:8080/base/warehouse/warehouseFindAll`).then(response=> {
+        this.$http.get(`${this.$host}/base/warehouse/warehouseFindAll`).then(response=> {
           let res = response.data;
 
           this.warehouse = res
         });
         //单位接口
-        this.$http.get(`http://192.168.31.222:8080/base/units/findAll/`).then(response=>{
+        this.$http.get(`${this.$host}/base/units/findAll/`).then(response=>{
           let res = response.data;
           if(res){
             this.units = res;
@@ -651,7 +651,7 @@
           return
         }
 
-        this.$http.get(`${this.api}/base/inboundOrderItem/deleteInboundOrderItem`,{params:{
+        this.$http.get(`${this.$host}/base/inboundOrderItem/deleteInboundOrderItem`,{params:{
             id:params.row.id
           }}).then(response=>{
           let res = response.data;
@@ -686,7 +686,7 @@
           inboundOrderItemModelList:this.data
         };
 
-        let url = !this.$route.query.id?`${this.api}/base/inboundOrder/addInboundOrder`:`${this.api}/base/inboundOrder/updateInboundOrder`;
+        let url = !this.$route.query.id?`${this.$host}/base/inboundOrder/addInboundOrder`:`${this.$host}/base/inboundOrder/updateInboundOrder`;
 
         this.$http.post(url,{...submitData}).then(response=>{
 

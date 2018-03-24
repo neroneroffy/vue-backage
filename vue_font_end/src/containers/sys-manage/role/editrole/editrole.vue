@@ -63,7 +63,7 @@
     },
     created(){
       if(this.$route.query.id){
-        this.$http.get(`${this.api}/sys/role/updatePre`,{
+        this.$http.get(`${this.$host}/sys/role/updatePre`,{
           params:{
             id:this.$route.query.id
           }
@@ -96,7 +96,7 @@
           return
 
         };
-        let url = this.$route.query.id?`${this.api}/sys/role/update`:`${this.api}/sys/role/add`
+        let url = this.$route.query.id?`${this.$host}/sys/role/update`:`${this.$host}/sys/role/add`
         this.$http.post(url,{...this.formCustom}).then(response=>{
           let res = response.data;
           console.log(res);

@@ -120,7 +120,7 @@
           this.time[0]=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
           date=new Date(Number(new Date().getTime()) +  24 * 3600 * 1000);
           this.time[1]=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
-          this.$http.get("http://192.168.31.168:8080/base/warehouse/warehouseFindAll").then(response=>{
+          this.$http.get(`${this.$host}/base/warehouse/warehouseFindAll`).then(response=>{
             console.log(response)
             let res=response.data;
             this.cityList=res;
@@ -146,7 +146,7 @@
               warehouseId:this.id
             };
             let params = customsParams || defaultParams;
-            this.$http.post("http://192.168.31.168:8080/base/inventoryRecord/findAllInventoryRecord ",params).then( response =>{
+            this.$http.post(`${this.$host}/base/inventoryRecord/findAllInventoryRecord`,params).then( response =>{
               console.log(response);
               let res=response.data;
               this.commodity=res.pageList;

@@ -102,7 +102,7 @@
     },
     mounted() {
       if(this.$route.query.id){
-        this.$http.get(`http://192.168.31.34:8080/base/gift/updatePre`,{
+        this.$http.get(`${this.$host}/base/gift/updatePre`,{
           params:{ id:this.$route.query.id}
         }).then(response=>{
           this.editData = response.data;
@@ -118,7 +118,7 @@
         if(this.$route.query.id){
           url='/base/gift/updateGift'
         }
-        this.$http.post(`http://192.168.31.34:8080${url}`,this.editData).then(response=>{
+        this.$http.post(`${this.$host}${url}`,this.editData).then(response=>{
           let res = response.data;
           if(res.result){
             this.$router.push('/baseData/present')

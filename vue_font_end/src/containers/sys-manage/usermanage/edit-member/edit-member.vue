@@ -25,7 +25,7 @@
             :max-size="2048"
             :on-format-error="handleFormatError"
             :on-exceeded-size="handleMaxSize"
-            action="http://192.168.31.174:8080/base/attachment/upload/signal/uploadImg"
+            :action="uploadUrl"
             v-if="!isChecked"
           >
             <Button type="ghost" icon="ios-cloud-upload-outline" v-if="!isChecked" >上传头像</Button>
@@ -52,6 +52,7 @@
       data(){
           return {
             api:"http://192.168.31.174:8080",
+            uploadUrl:`${this.$host}/base/attachment/upload/signal/uploadImg`,
             title:this.$route.query.id?this.$route.query.checked?"查看成员":'编辑成员':'新增成员',
             isChecked:this.$route.query.checked?true:false,
             editData:{
@@ -79,7 +80,7 @@
             this.checkMember = false
           }
           //请求角色列表
-        this.$http.get(`${this.api}/sys/user/addPre`).then(response=>{
+        this.$http.get(`${this.$host}/sys/user/addPre`).then(response=>{
           let res = response.data;
           if(res.result){
             this.editRoleList = res.data;
@@ -87,7 +88,7 @@
         });
           //请求用户数据，回显
         if(this.$route.query.id){
-          this.$http.get(`${this.api}/sys/user/updatePre`,{
+          this.$http.get(`${this.$host}/sys/user/updatePre`,{
             params:{ id:this.$route.query.id }
           }).then(response=>{
             let res = response.data;
@@ -106,7 +107,7 @@
         submit(){
 
           if(this.$route.query.id){
-            this.$http.post(`${this.api}/sys/user/update`,{...this.editData}).then(response=>{
+            this.$http.post(`${this.$host}/sys/user/update`,{...this.editData}).then(response=>{
               let res = response.data;
               if(res.result){
                 this.$Message.success('编辑成功!');
@@ -117,7 +118,7 @@
             })
             return
           }
-          this.$http.post(`${this.api}/sys/user/add`,{...this.editData}).then(response=>{
+          this.$http.post(`${this.$host}/sys/user/add`,{...this.editData}).then(response=>{
             let res = response.data;
             if(res.result){
               this.$Message.success('新增成功!');

@@ -111,7 +111,7 @@
         console.log(response)
       })*/
        ///base/warehouse/warehouseFindAll查询仓库http://192.168.31.222:8080
-       this.$http.get("http://192.168.31.168:8080/base/warehouse/warehouseFindAll").then(response=>{
+       this.$http.get(`${this.$host}/base/warehouse/warehouseFindAll`).then(response=>{
           console.log(response)
           let res=response.data;
           this.cityList=this.cityList.concat(res);
@@ -120,7 +120,7 @@
         warehouseId:this.id,
         stockType:this.status
       }
-      this.$http.post("http://192.168.31.168:8080/base/stockInfo/search",params).then(response=>{
+      this.$http.post(`${this.$host}/base/stockInfo/search`,params).then(response=>{
 
         let res = response.data;
         if(res){
@@ -169,7 +169,7 @@
           }
         })
         console.log(params)
-        this.$http.post("http://192.168.31.168:8080/base/inventoryRecord/addInventoryRecord",params).then(response => {
+        this.$http.post(`${this.$host}/base/inventoryRecord/addInventoryRecord`,params).then(response => {
           if(response.data.result){
             this.$Message.success(response.data.msg)
           }
@@ -182,7 +182,7 @@
           stockType:this.status,
           warehouseId:this.id
         }
-        this.$http.post("http://192.168.31.168:8080/base/stockInfo/search",params).then(response=>{
+        this.$http.post(`${this.$host}/base/stockInfo/search`,params).then(response=>{
           console.log(response)
           let res = response.data;
           if(res){

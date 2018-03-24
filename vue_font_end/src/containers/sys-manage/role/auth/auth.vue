@@ -82,7 +82,7 @@
         }
       },
       created(){
-        this.$http.get(`${this.api}/sys/role/authPre`,{
+        this.$http.get(`${this.$host}/sys/role/authPre`,{
           params:{
             id:this.$route.query.id
           }
@@ -210,7 +210,7 @@
             resourceIdList:checkedId
           };
 
-          this.$http.post(`${this.api}/sys/role/auth`,{...submitData}).then(response=>{
+          this.$http.post(`${this.$host}/sys/role/auth`,{...submitData}).then(response=>{
             let res = response.data;
 
             if(res.result){

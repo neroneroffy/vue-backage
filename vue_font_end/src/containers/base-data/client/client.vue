@@ -190,7 +190,7 @@
 
           this.searchContent.currentPage = `${this.currentPage}`;
           this.searchContent.pageSize= `${this.pageSize}`;
-          this.$http.post(`http://192.168.31.13:8080/base/customer/find`,{
+          this.$http.post(`${this.$host}/base/customer/find`,{
             ...this.searchContent
           }).then(response=>{
             if(response){
@@ -262,7 +262,7 @@
             loading: true,
             onOk: () => {
               this.$store.dispatch('modalLoading');
-              this.$http.get(`http://192.168.31.13:8080/base/customer/del`,{params:{ id }}).then(response=>{
+              this.$http.get(`${this.$host}/base/customer/del`,{params:{ id }}).then(response=>{
                 let res = response.data;
 
                 if(res.result){
@@ -283,7 +283,7 @@
           };
           let params = customsParams || defaultParams;
 
-          this.$http.post(`http://192.168.31.13:8080/base/customer/find`,params).then(response=>{
+          this.$http.post(`${this.$host}/base/customer/find`,params).then(response=>{
 
             let res = response.data;
             if(res.count === 0){
