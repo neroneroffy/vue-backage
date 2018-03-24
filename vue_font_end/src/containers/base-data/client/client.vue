@@ -35,8 +35,8 @@
       name: "client",
       data(){
         return {
-          pageSizeList:[10,50,100],
-          pageSize:10,
+          pageSizeList:[30,50,100],
+          pageSize:30,
           total:0,
           currentPage:1,
           visible:false,
@@ -223,6 +223,28 @@
               return "大客户";
           }
         },
+        status(type){
+          switch (type){
+            case "ZERO":
+              return "未拜访";
+              break;
+            case "ONE":
+              return "初次拜访";
+              break;
+            case "TWO":
+              return "二次拜访";
+              break;
+            case "MORE":
+              return "多次拜访";
+              break;
+            case "SUCCESS":
+              return "签单";
+              break;
+            case "FAIL":
+              return "弃单";
+              break;
+          }
+        },
         //查看信息
         show (params) {
           this.$router.push({path:'/baseData/client/edit-client',query:{id:params.row.id,checked:true}})
@@ -257,7 +279,7 @@
         pagination(customsParams){
           let defaultParams = {
             currentPage :'1',
-            pageSize : '10'
+            pageSize : '30'
           };
           let params = customsParams || defaultParams;
 
@@ -270,7 +292,8 @@
               console.log(res);
               res.pageList.forEach(v=>{
                 v.customerType = this.type(v.customerType)
-              })
+                v.status = this.status(v.status)
+              });
 
               this.listData = res.pageList;
               this.total = res.count;

@@ -34,14 +34,15 @@
 
 <script>
   import BastTitle from  "@/components/base-title";
+  import convertTime from  "@/util/convertTime"
   import { Form,Select,Upload,Avatar,Button,DatePicker,Cascader } from 'iview'
   export default {
     name: "order-form",
     data() {
       return {
         value4: "爸爸的选择",
-        pageSizeList: [5, 10, 20],
-        pageSize: 5,
+        pageSizeList: [30, 10, 20],
+        pageSize: 30,
         total:0,
         currentPage:1,
         visible:false,
@@ -177,7 +178,7 @@
           salesId: this.searchContent.salesId,
           logisticCode: this.searchContent.logisticCode,
           currentPage: 1,
-          pageSize: 5
+          pageSize: 30
         }
         ///base/order/seek单条查询
         this.$http.post(`http://192.168.31.34:8080/base/order/find`,{...data}).then(response => {
@@ -195,12 +196,16 @@
           salesId: this.searchContent.salesId,
           logisticCode: this.searchContent.logisticCode,
           currentPage: 1,
-          pageSize: 5
+          pageSize: 30
         };
         let params = customsParams || defaultParams;
         ///base/order/findAll  查询所有产品
         this.$http.post(`http://192.168.31.34:8080/base/order/find`, params).then(response => {
           let res = response.data;
+          res.pageList.forEach(v=>{
+            v.sendTime = convertTime(parseInt(v.sendTime))
+
+          })
           this.data = res.pageList;
           this.total = res.count;
         })

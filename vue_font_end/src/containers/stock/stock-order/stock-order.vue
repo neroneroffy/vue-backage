@@ -241,13 +241,15 @@
 
         this.$http.post(`${this.api}/base/PurchaseOrder/findAllPurchaseOrder`,{...this.searchContent}).then(response=>{
           let res = response.data;
-          res.pageList.forEach(v=>{
+
+          res.content.forEach(v=>{
             v.status = this.storageStatus(v.status);
             v.auditStatus = this.auditStatus(v.auditStatus);
             v.receiveTime = formatDate(v.receiveTime)
           })
 
-          this.data = res.pageList;
+
+          this.data = res.content;
           this.total = res.count;
           console.log(res);
         })

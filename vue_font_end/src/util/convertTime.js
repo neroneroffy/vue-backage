@@ -1,9 +1,13 @@
 export default function formatDate(date){
+  if(!date){
+    return ""
+  }
   var now = new Date(date)
   var year=now.getFullYear();
   var month=now.getMonth()+1;
   var date=now.getDate();
   var hour=now.getHours();
+
   if(month<10){
     month = "0"+month
   }
@@ -18,6 +22,7 @@ export default function formatDate(date){
   if(second<10){
     second = "0"+second
   }
+
   return year+"-"+month+"-"+date+" "+hour+":"+minute+":"+second;
 };
 

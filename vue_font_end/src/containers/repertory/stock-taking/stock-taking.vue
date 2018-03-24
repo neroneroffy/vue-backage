@@ -44,18 +44,7 @@
         * */
         id:"",
         visible:false,
-        commodity:[
-          {
-             warehouseId:"21312",
-             goodsId:"21312",
-             unitsId:"12331",
-             total:"21312",
-             num:"12312",
-             inventoryNum:"12",
-             inventoryResult:"45",
-             inventoryType:"GOODS",
-          }
-        ],
+        commodity:[],
         commodityType:[
           {
             title: '仓库名称',

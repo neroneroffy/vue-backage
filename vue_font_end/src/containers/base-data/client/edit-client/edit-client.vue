@@ -176,9 +176,9 @@
             let res = response.data;
             console.log(response.data)
             if(!res.result){
-              this.$Message.error('手机号已注册');
+              this.$Message.error('格式错误');
             }else{
-             this.$Message.info('添加成功');
+             this.$Message.success('成功');
              this.$router.push('/baseData/client')
             }
           })

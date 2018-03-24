@@ -676,12 +676,12 @@
     },
     mounted(){
       //调用供货商
-      console.log('调用供货商')
+
       this.$http.post(`http://192.168.31.222:8080/base/supplier/findAll`).then(response=>{
         if(response){
           let res = response.data;
           this.supplierList = res;
-          console.log(this.supplierList);
+
         }
       });
       //调用仓库接口
@@ -719,7 +719,7 @@
           let res = response.data;
           console.log(res);
           //转换时间戳
-/*          res.createTime = formatDate(parseInt(res.createTime))*/
+          res.createTime = formatDate(parseInt(res.createTime))
           this.baseData = res;
           this.data = res.purchaseOrderItemModel;
           this.selectedGood = [];
