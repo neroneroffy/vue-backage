@@ -102,7 +102,7 @@
       this.time[1]=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
       this.$http.get("http://192.168.31.168:8080/base/warehouse/warehouseFindAll").then(response=>{
         let res=response.data;
-        this.cityList=res.data;
+        this.cityList=res;
         this.id=res[0].id;
         this.pagination()
       })
