@@ -25,7 +25,7 @@
       </div>
     </div>
     <Table :columns="columns" :data="data" ref="table" >
-    <div slot="header">订单详细</div>
+
     </Table>
 
   </div>

@@ -206,7 +206,9 @@
             v.sendTime = convertTime(parseInt(v.sendTime))
 
           })
+
           this.data = res.pageList;
+          console.log(this.data);
           this.total = res.count;
         })
       },
