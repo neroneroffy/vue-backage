@@ -706,7 +706,7 @@
           outboundOrderItemModelList:this.data
         };
         console.log(submitData);
-        let url = this.$route.query.id?`${this.api}/base/outboundOrder/updateOutboundOrder`:`${this.api}/base/outboundOrder/addOutboundOrder`;
+        let url = this.$route.query.id?`${this.api}/base/outboundOrder/updateOutboundOrder`:`${this.api}/base/outboundOrder/saveOutboundOrder`;
         this.$http.post(url,{...submitData}).then(response=>{
           let res = response.data;
           if(res.result){
