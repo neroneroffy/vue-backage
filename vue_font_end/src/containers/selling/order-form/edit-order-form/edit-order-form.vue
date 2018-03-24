@@ -20,7 +20,7 @@
           <span>交货日期：</span>
           <DatePicker type="date" placeholder="交货日期" style="width: 150px"></DatePicker>
           </FormItem>-->
-          <Button type="primary" size="large" @click="exportData"><Icon type="ios-download-outline"></Icon>导出数据</Button>
+          <a :href="url"><Button type="primary" size="large" @click="exportData"><Icon type="ios-download-outline"></Icon>导出数据</Button></a>
         </Form>
       </div>
     </div>
@@ -38,7 +38,9 @@
     name: "edit-order-form",
     data() {
       return {
+        id:this.$route.query.id,
         api:"http://192.168.31.34:8080",
+        url:"",
         value4: "爸爸的选择",
         pageSizeList: [5, 10, 20],
         pageSize: 5,
@@ -133,8 +135,9 @@
     //   this.pagination(params)
     // },
     mounted(){
-      let id = this.$route.query.id
-
+      let id = this.$route.query.id;
+      let xAuthToken=localStorage.getItem("xAuthToken");
+      this.url=`http://192.168.31.34:8080/base/orderItem/export?id=${this.$route.query.id}&token=${xAuthToken}`;
 
       this.$http.get(`${this.api}/base/orderItem/findAll`,{
         params:{ id:this.$route.query.id }
@@ -153,17 +156,12 @@
 
       },
       exportData() {
-            /*this.$refs.table.exportCsv({
-              filename: '导出数据',
-              original:true,
-              noHeader:false,
 
-            });*/
-            this.$http.post(`http://192.168.31.34:8080/base/orderItem/export`,{
+            /*this.$http.post(``,{
               id:this.$route.query.id
             }).then(response=>{
               console.log(response)
-            })
+            })*/
       },
       //提交搜索
       handleSubmit() {
