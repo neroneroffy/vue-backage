@@ -166,22 +166,22 @@
         },
         submit(){
           console.log(this.editData);
-          /*          let url="/base/customer/add";
-                    if(this.$route.query.id){
-                      this.editData.id = this.$route.query.id;
-                      url="/base/customer/update";
-                    }
+          let url="/base/customer/add";
+          if(this.$route.query.id){
+            this.editData.id = this.$route.query.id;
+            url="/base/customer/update";
+          }
 
-                    this.$http.post(`${this.api}${url}`,this.editData).then(response=>{
-                      let res = response.data;
-                      console.log(response.data)
-                      if(!res.result){
-                        this.$Message.error('手机号已注册');
-                      }else{
-                       this.$Message.info('添加成功');
-                       this.$router.push('/baseData/client')
-                      }
-                    })*/
+          this.$http.post(`${this.api}${url}`,this.editData).then(response=>{
+            let res = response.data;
+            console.log(response.data)
+            if(!res.result){
+              this.$Message.error('手机号已注册');
+            }else{
+             this.$Message.info('添加成功');
+             this.$router.push('/baseData/client')
+            }
+          })
 
         }
       }

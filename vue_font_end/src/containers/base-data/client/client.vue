@@ -267,6 +267,7 @@
             if(res.count === 0){
               this.listData = []
             }else{
+              console.log(res);
               res.pageList.forEach(v=>{
                 v.customerType = this.type(v.customerType)
               })

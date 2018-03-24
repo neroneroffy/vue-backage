@@ -92,6 +92,10 @@
                     console.log(params)
                     params.row.inventoryNum = val;
                     params.row.inventoryResult=parseInt(params.row.inventoryNum)-parseInt(params.row.num);
+                    if(params.row.inventoryNum === ""){
+                      params.row.inventoryResult = 0
+                    }
+
                     this.commodity[params.index]=params.row;
                     console.log(this.commodity)
                   }
@@ -177,8 +181,10 @@
         })
         console.log(params)
         this.$http.post("http://192.168.31.168:8080/base/inventoryRecord/addInventoryRecord",params).then(response => {
-          console.log(response)
-          console.log('保存成功')
+          if(response.data.result){
+            this.$Message.success(response.data.msg)
+          }
+
         })
       },
       tab(){

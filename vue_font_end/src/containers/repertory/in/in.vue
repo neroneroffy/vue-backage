@@ -1,17 +1,23 @@
 <template>
   <!--盘点查询-->
   <div class="stock">
-    <Row type="flex" justify="end">
-      <Form  inline>
-        <DatePicker type="daterange" :value="time" @on-change="timey"></DatePicker>
-      </Form >
-      <Form>
-        <FormItem prop="id">
-          <Select v-model="id" :value="id" style="width:200px;margin-left:30px" placeholder="请选择仓库">
-            <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.contacts }}</Option>
-          </Select>
-        </FormItem>
-      </Form >
+    <Row type="flex" justify="space-between">
+      <div>
+        <BastTitle title="盘点入库"/>
+      </div>
+      <div class="search">
+        <Form  inline>
+          <DatePicker type="daterange" :value="time" @on-change="timey"></DatePicker>
+        </Form >
+        <Form>
+          <FormItem prop="id">
+            <Select v-model="id" :value="id" style="width:200px;margin-left:30px" placeholder="请选择仓库">
+              <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.contacts }}</Option>
+            </Select>
+          </FormItem>
+        </Form >
+
+      </div>
     </Row>
     <Table :border="false" :columns="commodityType" :data="commodity"></Table>
     <div class="pagination">
@@ -22,6 +28,7 @@
 </template>
 
 <script>
+  import BastTitle from "@/components/base-title";
   export default {
     name: "in",
     data(){
@@ -45,12 +52,14 @@
           },
           {
             title:'类型',
-            key:'outboundType'
+            key:'inboundType'
           },
+/*
           {
             title: '负责人',
             key: 'userName'
           },
+*/
           {
             title: '操作',
             key: 'action',
@@ -107,7 +116,22 @@
         this.pagination()
       })
     },
+    components:{
+      BastTitle
+    },
     methods:{
+      inboundType(type){
+        switch(type){
+          case "GOODS":
+            return "商品";
+            break;
+          case "GIFT":
+            return "赠品";
+            break;
+          case "MATERIEL":
+            return "物料";
+        }
+      },
       timey(daterange){
         this.time=daterange;
         this.pagination()
@@ -132,6 +156,7 @@
           if(this.commodity){
             this.commodity.forEach(item=>{
               item.createTime=new Date(Number(item.createTime)).toLocaleDateString();
+              item.inboundType = this.inboundType(item.inboundType)
             })
             this.total=res.count;
           }else{
@@ -154,12 +179,8 @@
   }
 </script>
 
-<style scoped>
-  .pagination{
-    margin-top: 20px;
-    display: flex;
-    justify-content: flex-end;
-  }
+<style scoped lang="stylus">
+  @import "./in.styl"
 
 </style>
 

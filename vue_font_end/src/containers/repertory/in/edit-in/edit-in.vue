@@ -1,12 +1,16 @@
 <template>
-  <div class="edit-client">
-    <BastTitle :title="title"></BastTitle>
+  <div class="edit-client" >
+    <div style="display: flex; justify-content: space-between">
+      <BastTitle :title="title"></BastTitle>
+      <Form justify="end">
+        <FormItem>
+          <Button type="primary" v-if='!checkout' icon="plus-circled" @click="make()">确认入库</Button>
+        </FormItem>
+      </Form>
+
+    </div>
+
     <Table :border="false" :columns="commodityType" :data="commodity"></Table>
-    <Form justify="end">
-      <FormItem>
-        <Button type="primary" v-if='!checkout' icon="plus-circled" @click="make()">确认入库</Button>
-      </FormItem>
-    </Form>
   </div>
 </template>
 
@@ -48,20 +52,31 @@
     },
     mounted(){
       ///base/inventoryOutboundItem/find this.$route.query.id
-      this.$http.get("http://192.168.31.31:8080/base/inventoryInboundItem/find",{params:{id:this.$route.query.id}}).then(response => {
-        console.log(response);
+      this.$http.get("http://192.168.31.168:8080/base/inventoryInboundItem/find",{params:{id:this.$route.query.id}}).then(response => {
+
         let res=response.data;
         this.commodity=res;
       })
     },
     methods:{
       make(){
-        this.$http.get('http://192.168.31.168:8080/base/inventoryInboundItem/inBound',{params:{id:this.$route.query.id}}).then(response => {
-          console.log(response);
-          let res=response.data;
-          this.commodity=res.pageList;
-          this.$router.push('/')
-        })
+        this.$store.dispatch("modalLoading");
+        this.$Modal.confirm({
+          title: '确认入库',
+          content: '<p>请确定信息正确</p>',
+          loading: true,
+          onOk: () => {
+            this.$http.get('http://192.168.31.168:8080/base/inventoryInboundItem/inBound',{params:{id:this.$route.query.id}}).then(response => {
+              console.log(response);
+              let res=response.data;
+              this.$Modal.remove();
+              this.$Message.success(res.msg);
+
+              console.log(res);
+              this.$router.push('/repertory/in')
+            })
+          }
+        });
       },
     }
   }
