@@ -22,7 +22,7 @@
       </div>
 
       <div v-if="!isChecked">
-        <Button type="primary" icon="plus-round" @click="save">保存入库单</Button>
+        <Button type="primary" icon="plus-round" @click="save">保存出库单</Button>
       </div>
 
     </div>
@@ -44,7 +44,7 @@
     name: "edit-stock-out",
     data(){
       return{
-        api:'http://192.168.31.168:8080',
+        api:'http://192.168.31.222:8080',
         title:this.$route.query.id?this.$route.query.checked?`查看${this.$route.query.name}出库单`:`编辑${this.$route.query.name}出库单`:`新增${this.$route.query.name}出库单`,
         isChecked:this.$route.query.checked?true:false,
         isNew:this.$route.query.id?false:true,
