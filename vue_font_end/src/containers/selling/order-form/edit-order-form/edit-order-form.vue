@@ -5,7 +5,7 @@
       <BastTitle title="客户订单管理明细"/>
       <div class="search">
         <Form ref="formInline":model="searchContent"   inline>
-          <FormItem>
+          <!--<FormItem>
             <span>供货商：</span>
             <Select  style="width:200px"  placeholder="请选择供货商">
               <Option v-for="item in supplierList" :value="item.id" :key="item.name">{{ item.name }}</Option>
@@ -19,13 +19,13 @@
           <FormItem prop="user">
           <span>交货日期：</span>
           <DatePicker type="date" placeholder="交货日期" style="width: 150px"></DatePicker>
-          </FormItem>
-          <Button type="primary" size="large" @click="exportData"><Icon type="ios-download-outline"></Icon>导出数据</Button>
+          </FormItem>-->
+          <a :href="url"><Button type="primary" size="large" @click="exportData"><Icon type="ios-download-outline"></Icon>导出数据</Button></a>
         </Form>
       </div>
     </div>
-    <Table :columns="columns" :data="data" ref="table"  >
-    <div slot="header">供货商：123</div>
+    <Table :columns="columns" :data="data" ref="table" >
+
     </Table>
 
   </div>
@@ -38,7 +38,9 @@
     name: "edit-order-form",
     data() {
       return {
-        api:"http://192.168.31.13:8080",
+        id:this.$route.query.id,
+        api:"http://192.168.31.34:8080",
+        url:"",
         value4: "爸爸的选择",
         pageSizeList: [5, 10, 20],
         pageSize: 5,
@@ -133,7 +135,10 @@
     //   this.pagination(params)
     // },
     mounted(){
-      let id = this.$route.query.id
+      let id = this.$route.query.id;
+      let xAuthToken=localStorage.getItem("xAuthToken");
+      this.url=`${this.$host}/base/orderItem/export?id=${this.$route.query.id}&token=${xAuthToken}`;
+
       this.$http.get(`${this.api}/base/orderItem/findAll`,{
         params:{ id:this.$route.query.id }
       }).then(response => {
@@ -150,13 +155,13 @@
       cancel() {
 
       },
-        exportData() {
-            this.$refs.table.exportCsv({
-              filename: '导出数据',
-              original:true,
-              noHeader:false,
+      exportData() {
 
-            });
+            /*this.$http.post(``,{
+              id:this.$route.query.id
+            }).then(response=>{
+              console.log(response)
+            })*/
       },
       //提交搜索
       handleSubmit() {
@@ -167,7 +172,7 @@
           currentPage: 1,
           pageSize: 5
         }
-        this.$http.post(`http://192.168.31.13:8080/base/product/findAllProduct`, data).then(response => {
+        this.$http.post(`${this.$host}/base/product/findAllProduct`, data).then(response => {
           console.log(response)
           let res = response.data;
           this.listData = res.content;
@@ -184,7 +189,7 @@
         // };
         let params = customsParams || defaultParams;
         ///base/product/findAllProduct  查询所有产品
-        this.$http.post(`http://192.168.31.13:8080/base/product/findAllProduct`, data).then(response => {
+        this.$http.post(`${this.$host}/base/product/findAllProduct`, data).then(response => {
           console.log(response.data)
           let res = response.data;
           this.listData = res.content;

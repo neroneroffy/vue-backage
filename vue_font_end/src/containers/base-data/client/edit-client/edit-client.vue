@@ -97,7 +97,7 @@
       mounted(){
         //三级联动
 
-        this.$http.get(`${this.api}/base/area/province`).then(response => {
+        this.$http.get(`${this.$host}/base/area/province`).then(response => {
           this.areaData = response.data;
           this.areaData.forEach(v=>{
             v.label = v.areaName;
@@ -107,7 +107,7 @@
           })
         });
         if(this.$route.query.id){
-          this.$http.get(`${this.api}/base/customer/updatePre`,{
+          this.$http.get(`${this.$host}/base/customer/updatePre`,{
             params:{ id:this.$route.query.id }
           }).then(response=>{
             let res = response.data;
@@ -129,7 +129,7 @@
         loadData (item, callback) {
           item.loading = true;
           console.log(item.value)
-          this.$http.get(`${this.api}/base/area/cityOrDistrict`,{
+          this.$http.get(`${this.$host}/base/area/cityOrDistrict`,{
             params:{parentId:item.value}
           }).then(response=>{
             let res = response.data;
@@ -166,22 +166,22 @@
         },
         submit(){
           console.log(this.editData);
-          /*          let url="/base/customer/add";
-                    if(this.$route.query.id){
-                      this.editData.id = this.$route.query.id;
-                      url="/base/customer/update";
-                    }
+          let url="/base/customer/add";
+          if(this.$route.query.id){
+            this.editData.id = this.$route.query.id;
+            url="/base/customer/update";
+          }
 
-                    this.$http.post(`${this.api}${url}`,this.editData).then(response=>{
-                      let res = response.data;
-                      console.log(response.data)
-                      if(!res.result){
-                        this.$Message.error('手机号已注册');
-                      }else{
-                       this.$Message.info('添加成功');
-                       this.$router.push('/baseData/client')
-                      }
-                    })*/
+          this.$http.post(`${this.$host}${url}`,this.editData).then(response=>{
+            let res = response.data;
+            console.log(response.data)
+            if(!res.result){
+              this.$Message.error('格式错误');
+            }else{
+             this.$Message.success('成功');
+             this.$router.push('/baseData/client')
+            }
+          })
 
         }
       }

@@ -148,7 +148,7 @@
       },
       mounted(){
 
-        this.$http.post(`${this.api}/sys/org/list`,{}).then(response=>{
+        this.$http.post(`${this.$host}/sys/org/list`,{}).then(response=>{
           let res = response.data;
           if(res.result){
             this.data = res.data
@@ -185,13 +185,13 @@
           this.$router.push({path:"/sys/organization/edit-organization",query:{id:params.row.id}})
         },
         remove(params){
-          this.$http.get(`${this.api}/sys/org/del`,{
+          this.$http.get(`${this.$host}/sys/org/del`,{
             params:{id:params.row.id}
           }).then(response=>{
             let res = response.data;
             if(res.result){
               this.$Message.success('删除成功!');
-              this.$http.post(`${this.api}/sys/org/list`,{}).then(response=>{
+              this.$http.post(`${this.$host}/sys/org/list`,{}).then(response=>{
                 let res = response.data;
                 if(res.result){
                   this.data = res.data
@@ -206,7 +206,7 @@
         },
         handleSearch(){
           if(this.searchContent.orgName === "" && this.searchContent.orgCode === ""){
-            this.$http.post(`${this.api}/sys/org/list`,{}).then(response=>{
+            this.$http.post(`${this.$host}/sys/org/list`,{}).then(response=>{
               let res = response.data;
 
               if(res.result){
@@ -218,7 +218,7 @@
             });
             return
           }
-          this.$http.post(`${this.api}/sys/org/list`,{...this.searchContent}).then(response=>{
+          this.$http.post(`${this.$host}/sys/org/list`,{...this.searchContent}).then(response=>{
             let res = response.data;
 
             if(res.result){

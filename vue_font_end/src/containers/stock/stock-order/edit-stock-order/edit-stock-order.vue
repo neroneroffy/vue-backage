@@ -399,7 +399,7 @@
                     borderRadius:"3px",
                     float:"left"
                   },
-                },this.selectedGood[params.index].goodsName?params.row.modelSize:"请先选择商品")
+                },this.selectedGood[params.index].goodsName?params.row.modelSize?params.row.modelSize:"暂无型号":"请先选择商品")
               }
             },
             {
@@ -676,21 +676,21 @@
     },
     mounted(){
       //调用供货商
-      console.log('调用供货商')
-      this.$http.post(`http://192.168.31.222:8080/base/supplier/findAll`).then(response=>{
+
+      this.$http.post(`${this.$host}/base/supplier/findAll`).then(response=>{
         if(response){
           let res = response.data;
           this.supplierList = res;
-          console.log(this.supplierList);
+
         }
       });
       //调用仓库接口
-      this.$http.get(`http://192.168.31.222:8080/base/warehouse/warehouseFindAll`).then(response=> {
+      this.$http.get(`${this.$host}/base/warehouse/warehouseFindAll`).then(response=> {
         let res = response.data;
         this.warehouse = res;
       });
       //单位接口
-      this.$http.get(`http://192.168.31.222:8080/base/units/findAll/`).then(response=>{
+      this.$http.get(`${this.$host}/base/units/findAll/`).then(response=>{
         let res = response.data;
         if(res){
           this.units = res;
@@ -712,13 +712,13 @@
       };
       //回显数据
       if(this.$route.query.id){
-        this.$http.get(`${this.api}/base/PurchaseOrder/updatePre`,{
+        this.$http.get(`${this.$host}/base/PurchaseOrder/updatePre`,{
           params:{ id:this.$route.query.id }
         }).then(response =>{
           let res = response.data;
           console.log(res);
           //转换时间戳
-/*          res.createTime = formatDate(parseInt(res.createTime))*/
+          res.createTime = formatDate(parseInt(res.createTime))
           this.baseData = res;
           this.data = res.purchaseOrderItemModel;
           this.selectedGood = [];
@@ -805,7 +805,7 @@
       closeRow(params){
         console.log(333);
 
-        this.$http.get(`${this.api}/base/PurchaseOrderItem/deletePurchaseOrderItem`,{params:{
+        this.$http.get(`${this.$host}/base/PurchaseOrderItem/deletePurchaseOrderItem`,{params:{
             id:params.row.id
           }}).then(response=>{
           let res = response.data;
@@ -833,7 +833,7 @@
             ...this.baseData,
           purchaseOrderItemModel:this.data
         };
-        let url = this.$route.query.id?`${this.api}/base/PurchaseOrder/updatePurchaseOrder`:`${this.api}/base/PurchaseOrder/addPurchaseOrder`
+        let url = this.$route.query.id?`${this.$host}/base/PurchaseOrder/updatePurchaseOrder`:`${this.$host}/base/PurchaseOrder/addPurchaseOrder`
         this.$http.post(url,{...submitData}).then(response=>{
           let res = response.data;
           if(res.result){

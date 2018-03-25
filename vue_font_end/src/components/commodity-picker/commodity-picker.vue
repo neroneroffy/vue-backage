@@ -92,10 +92,10 @@
           loading:true,
           currentPage:1,
           GOODS:{
-            url:`http://192.168.31.34:8080/base/product/findAllProduct`
+            url:`${this.$host}/base/product/findAllProduct`
           },
           GIFT:{
-            url:`http://192.168.31.34:8080/base/gift/findAllGift`
+            url:`${this.$host}/base/gift/findAllGift`
           },
           MATERIEL:{
             column:[
@@ -127,7 +127,7 @@
 
               }
             ],
-            url:`http://192.168.31.34:8080/base/materiel/findAllMateriel`
+            url:`${this.$host}/base/materiel/findAllMateriel`
           },
           typeColumn:[
             {

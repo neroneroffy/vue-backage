@@ -96,7 +96,7 @@
       },
       mounted(){
         console.log(this.$route.query.id)
-        this.$http.get(`http://192.168.31.34:8080/base/goodsApplyItem/findAllGoodsApplyItem`,{params:{id:this.$route.query.id}}).then(response=>{
+        this.$http.get(`${this.$host}/base/goodsApplyItem/findAllGoodsApplyItem`,{params:{id:this.$route.query.id}}).then(response=>{
           console.log(response)
           let res = response.data;
           if(res.result){

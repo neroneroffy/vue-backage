@@ -189,7 +189,7 @@
             pageSize:this.pageSize,
             ...this.searchContent
           };
-          this.$http.post(`${this.api}/sys/user/list`,{...searchData}).then(response=>{
+          this.$http.post(`${this.$host}/sys/user/list`,{...searchData}).then(response=>{
             let res = response.data;
             this.listData = res.content;
             this.total = data.totalElements;
@@ -212,7 +212,7 @@
             loading: true,
             onOk: () => {
               this.$store.dispatch('modalLoading');
-              this.$http.get(`${this.api}/sys/user/del`,{params:{id:id}}).then(response=>{
+              this.$http.get(`${this.$host}/sys/user/del`,{params:{id:id}}).then(response=>{
                 let res = response.data;
                 if(res.result){
                   this.currentPage = 1,
@@ -250,7 +250,7 @@
             pageSize : 30
           };
           let params = customsParams || defaultParams;
-          this.$http.post(`${this.api}/sys/user/list`,{...params}).then(response=>{
+          this.$http.post(`${this.$host}/sys/user/list`,{...params}).then(response=>{
             let res = response.data;
             if(res.totalElements.length!==0){
               this.listData = res.content;

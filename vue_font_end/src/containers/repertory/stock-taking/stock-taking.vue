@@ -44,18 +44,7 @@
         * */
         id:"",
         visible:false,
-        commodity:[
-          {
-             warehouseId:"21312",
-             goodsId:"21312",
-             unitsId:"12331",
-             total:"21312",
-             num:"12312",
-             inventoryNum:"12",
-             inventoryResult:"45",
-             inventoryType:"GOODS",
-          }
-        ],
+        commodity:[],
         commodityType:[
           {
             title: '仓库名称',
@@ -92,6 +81,10 @@
                     console.log(params)
                     params.row.inventoryNum = val;
                     params.row.inventoryResult=parseInt(params.row.inventoryNum)-parseInt(params.row.num);
+                    if(params.row.inventoryNum === ""){
+                      params.row.inventoryResult = 0
+                    }
+
                     this.commodity[params.index]=params.row;
                     console.log(this.commodity)
                   }
@@ -118,7 +111,7 @@
         console.log(response)
       })*/
        ///base/warehouse/warehouseFindAll查询仓库http://192.168.31.222:8080
-       this.$http.get("http://192.168.31.168:8080/base/warehouse/warehouseFindAll").then(response=>{
+       this.$http.get(`${this.$host}/base/warehouse/warehouseFindAll`).then(response=>{
           console.log(response)
           let res=response.data;
           this.cityList=this.cityList.concat(res);
@@ -127,7 +120,7 @@
         warehouseId:this.id,
         stockType:this.status
       }
-      this.$http.post("http://192.168.31.168:8080/base/stockInfo/search",params).then(response=>{
+      this.$http.post(`${this.$host}/base/stockInfo/search`,params).then(response=>{
 
         let res = response.data;
         if(res){
@@ -176,9 +169,11 @@
           }
         })
         console.log(params)
-        this.$http.post("http://192.168.31.168:8080/base/inventoryRecord/addInventoryRecord",params).then(response => {
-          console.log(response)
-          console.log('保存成功')
+        this.$http.post(`${this.$host}/base/inventoryRecord/addInventoryRecord`,params).then(response => {
+          if(response.data.result){
+            this.$Message.success(response.data.msg)
+          }
+
         })
       },
       tab(){
@@ -187,7 +182,7 @@
           stockType:this.status,
           warehouseId:this.id
         }
-        this.$http.post("http://192.168.31.168:8080/base/stockInfo/search",params).then(response=>{
+        this.$http.post(`${this.$host}/base/stockInfo/search`,params).then(response=>{
           console.log(response)
           let res = response.data;
           if(res){

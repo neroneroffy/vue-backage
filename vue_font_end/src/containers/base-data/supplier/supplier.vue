@@ -143,7 +143,7 @@
         handleSubmit() {
           console.log(this.searchContent);
 
-            this.$http.post(`${this.api}/base/supplier/findmobilePhone`,{...this.searchContent}).then(response=>{
+            this.$http.post(`${this.$host}/base/supplier/findmobilePhone`,{...this.searchContent}).then(response=>{
               let res = response.data;
               this.listData = res.supplierList;
             })
@@ -151,7 +151,7 @@
         //切换状态
         statusEdit(params){
           //更新供货商状态
-          this.$http.post(`${this.api}/supplier/update`,{id:params.row.id,status:params.row.status}).then(response=>{
+          this.$http.post(`${this.$host}/supplier/update`,{id:params.row.id,status:params.row.status}).then(response=>{
             let res = response.data;
             if(res.result){
               console.log(res);
@@ -173,7 +173,7 @@
             loading: true,
             onOk: () => {
               this.$store.dispatch('modalLoading');
-              this.$http.get(`${this.api}/base/supplier/delSupplier`,{params:{ id }}).then(response=>{
+              this.$http.get(`${this.$host}/base/supplier/delSupplier`,{params:{ id }}).then(response=>{
                 let res = response.data;
                 console.log(res);
                 if(res.result){
@@ -195,7 +195,7 @@
             pageSize : "10"
           };
           let params = customsParams || defaultParams;
-          this.$http.get(`${this.api}/base/supplier/supplierFindAll`,{params}).then(response=>{
+          this.$http.get(`${this.$host}/base/supplier/supplierFindAll`,{params}).then(response=>{
             if(response){
               let res = response.data;
               console.log(res);

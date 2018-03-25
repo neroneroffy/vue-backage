@@ -70,7 +70,7 @@
       },
       mounted(){
         if(this.$route.query.id){
-          this.$http.get(`${this.$api}/base/units/updatePre`,{
+          this.$http.get(`${this.$host}/base/units/updatePre`,{
             params:{
               id:this.$route.query.id
             }
@@ -133,7 +133,7 @@
             unitsType:this.editData.unitsType,
             id:this.$route.query.id
           };
-          this.$http.post(`${this.$api}/base/units/add`,{...submitData}).then(response=>{
+          this.$http.post(`${this.$host}/base/units/add`,{...submitData}).then(response=>{
             let res = response.data;
 
             if(res.result){

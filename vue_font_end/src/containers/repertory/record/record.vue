@@ -1,17 +1,21 @@
 <template>
   <!--盘点查询-->
   <div class="stock">
-    <Row type="flex" justify="end">
-      <Form  inline>
-        <DatePicker type="daterange" :value="time" @on-change="timey"></DatePicker>
-      </Form >
-      <Form>
-      <FormItem prop="id">
-        <Select @on-change="select" v-model="id" :value="id" style="width:200px;margin-left:30px" placeholder="请选择仓库">
-          <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.contacts }}</Option>
-        </Select>
-      </FormItem>
-      </Form >
+    <Row type="flex" justify="space-between">
+      <BastTitle title="盘点记录查询"/>
+      <div style="display: flex; justify-content: flex-end">
+        <Form  inline>
+          <DatePicker type="daterange" :value="time" @on-change="timey"></DatePicker>
+        </Form >
+        <Form>
+          <FormItem prop="id">
+            <Select @on-change="select" v-model="id" :value="id" style="width:200px;margin-left:30px" placeholder="请选择仓库">
+              <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.contacts }}</Option>
+            </Select>
+          </FormItem>
+        </Form >
+      </div>
+
     </Row>
     <Table :border="false" :columns="commodityType" :data="commodity"></Table>
     <div class="pagination">
@@ -22,12 +26,13 @@
 </template>
 
 <script>
+  import BastTitle from "@/components/base-title";
     export default {
         name: "record",
         data(){
           return{
             commodity:[],
-            time:[new Date(new Date().getTime() - 7 * 24 * 3600 * 1000).toLocaleDateString(),new Date().toLocaleDateString()],
+            time:[new Date(new Date().getTime() - 7 * 24 * 3600 * 1000).toLocaleDateString(),new Date(Number(new Date().getTime()) +  24 * 3600 * 1000)],
             id:"",
             cityList:[],
             pageSizeList: [5, 10, 20],
@@ -107,12 +112,15 @@
 
 
         }},
+      components:{
+        BastTitle
+      },
         mounted(){
           let date=new Date(new Date().getTime() - 7 * 24 * 3600 * 1000);
           this.time[0]=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
-          date=new Date();
+          date=new Date(Number(new Date().getTime()) +  24 * 3600 * 1000);
           this.time[1]=date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate();
-          this.$http.get("http://192.168.31.168:8080/base/warehouse/warehouseFindAll").then(response=>{
+          this.$http.get(`${this.$host}/base/warehouse/warehouseFindAll`).then(response=>{
             console.log(response)
             let res=response.data;
             this.cityList=res;
@@ -138,7 +146,7 @@
               warehouseId:this.id
             };
             let params = customsParams || defaultParams;
-            this.$http.post("http://192.168.31.168:8080/base/inventoryRecord/findAllInventoryRecord ",params).then( response =>{
+            this.$http.post(`${this.$host}/base/inventoryRecord/findAllInventoryRecord`,params).then( response =>{
               console.log(response);
               let res=response.data;
               this.commodity=res.pageList;

@@ -117,7 +117,7 @@
     },
     created(){
       //请求角色列表
-      this.$http.get(`${this.api}/sys/role/list`).then(response=>{
+      this.$http.get(`${this.$host}/sys/role/list`).then(response=>{
         let res = response.data;
         if(res.result){
           this.listData = res.data;
@@ -151,12 +151,12 @@
           loading: true,
           onOk: () => {
             this.$store.dispatch("modalLoading");
-            this.$http.get(`${this.api}/sys/role/del`,{
+            this.$http.get(`${this.$host}/sys/role/del`,{
               params:{id:params.row.id}
             }).then(response=>{
               let res = response.data;
 
-              this.$http.get(`${this.api}/sys/role/list`).then(response=>{
+              this.$http.get(`${this.$host}/sys/role/list`).then(response=>{
                 let res = response.data;
                 if(res.result){
                   this.$Modal.remove();

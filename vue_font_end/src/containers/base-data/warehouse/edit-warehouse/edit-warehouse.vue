@@ -68,7 +68,7 @@
       BastTitle
     },
     mounted(){
-      this.$http.get(`${this.api}/base/area/province`).then(response => {
+      this.$http.get(`${this.$host}/base/area/province`).then(response => {
         this.areaData = response.data;
         this.areaData.forEach(v=>{
           v.label = v.areaName;
@@ -78,7 +78,7 @@
         })
       });
       if(this.$route.query.id){
-        this.$http.get(`${this.api}/base/warehouse/updatePre`,{
+        this.$http.get(`${this.$host}/base/warehouse/updatePre`,{
           params:{ id:this.$route.query.id }
         }).then(response=>{
           let res = response.data;
@@ -92,7 +92,7 @@
     methods:{
       loadData (item, callback) {
         item.loading = true;
-        this.$http.get(`${this.api}/base/area/cityOrDistrict`,{
+        this.$http.get(`${this.$host}/base/area/cityOrDistrict`,{
           params:{parentId:item.value}
         }).then(response=>{
           let res = response.data;
@@ -134,7 +134,7 @@
           delete this.editData['addressList'];
           delete this.editData['address'];
         }
-        this.$http.post(`${this.api}${url}`,{...this.editData}).then(response=>{
+        this.$http.post(`${this.$host}${url}`,{...this.editData}).then(response=>{
           let res = response.data;
           console.log(res)
           if(res.result){

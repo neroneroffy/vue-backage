@@ -67,7 +67,7 @@
       },
       mounted(){
         //三级联动
-        this.$http.get(`${this.api}/base/area/province`).then(response => {
+        this.$http.get(`${this.$host}/base/area/province`).then(response => {
           this.areaData = response.data;
           this.areaData.forEach(v=>{
             v.label = v.areaName;
@@ -78,7 +78,7 @@
         });
 
         if(this.$route.query.id){
-          this.$http.get(`${this.api}/base/supplier/updatePre`,{
+          this.$http.get(`${this.$host}/base/supplier/updatePre`,{
             params:{ id:this.$route.query.id }
           }).then(response=>{
             let res = response.data;
@@ -99,7 +99,7 @@
         loadData (item, callback) {
           item.loading = true;
           console.log(item.value)
-          this.$http.get(`${this.api}/base/area/cityOrDistrict`,{
+          this.$http.get(`${this.$host}/base/area/cityOrDistrict`,{
             params:{parentId:item.value}
           }).then(response=>{
             let res = response.data;
@@ -133,11 +133,11 @@
         },
 
         submit(){
-          let url = `${this.api}/base/supplier/saveSupplier`;
+          let url = `${this.$host}/base/supplier/saveSupplier`;
           if(this.$route.query.id){
             delete this.editData.addressList;
             delete this.editData.address;
-            url = `${this.api}/base/supplier/updateSupplier`
+            url = `${this.$host}/base/supplier/updateSupplier`
           }
           this.$http.post(url,{...this.editData}).then(response=>{
             let res = response.data;
