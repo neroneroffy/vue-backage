@@ -218,7 +218,6 @@
     },
     created(){
       //刷新时候保持高亮
-
       this.user = JSON.parse(localStorage.getItem('user'));
       //验证token
       console.log('进入');

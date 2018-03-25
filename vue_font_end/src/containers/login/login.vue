@@ -79,9 +79,13 @@
                   sessionStorage.setItem('currentPath','/index');
                   this.loading = false;
                   this.$router.push('/index');//登陆成功后跳转到首页
+                  this.$Message.success(response.data.msg)
                   return
                 }
               }
+            }else{
+              this.$Message.error(response.data.msg)
+              this.loading = false;
             }
           })
         }

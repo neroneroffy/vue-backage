@@ -134,7 +134,7 @@
                     }
                   }
                 }, '查看'),
-                h('Button', {
+                /*h('Button', {
                     props: {
                       size: 'small'
                     },
@@ -149,7 +149,7 @@
                       }
                     }
                   },
-                  params.row.del?"禁用": '启用')
+                  params.row.del?"禁用": '启用')*/
               ]);
             }
           }
