@@ -8,8 +8,8 @@
           <FormItem prop="orderNo">
             <Input type="text" style="width: 200px" v-model="searchContent.orderNo"  placeholder="请输入单据编号"/>
           </FormItem>
-          <FormItem prop="customerId">
-            <Input type="text" style="width: 200px" v-model="searchContent.customerId" placeholder="请输入客户名称"/>
+          <FormItem prop="customerName">
+            <Input type="text" style="width: 200px" v-model="searchContent.customerName" placeholder="请输入客户名称"/>
           </FormItem>
           <FormItem prop="salesId">
             <Input type="text" style="width: 200px" v-model="searchContent.salesId"  placeholder="请输入销售人员名称"/>
@@ -57,16 +57,16 @@
             key: "orderNo",
 
           },
-          {
+/*          {
             title: "客户名称",
-            key: "customerId",
+            key: "customerName",
 
           },
           {
             title: "名称",
             key: "nickName",
 
-          },
+          },*/
           {
             title: "销售人员名称",
             key: "salesId",
@@ -82,18 +82,20 @@
             title: "发货时间",
             key: "sendTime",
           },
+/*
           {
             title: "收货信息",
             key: "address",
           },
+*/
           {
             title: "商品金额",
             key: "totalGoodsPrice",
           },
-          {
+/*          {
             title: "运费",
             key: "dispatchPrice",
-          },
+          },*/
           {
             title: "物流单号",
             key: "logisticCode",
@@ -130,7 +132,7 @@
         data: [
           {
             orderNo: "",
-            customerId: "",
+            customerName: "",
             salesId: "",
             status: "",
             sendTime: "",
@@ -174,7 +176,7 @@
         console.log(this.searchContent)
         let data = {
           orderNo: this.searchContent.orderNo,
-          customerId: this.searchContent.customerId,
+          customerName: this.searchContent.customerName,
           salesId: this.searchContent.salesId,
           logisticCode: this.searchContent.logisticCode,
           currentPage: 1,
@@ -192,7 +194,7 @@
       pagination(customsParams) {
         let defaultParams = {
           orderNo: this.searchContent.orderNo,
-          customerId: this.searchContent.customerId,
+          customerName: this.searchContent.customerName,
           salesId: this.searchContent.salesId,
           logisticCode: this.searchContent.logisticCode,
           currentPage: 1,
@@ -217,7 +219,7 @@
         this.currentPage = currentPageNum;
         let params = {
           orderNo: this.searchContent.orderNo,
-          customerId: this.searchContent.customerId,
+          customerName: this.searchContent.customerName,
           salesId: this.searchContent.salesId,
           logisticCode: this.searchContent.logisticCode,
           currentPage: this.currentPage,
@@ -231,7 +233,7 @@
         this.currentPage = 1;
         let params = {
           orderNo: this.searchContent.orderNo,
-          customerId: this.searchContent.customerId,
+          customerName: this.searchContent.customerName,
           salesId: this.searchContent.salesId,
           logisticCode: this.searchContent.logisticCode,
           currentPage: this.currentPage,

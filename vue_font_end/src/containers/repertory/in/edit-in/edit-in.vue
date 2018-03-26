@@ -55,6 +55,7 @@
       this.$http.get(`${this.$host}/base/inventoryInboundItem/find`,{params:{id:this.$route.query.id}}).then(response => {
 
         let res=response.data;
+        console.log(res);
         this.commodity=res;
       })
     },

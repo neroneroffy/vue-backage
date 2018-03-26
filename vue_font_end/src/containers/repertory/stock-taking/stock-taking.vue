@@ -171,8 +171,13 @@
             }
             params.push(obj)
           }
-        })
-        console.log(params)
+        });
+        if(params.length === 0){
+          this.$Message.error("盘点数量不能都为空")
+          return
+        }
+
+
         this.$http.post(`${this.$host}/base/inventoryRecord/addInventoryRecord`,params).then(response => {
           if(response.data.result){
             this.$Message.success(response.data.msg)
