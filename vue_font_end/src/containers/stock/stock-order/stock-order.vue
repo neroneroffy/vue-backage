@@ -54,8 +54,8 @@
     name: "stock-order",
     data(){
       return{
-        pageSizeList:[5,50,100],
-        pageSize:5,
+        pageSizeList:[30,50,100],
+        pageSize:30,
         total:0,
         data:[],
         api:"http://192.168.31.168:8080",
@@ -165,7 +165,24 @@
                     },
                     on: {
                       click: () => {
+                        console.log(params.row.id);
+                        this.$http.get(`${this.$host}/base/PurchaseOrder/updateAndItStatus`,{
+                          params:{
+                            id:params.row.id
+                          }
+                        }).then(response=>{
+                          let res = response.data;
+                          if(res.result){
+                            this.$Message.success(res.msg);
+                            let params = {
+                              ...this.searchContent,
+                              pageCount: this.pageCount,
+                              pageSize: this.pageSize
+                            };
+                            this.pagination(params)
+                          }
 
+                        })
                       }
                     }
                   }, '审核')
@@ -214,20 +231,7 @@
                     }
                   }
                 }, '编辑'),
-                h('Button', {
-                    props: {
-                      type: 'default',
-                      size: 'small'
-                    },
-                    style: {
-                      marginRight: '5px'
-                    },
-                    on: {
-                      click: () => {
-                        console.log(params.row.id);
-                      }
-                    }
-                  }, '审核')
+
               ])
 
                 ;
@@ -384,7 +388,7 @@
           status:"",
           auditStatus:"",
           pageCount:1,
-          pageSize:5,
+          pageSize:30,
           purchaseType:this.tab
         };
         let params = customsParams || defaultParams;

@@ -55,6 +55,7 @@
       this.$http.get(`${this.$host}/base/inventoryInboundItem/find`,{params:{id:this.$route.query.id}}).then(response => {
 
         let res=response.data;
+        console.log(res);
         this.commodity=res;
       })
     },
@@ -66,7 +67,7 @@
           content: '<p>请确定信息正确</p>',
           loading: true,
           onOk: () => {
-            this.$http.get(`${this.$host}/base/inventoryInboundItem/inBound`,{params:{id:this.$route.query.id}}).then(response => {
+            this.$http.get(`${this.$host}/base/inventoryInboundItem/Inbound`,{params:{id:this.$route.query.id}}).then(response => {
               console.log(response);
               let res=response.data;
               this.$Modal.remove();

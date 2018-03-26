@@ -59,7 +59,7 @@
                   </MenuItem>
                 </router-link>
               </Submenu>-->
-            <!--<Submenu v-for="v in subMenu" :name="v.uri" :key ="v.uri">
+            <Submenu v-for="v in subMenu" :name="v.uri" :key ="v.uri">
                 <template slot="title">
                   <Icon :type="v.icon"></Icon>
                   {{v.menuName}}
@@ -69,7 +69,7 @@
                     {{i.menuName}}
                   </MenuItem>
                 </router-link>
-              </Submenu>-->
+              </Submenu>
           </Menu>
         </Sider>
         <Layout :style="{padding: '24px 24px'}">
