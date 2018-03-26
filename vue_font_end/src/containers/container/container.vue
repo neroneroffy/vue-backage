@@ -31,11 +31,7 @@
                   {{k.menuName}}
                 </MenuItem>
               </router-link>
-              <router-link to="/sys/organization" key="/sys/organization" >
-                <MenuItem name="/sys/organization"  @click.native="storePath('/sys/organization')">
-                  组织管理
-                </MenuItem>
-              </router-link>
+
             </Submenu>
 <!--            <Submenu name="/dataAnalyze">
                 <template slot="title">
@@ -63,7 +59,7 @@
                   </MenuItem>
                 </router-link>
               </Submenu>-->
-            <Submenu v-for="v in subMenu" :name="v.uri" :key ="v.uri">
+            <!--<Submenu v-for="v in subMenu" :name="v.uri" :key ="v.uri">
                 <template slot="title">
                   <Icon :type="v.icon"></Icon>
                   {{v.menuName}}
@@ -73,7 +69,7 @@
                     {{i.menuName}}
                   </MenuItem>
                 </router-link>
-              </Submenu>
+              </Submenu>-->
           </Menu>
         </Sider>
         <Layout :style="{padding: '24px 24px'}">
@@ -217,11 +213,19 @@
       }
     },
     created(){
-      //刷新时候保持高亮
       this.user = JSON.parse(localStorage.getItem('user'));
-      //验证token
-      console.log('进入');
+/*
+      console.log("用户进入主页面")
       let xAuthToken = localStorage.getItem('xAuthToken');
+      let user = JSON.parse(localStorage.getItem('user'));
+      if(!xAuthToken || !user){
+        console.log("用户不存在")
+        this.$router.push('/login')
+        return
+      }
+      this.user = user;
+      console.log(this.user);
+      //验证token
       console.log(xAuthToken);
       if(!xAuthToken){
         this.$router.push('/login');
@@ -246,6 +250,7 @@
           }
         })
       };
+*/
     },
     mounted(){
       //

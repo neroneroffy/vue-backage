@@ -5,6 +5,9 @@
       <FormItem label="账户" prop="id">
         <Input v-model="editData.userName" :disabled="isChecked" placeholder="用户账户" />
       </FormItem>
+      <FormItem label="密码" prop="id">
+        <Input v-model="editData.password" :disabled="isChecked" placeholder="用户密码" />
+      </FormItem>
       <FormItem label="昵称" prop="account">
         <Input v-model="editData.nickName" :disabled="isChecked" placeholder="用户昵称"/>
       </FormItem>
@@ -61,7 +64,8 @@
               nickName:"",
               roleId:"",
               mobile:"",
-              thumbnail:""
+              thumbnail:"",
+              password:""
             },
             checkMember:false,
             editRoleList: [],

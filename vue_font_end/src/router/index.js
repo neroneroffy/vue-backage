@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router';
-
+import authRoute from '@/containers/auth'
 import login from '@/containers/login/login'
 import container from '@/containers/container/container'
 //资源管理
@@ -80,6 +80,11 @@ Vue.use(Router);
 const router = new Router({
 
   routes: [
+    {
+      path:"/authRoute",
+      name:"authRoute",
+      component:authRoute
+    },
     {
       path:"/login",
       name:"login",

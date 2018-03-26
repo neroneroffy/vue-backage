@@ -19,7 +19,7 @@ Vue.prototype.$http = axios;
 
 //Vue.prototype.$api = 'http://192.168.31.168:8080';
 
-Vue.prototype.$host = 'http://192.168.31.34:8080';
+Vue.prototype.$host = 'http://jxcb.baobaofarm.com';
 
 Vue.config.productionTip = false;
 
