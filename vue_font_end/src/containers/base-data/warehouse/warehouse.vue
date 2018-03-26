@@ -71,14 +71,17 @@
             title: '座机',
             key: 'telephone',
           },
+/*
           {
             title: '微信',
             key: 'wechat',
           },
+*/
           {
             title: '仓库面积',
             key: 'acreage',
           },
+/*
           {
             title: '仓库地址',
             key: 'address',
@@ -87,15 +90,7 @@
             title: '负责人',
             key: 'contacts',
           },
-          {
-            title: '电话',
-            key: 'mobilePhone',
-          },
-          {
-            title: '座机',
-            key: 'telephone',
-          },
-
+*/
           {
             title: '操作',
             key: 'action',

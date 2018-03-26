@@ -12,7 +12,7 @@
         <Form>
           <FormItem prop="id">
             <Select v-model="id" :value="id" style="width:200px;margin-left:30px" placeholder="请选择仓库">
-              <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.contacts }}</Option>
+              <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.warehouseName }}</Option>
             </Select>
           </FormItem>
         </Form >

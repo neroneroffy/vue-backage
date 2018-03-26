@@ -5,7 +5,7 @@
 
         <FormItem prop="id">
           <Select v-model="id" :value="id" @on-change="tab" style="width:200px" placeholder="所有">
-            <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.contacts }}</Option>
+            <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.warehouseName }}</Option>
           </Select>
         </FormItem>
       </Form>
@@ -101,7 +101,7 @@
         cityList:[
           {
             id:"",
-            contacts:"所有"
+            warehouseName:"所有"
           }
         ]
       }
@@ -151,6 +151,10 @@
              inventoryType:"GOODS",
           }
          * */
+        if(this.id === ""){
+          this.$Message.error("请选择仓库")
+          return
+        }
         console.log(this.commodity)
         let params=[];
         this.commodity.forEach(item=>{

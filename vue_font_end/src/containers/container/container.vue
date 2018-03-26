@@ -2,7 +2,7 @@
   <div class="layout">
     <Layout>
       <Header>
-        <div class="layout-logo"></div>
+        <div class="layout-logo">爸爸的选择供应链</div>
         <div class="user" v-if="user">
           <div class="avatar">
             <Avatar icon="person"  size="large" />
@@ -366,14 +366,12 @@
 
   }
   .layout-logo{
-    width: 100px;
-    height: 30px;
-    background: #5b6270;
-    border-radius: 3px;
+    color #eaeaea;
+    font-size 20px;
+    letter-spacing 2px;
+    font-weight bold
     float: left;
-    position: relative;
-    top: 15px;
-    left: 0px;
+
   }
   .user{
     float: right;

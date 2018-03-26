@@ -65,50 +65,55 @@
           {
             title: '采购单编号',
             key: 'orderNo',
-            width:"180"
           },
-          {
+/*          {
             title: '供货商',
             key: 'supplierName',
           },
           {
             title: '采购员',
             key: 'nickName',
-          },
+          },*/
           {
-            title: '采购总价',
+            title: '总金额',
             key: 'totalPurchasePrice',
           },
+/*
           {
             title: '采购单含税总价',
             key: 'totalTaxPrice',
             width:"150"
           },
+*/
+/*
           {
             title: '折扣率',
             key: 'discountRate',
             width:"90"
           },
+*/
+/*
           {
             title: '优惠金额',
             key: 'discountAmount'
           },
+*/
           {
-            title: '实际采购总金额',
+            title: '实际总金额',
             key: 'realTotalPrice',
-            width:"150"
+
           },
           {
             title: '交货日期',
             key: 'receiveTime',
-            width:150
+
           },
           {
-            title: '采购单状态',
+            title: '状态',
             key: 'status',
           },
           {
-            title: '采购单审核状态',
+            title: '审核状态',
             key: 'auditStatus',
           },
           {

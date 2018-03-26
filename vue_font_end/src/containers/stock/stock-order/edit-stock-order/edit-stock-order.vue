@@ -55,6 +55,7 @@
             {
               title:"新增",
               key:"add",
+              width:100,
               render:(h,params)=>{
                 return h('div', [
                   h('Button',{
@@ -94,7 +95,7 @@
               }
             },
             {
-              title:"货物名称",
+              title:"名称",
               key:"goodsName",
               render:(h,params)=>{
                 return h("div",{
@@ -120,6 +121,7 @@
             {
               title:"仓库",
               key:"warehouseId",
+              width:250,
               render:(h,params)=>{
                 return h('Select',{
                   props:{
@@ -170,7 +172,7 @@
             {
               title:"采购单价",
               key:"purchasePrice",
-              width:120,
+
               render:(h,params)=>{
                 return h('Input',{
                   props:{
@@ -186,7 +188,7 @@
                 })
               }
             },
-            {
+/*            {
               title:"采购含税单价",
               key:"taxPrice",
               width:120,
@@ -204,8 +206,8 @@
                   }
                 })
               }
-            },
-            {
+            },*/
+            /*{
               title:"折扣率",
               key:"discountRate",
               render:(h,params)=>{
@@ -223,8 +225,8 @@
                   }
                 })
               }
-            },
-            {
+            },*/
+            /*{
               title:"优惠金额",
               key:"discountAmount",
               render:(h,params)=>{
@@ -241,7 +243,7 @@
                   }
                 })
               }
-            },
+            },*/
             {
               title:"采购数量",
               key:"num",
@@ -280,7 +282,7 @@
                 })
               }
             },
-            {
+/*            {
               title:"采购单含税总价",
               key:"totalTaxPrice",
               width:120,
@@ -298,7 +300,7 @@
                   }
                 })
               }
-            },
+            },*/
             {
               title:"备注",
               key:"mark",
@@ -324,6 +326,7 @@
             {
               title:"新增",
               key:"add",
+              width:100,
               render:(h,params)=>{
                 return h('div', [
                   h('Button',{
@@ -363,7 +366,7 @@
               }
             },
             {
-              title:"货物名称",
+              title:"名称",
               key:"goodsName",
               render:(h,params)=>{
                 return h("div",{
@@ -388,8 +391,9 @@
               }
             },
             {
-              title:"货物型号",
+              title:"型号",
               key:"modelSize",
+              width:100,
               render:(h,params)=>{
                 return h("div",{
                   style:{
@@ -399,11 +403,12 @@
                     borderRadius:"3px",
                     float:"left"
                   },
-                },this.selectedGood[params.index].goodsName?params.row.modelSize?params.row.modelSize:"暂无型号":"请先选择商品")
+                },this.selectedGood[params.index].goodsName?params.row.modelSize?params.row.modelSize:"暂无型号":"型号")
               }
             },
             {
               title:"仓库",
+              width:250,
               key:"warehouseId",
               render:(h,params)=>{
 
@@ -472,7 +477,7 @@
                 })
               }
             },
-            {
+            /*{
               title:"采购含税单价",
               key:"taxPrice",
               width:120,
@@ -490,8 +495,8 @@
                   }
                 })
               }
-            },
-            {
+            },*/
+            /*{
               title:"折扣率",
               key:"discountRate",
               render:(h,params)=>{
@@ -509,8 +514,8 @@
                   }
                 })
               }
-            },
-            {
+            },*/
+            /*{
               title:"优惠金额",
               key:"discountAmount",
               render:(h,params)=>{
@@ -527,7 +532,7 @@
                   }
                 })
               }
-            },
+            },*/
             {
               title:"采购数量",
               key:"num",
@@ -566,10 +571,10 @@
                 })
               }
             },
-            {
+/*            {
               title:"采购单含税总价",
               key:"totalTaxPrice",
-              width:120,
+
               render:(h,params)=>{
                 return h('Input',{
                   props:{
@@ -584,11 +589,11 @@
                   }
                 })
               }
-            },
+            },*/
             {
               title:"备注",
               key:"mark",
-              width:120,
+
               render:(h,params)=>{
                 return h('Input',{
                   props:{
@@ -834,17 +839,36 @@
             ...this.baseData,
           purchaseOrderItemModel:this.data
         };
-        let url = this.$route.query.id?`${this.$host}/base/PurchaseOrder/updatePurchaseOrder`:`${this.$host}/base/PurchaseOrder/addPurchaseOrder`
-        this.$http.post(url,{...submitData}).then(response=>{
-          let res = response.data;
-          if(res.result){
-            this.$Message.success('成功');
-            this.$router.push('/stock/stock-order')
-          }else{
-            this.$Message.error(res.msg);
-          }
 
-        })
+        for(let i = 0;i<this.data.length;i++){
+          if(this.data[i].goodsId === ""){
+            this.$Message.error("请选择货物")
+            return
+          }
+          if(this.data[i].num === "") {
+            this.$Message.error("请填写数量")
+            return
+          }
+        }
+
+
+/*          if(v.num === ""){
+            this.$Message.error("请填写数量")
+            return
+          }*/
+
+
+                let url = this.$route.query.id?`${this.$host}/base/PurchaseOrder/updatePurchaseOrder`:`${this.$host}/base/PurchaseOrder/addPurchaseOrder`
+                this.$http.post(url,{...submitData}).then(response=>{
+                  let res = response.data;
+                  if(res.result){
+                    this.$Message.success('成功');
+                    this.$router.push('/stock/stock-order')
+                  }else{
+                    this.$Message.error(res.msg);
+                  }
+
+                })
 
       },
       submit(){
