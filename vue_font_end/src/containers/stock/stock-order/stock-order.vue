@@ -126,7 +126,7 @@
             align: 'center',
             width:180,
             render: (h, params) => {
-              return h('div', [
+              return this.user.roleCode === "finance"? h('div', [
                 h('Button', {
                   props: {
                     type: 'primary',
@@ -156,19 +156,19 @@
                   }
                 }, '编辑'),
                 h('Button', {
-                  props: {
-                    type: 'default',
-                    size: 'small'
-                  },
-                  style: {
-                    marginRight: '5px'
-                  },
-                  on: {
-                    click: () => {
-                      
+                    props: {
+                      type: 'default',
+                      size: 'small'
+                    },
+                    style: {
+                      marginRight: '5px'
+                    },
+                    on: {
+                      click: () => {
+
+                      }
                     }
-                  }
-                }, '审核'),
+                  }, '审核')
                 /*h('Button', {
                   props: {
                     type: 'error',
@@ -183,7 +183,54 @@
                     }
                   }
                 }, '删除')*/
-              ]);
+              ])
+                :
+                h('div', [
+                h('Button', {
+                  props: {
+                    type: 'primary',
+                    size: 'small'
+                  },
+                  style: {
+                    marginRight: '5px'
+                  },
+                  on: {
+                    click: () => {
+                      this.show(params)
+                    }
+                  }
+                }, '查看'),
+                h('Button', {
+                  props: {
+                    type: 'warning',
+                    size: 'small'
+                  },
+                  style: {
+                    marginRight: '5px'
+                  },
+                  on: {
+                    click: () => {
+                      this.edit(params)
+                    }
+                  }
+                }, '编辑'),
+                h('Button', {
+                    props: {
+                      type: 'default',
+                      size: 'small'
+                    },
+                    style: {
+                      marginRight: '5px'
+                    },
+                    on: {
+                      click: () => {
+                        console.log(params.row.id);
+                      }
+                    }
+                  }, '审核')
+              ])
+
+                ;
             }
           }
         ],
@@ -232,10 +279,14 @@
             name: '已审核'
           },
         ],
-        type:"GOODS"
+        type:"GOODS",
+        user:""
       }
     },
-
+    create(){
+      this.user = JSON.parse(localStorage.getItem('user'));
+      this.user.roleCode = "finance"
+    },
     mounted(){
       //初始请求分页
       this.pagination()
