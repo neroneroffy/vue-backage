@@ -155,6 +155,20 @@
                     }
                   }
                 }, '编辑'),
+                h('Button', {
+                  props: {
+                    type: 'default',
+                    size: 'small'
+                  },
+                  style: {
+                    marginRight: '5px'
+                  },
+                  on: {
+                    click: () => {
+                      
+                    }
+                  }
+                }, '审核'),
                 /*h('Button', {
                   props: {
                     type: 'error',
