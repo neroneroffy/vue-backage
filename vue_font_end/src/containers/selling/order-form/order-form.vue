@@ -12,7 +12,7 @@
             <Input type="text" style="width: 200px" v-model="searchContent.customerName" placeholder="请输入客户名称"/>
           </FormItem>
           <FormItem prop="salesId">
-            <Input type="text" style="width: 200px" v-model="searchContent.salesId"  placeholder="请输入销售人员名称"/>
+            <Input type="text" style="width: 200px" v-model="searchContent.nickName"  placeholder="请输入销售人员名称"/>
           </FormItem>
           <FormItem prop="logisticCode">
             <Input type="text" style="width: 200px" v-model="searchContent.logisticCode" placeholder="请输入物流单号"/>
@@ -57,11 +57,12 @@
             key: "orderNo",
 
           },
-/*          {
+          {
             title: "客户名称",
             key: "customerName",
 
           },
+/*
           {
             title: "名称",
             key: "nickName",
@@ -69,7 +70,7 @@
           },*/
           {
             title: "销售人员名称",
-            key: "salesId",
+            key: "nickName",
           },
           {
             title: "订单状态",
@@ -177,7 +178,7 @@
         let data = {
           orderNo: this.searchContent.orderNo,
           customerName: this.searchContent.customerName,
-          salesId: this.searchContent.salesId,
+          nickName: this.searchContent.nickName,
           logisticCode: this.searchContent.logisticCode,
           currentPage: 1,
           pageSize: 30
@@ -186,6 +187,10 @@
         this.$http.post(`${this.$host}/base/order/find`,{...data}).then(response => {
           console.log(response)
           let res = response.data;
+          res.pageList.forEach(v=>{
+            v.sendTime = convertTime(v.sendTime)
+          })
+
           this.data = res.pageList;
           this.total = res.count;
         })
@@ -195,7 +200,7 @@
         let defaultParams = {
           orderNo: this.searchContent.orderNo,
           customerName: this.searchContent.customerName,
-          salesId: this.searchContent.salesId,
+          nickName: this.searchContent.nickName,
           logisticCode: this.searchContent.logisticCode,
           currentPage: 1,
           pageSize: 30
@@ -205,8 +210,7 @@
         this.$http.post(`${this.$host}/base/order/find`, params).then(response => {
           let res = response.data;
           res.pageList.forEach(v=>{
-            v.sendTime = convertTime(parseInt(v.sendTime))
-
+            v.sendTime = convertTime(v.sendTime)
           })
 
           this.data = res.pageList;
@@ -220,7 +224,7 @@
         let params = {
           orderNo: this.searchContent.orderNo,
           customerName: this.searchContent.customerName,
-          salesId: this.searchContent.salesId,
+          nickName: this.searchContent.nickName,
           logisticCode: this.searchContent.logisticCode,
           currentPage: this.currentPage,
           pageSize: this.pageSize
@@ -234,7 +238,7 @@
         let params = {
           orderNo: this.searchContent.orderNo,
           customerName: this.searchContent.customerName,
-          salesId: this.searchContent.salesId,
+          nickName: this.searchContent.nickName,
           logisticCode: this.searchContent.logisticCode,
           currentPage: this.currentPage,
           pageSize: this.pageSize

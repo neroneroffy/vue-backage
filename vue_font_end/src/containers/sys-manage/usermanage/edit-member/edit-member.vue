@@ -152,6 +152,7 @@
             this.$Message.error("请检查信息是否全部填写");
             return
           }
+
           this.$http.post(`${this.$host}/sys/user/add`,{...this.editData}).then(response=>{
             let res = response.data;
             if(res.result){
