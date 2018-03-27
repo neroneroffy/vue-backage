@@ -68,7 +68,7 @@
             onOk: () => {
               this.$http.get(`${this.$host}/base/inventoryOutboundItem/outBound`,{params:{id:this.$route.query.id}}).then(response => {
                 let res=response.data;
-                if(!res){
+                if(res){
                   this.$Modal.remove();
                   this.$Message.success("出库成功");
                   this.$router.push(`/repertory/out`)

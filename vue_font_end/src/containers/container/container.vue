@@ -205,7 +205,7 @@
               {
                 menuName:"入库单管理",
                 uri:"/stock/stock-in-order"
-              },
+              }
             ]
           }
         ],

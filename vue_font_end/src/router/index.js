@@ -75,11 +75,24 @@ import editIn from '@/containers/repertory/in/edit-in/edit-in'//入库查询
 import Out from '@/containers/repertory/out/out'//出库
 import editOut from '@/containers/repertory/out/edit-out/edit-out'//出库查询
 
+import wordbook from '@/containers/sys-manage/wordbook/wordbook'//字典管理
+import editWordbook from '@/containers/sys-manage/wordbook/edit-wordbook/edit-wordbook'
+
 Vue.use(Router);
 
 const router = new Router({
 
   routes: [
+    {
+      path:"/wordbook",
+      name:"wordbook",
+      component:wordbook
+    },
+    {
+      path:"/editWordbook",
+      name:"wordbook",
+      component:editWordbook
+    },
     {
       path:"/authRoute",
       name:"authRoute",

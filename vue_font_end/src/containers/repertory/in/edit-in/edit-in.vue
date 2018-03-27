@@ -71,7 +71,6 @@
               let res=response.data;
               this.$Modal.remove();
               this.$Message.success(res.msg);
-
               console.log(res);
               this.$router.push('/repertory/in')
             })
