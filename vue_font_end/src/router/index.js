@@ -342,7 +342,7 @@ const router = new Router({
 
         },
         {
-          path: '/selling/order-form/edit-order-form/edit-order-form',
+          path: '/selling/order-form/edit-order-form',
           name:'edit-order-form',
           component:editOrderForm
 

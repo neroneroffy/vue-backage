@@ -5,7 +5,7 @@
         <div class="layout-logo">爸爸的选择供应链</div>
         <div class="user" v-if="user">
           <div class="avatar">
-            <Avatar icon="person"  size="large" />
+            <Avatar icon="person"  size="large" :src="user.thumbnail"/>
           </div>
           <div class="name">{{user.nickName}} <span>({{user.roleName}})</span></div>
           <div class="logout" @click="logout">退出</div>
@@ -214,6 +214,7 @@
     },
     created(){
       this.user = JSON.parse(localStorage.getItem('user'));
+
 /*
       console.log("用户进入主页面")
       let xAuthToken = localStorage.getItem('xAuthToken');

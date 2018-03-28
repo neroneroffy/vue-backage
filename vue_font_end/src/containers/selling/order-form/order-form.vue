@@ -170,7 +170,7 @@
       },
       //查看
       show(params){
-        this.$router.push({path:'/selling/order-form/edit-order-form/edit-order-form',query:{id:params.row.id}})
+        this.$router.push({path:'/selling/order-form/edit-order-form/',query:{id:params.row.id}})
       },
       //提交搜索
       handleSubmit() {

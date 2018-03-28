@@ -54,8 +54,8 @@
     name: "stock-order",
     data(){
       return{
-        pageSizeList:[5,50,100],
-        pageSize:5,
+        pageSizeList:[30,50,100],
+        pageSize:30,
         total:0,
         data:[],
         api:"http://192.168.31.168:8080",
@@ -126,7 +126,7 @@
             align: 'center',
             width:180,
             render: (h, params) => {
-              return h('div', [
+              return this.user.roleCode === "finance"? h('div', [
                 h('Button', {
                   props: {
                     type: 'primary',
@@ -156,8 +156,43 @@
                   }
                 }, '编辑'),
                 h('Button', {
+                    props: {
+                      type: 'default',
+                      size: 'small'
+                    },
+                    style: {
+                      marginRight: '5px'
+                    },
+                    on: {
+                      click: () => {
+                        console.log(params.row.id);
+                        this.$http.get(`${this.$host}/base/PurchaseOrder/updateAndItStatus`,{
+                          params:{
+                            id:params.row.id
+                          }
+                        }).then(response=>{
+                          let res = response.data;
+                          if(res.result){
+                            this.$Message.success(res.msg);
+                            let params = {
+                              ...this.searchContent,
+                              pageCount: this.pageCount,
+                              pageSize: this.pageSize
+                            };
+                            this.pagination(params)
+                          }
+
+                        })
+                      }
+                    }
+                  }, '审核')
+
+              ])
+                :
+                h('div', [
+                h('Button', {
                   props: {
-                    type: 'default',
+                    type: 'primary',
                     size: 'small'
                   },
                   style: {
@@ -165,13 +200,13 @@
                   },
                   on: {
                     click: () => {
-                      
+                      this.show(params)
                     }
                   }
-                }, '审核'),
-                /*h('Button', {
+                }, '查看'),
+                h('Button', {
                   props: {
-                    type: 'error',
+                    type: 'warning',
                     size: 'small'
                   },
                   style: {
@@ -179,10 +214,11 @@
                   },
                   on: {
                     click: () => {
-                      this.remove(params)
+                      this.edit(params)
                     }
                   }
-                }, '删除')*/
+                }, '编辑'),
+
               ]);
             }
           }
@@ -232,10 +268,14 @@
             name: '已审核'
           },
         ],
-        type:"GOODS"
+        type:"GOODS",
+        user:""
       }
     },
-
+    create(){
+      this.user = JSON.parse(localStorage.getItem('user'));
+      this.user.roleCode = "finance"
+    },
     mounted(){
       //初始请求分页
       this.pagination()
@@ -333,7 +373,7 @@
           status:"",
           auditStatus:"",
           pageCount:1,
-          pageSize:5,
+          pageSize:30,
           purchaseType:this.tab
         };
         let params = customsParams || defaultParams;

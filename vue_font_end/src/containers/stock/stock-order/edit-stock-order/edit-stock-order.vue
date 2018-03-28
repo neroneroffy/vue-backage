@@ -115,7 +115,7 @@
                       this.goodsPicker = true
                     },
                   }
-                },this.selectedGood[params.index].goodsName?this.selectedGood[params.index].goodsName:"请选择商品")
+                },this.selectedGood[params.index].goodsName?this.selectedGood[params.index].goodsName:"请选择货物")
               }
             },
             {
@@ -387,7 +387,7 @@
                       this.goodsPicker = true
                     },
                   }
-                },this.selectedGood[params.index].goodsName?this.selectedGood[params.index].goodsName:"请选择商品")
+                },this.selectedGood[params.index].goodsName?this.selectedGood[params.index].goodsName:"请选择货物")
               }
             },
             {

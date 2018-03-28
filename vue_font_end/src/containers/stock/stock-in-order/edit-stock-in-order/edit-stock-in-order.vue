@@ -715,7 +715,7 @@
               this.$router.push(`/stock/stock-in-order`)
               return
             }
-            this.$Message.success('成功');
+            this.$Message.info(res.msg);
             this.$router.push(`/stock/stock-in-order`)
           }else{
             this.$Message.error(res.msg);
