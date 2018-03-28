@@ -70,10 +70,11 @@
             this.$http.get(`${this.$host}/base/inventoryInboundItem/Inbound`,{params:{id:this.$route.query.id}}).then(response => {
               console.log(response);
               let res=response.data;
-              this.$Modal.remove();
-              this.$Message.success(res.msg);
-              console.log(res);
-              this.$router.push('/repertory/in')
+              if(res){
+                this.$Modal.remove();
+                this.$Message.success("入库成功");
+                this.$router.push(`/repertory/in`)
+              }
             })
           }
         });

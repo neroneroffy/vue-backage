@@ -1,7 +1,7 @@
 <template>
   <Modal
     :value="showPicker"
-    title="选择商品"
+    title="选择货品"
     width="630"
     @on-ok="selectDone"
     @on-cancel="cancel">

@@ -35,7 +35,8 @@
           "dictValue":"",
           "dictType":"",
           "dictName":""
-        }
+        },
+        api:"http://192.168.31.13:8080",
       }},
     components:{
       BastTitle
@@ -48,11 +49,13 @@
         let url="/base/dict/add";
         console.log(this.editData)
         //${this.$host}
-        this.$http.post(`http://192.168.31.13:8080${url}`,this.editData).then(response=>{
+        this.$http.post(`${this.$host}${url}`,this.editData).then(response=>{
           console.log(response);
           let res = response.data;
+          console.log(res);
           if(res.result){
-            this.$router.push('/wordbook')
+            this.$Message.success(res.msg);
+            this.$router.push('/sys/dict')
           }else{
             this.$Message.info(res.msg);
           }

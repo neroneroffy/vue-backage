@@ -73,7 +73,7 @@
                       on: {
                         click: () => {
                           console.log(params)
-                          this.$router.push({path:'/repertory/record/edit-record',query:{id:params.row.id}})
+                          this.$router.push({path:'/repertory/record/edit-record',query:{id:params.row.id,}})
                         }
                       }
                     },'查看详情'),
@@ -87,7 +87,7 @@
                       },
                       on: {
                         click: () => {
-                          this.$router.push({path:'/repertory/in/edit-in',query:{id:params.row.inventoryNo}})
+                          this.$router.push({path:'/repertory/in/edit-in',query:{id:params.row.inventoryNo,ischecked:true}})
                         }
                       }
                     }, '盘盈'),
@@ -101,7 +101,7 @@
                       },
                       on: {
                         click: () => {
-                          this.$router.push({path:'/repertory/out/edit-out',query:{id:params.row.inventoryNo}})
+                          this.$router.push({path:'/repertory/out/edit-out',query:{id:params.row.inventoryNo,ischecked:true}})
                         }
                       }
                     }, '盘亏')

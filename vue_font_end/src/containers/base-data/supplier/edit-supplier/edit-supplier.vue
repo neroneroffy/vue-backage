@@ -143,11 +143,13 @@
             let res = response.data;
             console.log(res);
             if(res.result){
-              this.$Message.info('修改成功');
+              this.$Message.success(res.msg);
               this.$router.push('/baseData/supplier')
+            }else{
+              this.$Message.error(res.msg);
             }
           });
-          console.log(this.editData)
+
         }
       }
     }

@@ -692,6 +692,7 @@
       //调用仓库接口
       this.$http.get(`${this.$host}/base/warehouse/warehouseFindAll`).then(response=> {
         let res = response.data;
+
           this.warehouse = res;
 
       });

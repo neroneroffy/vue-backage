@@ -70,7 +70,7 @@
                   props: {
                     type: 'warning',
                     size: 'small',
-                    disabled:params.row.status === "INSTORAGE"
+                    disabled:!params.row.del
                   },
                   style: {
                     marginRight: '5px'
@@ -85,7 +85,7 @@
                   props: {
                     type: 'error',
                     size: 'small',
-                    disabled:params.row.status !== "INSTORAGE"
+                    disabled:params.row.del
                   },
                   style: {
                     marginRight: '5px'

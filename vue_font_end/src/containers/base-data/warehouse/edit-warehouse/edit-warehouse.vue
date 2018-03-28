@@ -23,12 +23,12 @@
         <span slot="append">平方米</span>
         </Input>
       </FormItem>
-      <FormItem label="仓库地址" prop="addressld">
-        <Cascader :data="areaData" :load-data="loadData" @on-change="selectAreaDone" :disabled="isChecked" ></Cascader>
+      <FormItem label="仓库地址" prop="addressld" >
+        <Cascader :data="areaData" :load-data="loadData"  :disabled="title!=='新增仓库'" @on-change="selectAreaDone" ></Cascader>
       </FormItem>
       <FormItem label="详细地址">
         <div class="detail-address">
-          <Input v-model="editData.address" :disabled="isChecked" type="textarea" placeholder="请填写详细地址"></Input>
+          <Input v-model="editData.address"  :disabled="title!=='新增仓库'" type="textarea" placeholder="请填写详细地址"></Input>
         </div>
       </FormItem>
       <FormItem v-if="!checked">
@@ -82,6 +82,7 @@
           params:{ id:this.$route.query.id }
         }).then(response=>{
           let res = response.data;
+          console.log(res);
           if(res){
             this.editData = res;
             this.setCascader(`${this.editData.addressList[0]}/${this.editData.addressList[1]}/${this.editData.addressList[2]}`,"block","")
@@ -125,6 +126,10 @@
         this.setCascader("","block","")
       },
       submit(){
+        if(this.editData.warehouseName === "" || this.editData.contacts === "" || this.editData.mobilePhone === "" || this.editData.addressList === "" || this.editData.address === "" ){
+          this.$Message.error("主要信息不能为空");
+          return
+        }
         ///base/warehouse/saveWareHouse添加接口
         ///base/warehouse/updateWareHouse更新接口
         console.log(this.editData);

@@ -50,26 +50,15 @@
             }
           },
           {
+            title: '字典类型',
+            key: 'dictType'
+          },
+          {
             title: '字典名称',
             key: 'dictName',
-            render: (h, params) => {
-              return h('Input', {
-                props: {
-                  size: 'small',
-                  value: params.row.dictName
-                },
-                on: {
-                  input: (val) => {
-                    //赋值行内数据
-                    console.log(params)
-                    if(val){
-                      params.row.dictName = val
-                    }
-                  }
-                }
-              })
-            }
+
           },
+
           {
             title: '操作',
             key: 'action',
@@ -109,33 +98,31 @@
           }
         ],
         cityList:[
-          {
-            dictType:"无类",
-            dictKey:"123",
-            dictValue:"无知",
-            dictName:"sb"
-          }
+
         ],
         dictType:"",
         dictName:"",
         listData:[
           {
-            dictType:"无类",
-            dictKey:"123",
-            dictValue:"无知",
-            dictName:"sb"
+            dictType:"",
+            dictName:"请选择类型",
           }
         ]
       }
     },
     mounted() {
-      this.$http.get(`${this.api}/base/dict/findType`).then(response=>{
+      this.$http.get(`${this.$host}/base/dict/findType`).then(response=>{
         let res = response.data;
-        this.dictType=res[0].dictType;
-        this.dictName=res[0].dictName;
-        this.cityList=res;
-        this.$http.get(`${this.api}/base/dict/findByDictType`, {params:{dictType:this.dictType}}).then(response => {
+        this.cityList = [
+          {
+            dictType:"",
+            dictName:"请选择类型",
+          }
+        ].concat(res);
+        console.log(this.cityList);
+        this.$http.get(`${this.$host}/base/dict/findByDictType`, {params:{dictType:this.dictType}}).then(response => {
           let data = response.data;
+
           this.listData = data;
         })
       })
@@ -149,7 +136,7 @@
         })
       },
       addMember() {
-        this.$router.push('/editWordbook')
+        this.$router.push('/sys/dict/editWordbook')
       },
       //编辑
       edit(params){
@@ -157,7 +144,7 @@
           content: '<p>确认编辑此条数据吗？</p>',
           loading: true,
           onOk: () => {
-            console.log(params)
+
             this.$store.dispatch('modalLoading');
             // let params=params.row;
             this.$http.post(`${this.api}/base/dict/update`,params.row).then(response=>{
@@ -166,7 +153,12 @@
               if (res.result) {
                 this.$Modal.remove();
                 this.$Message.info('编辑成功');
-                this.$router.push({path:'/wordbook'})
+                this.$http.get(`${this.$host}/base/dict/findByDictType`, {params:{dictType:this.dictType}}).then(response => {
+                  let data = response.data;
+                  this.listData = data;
+                })
+
+
               }
             })
           }
@@ -188,7 +180,12 @@
               if (res.result) {
                 this.$Modal.remove();
                 this.$Message.info('删除成功');
-                this.$router.push({path:'/wordbook'})
+                this.$http.get(`${this.$host}/base/dict/findByDictType`, {params:{dictType:this.dictType}}).then(response => {
+                  let data = response.data;
+                  console.log(data);
+                  this.listData = data;
+                })
+
               }
             })
           }

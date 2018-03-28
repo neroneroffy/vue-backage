@@ -197,6 +197,7 @@
               let res = response.data;
               res.pageList.forEach(v=>{
                 v.customerType = this.type(v.customerType)
+                v.status = this.status(v.status)
               })
               this.listData = res.pageList;
               //记录总页数

@@ -126,6 +126,7 @@
             align: 'center',
             width:180,
             render: (h, params) => {
+
               return this.user.roleCode === "finance"? h('div', [
                 h('Button', {
                   props: {
@@ -165,7 +166,7 @@
                     },
                     on: {
                       click: () => {
-                        console.log(params.row.id);
+
                         this.$http.get(`${this.$host}/base/PurchaseOrder/updateAndItStatus`,{
                           params:{
                             id:params.row.id
@@ -273,10 +274,11 @@
       }
     },
     create(){
-      this.user = JSON.parse(localStorage.getItem('user'));
-      this.user.roleCode = "finance"
     },
     mounted(){
+      this.user = JSON.parse(localStorage.getItem('user'));
+      this.user.roleCode = "finance"
+
       //初始请求分页
       this.pagination()
     },
@@ -290,7 +292,7 @@
         this.currentTab = name;
         sessionStorage.setItem("currentTab",this.currentTab);
         this.pagination();
-        console.log(this.currentTab);
+
       },
       //提交搜索
       handleSubmit() {

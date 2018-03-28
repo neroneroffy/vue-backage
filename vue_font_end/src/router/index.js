@@ -84,16 +84,6 @@ const router = new Router({
 
   routes: [
     {
-      path:"/wordbook",
-      name:"wordbook",
-      component:wordbook
-    },
-    {
-      path:"/editWordbook",
-      name:"wordbook",
-      component:editWordbook
-    },
-    {
       path:"/authRoute",
       name:"authRoute",
       component:authRoute
@@ -128,6 +118,18 @@ const router = new Router({
           name: 'editrole',
           component: editrole
         },
+        /*字典管理*/
+        {
+          path:"/sys/dict",
+          name:"wordbook",
+          component:wordbook
+        },
+        {
+          path:"/sys/dict/editWordbook",
+          name:"wordbook",
+          component:editWordbook
+        },
+
         {
           path: '/sys/role/auth',
           name: 'auth',

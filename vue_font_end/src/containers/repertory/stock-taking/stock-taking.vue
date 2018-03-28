@@ -4,7 +4,7 @@
       <Form inline>
 
         <FormItem prop="id">
-          <Select v-model="id" :value="id" @on-change="tab" style="width:200px" placeholder="所有">
+          <Select v-model="id" :value="id" @on-change="tab" style="width:200px" placeholder="请选择">
             <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.warehouseName }}</Option>
           </Select>
         </FormItem>
@@ -121,7 +121,6 @@
         stockType:this.status
       }
       this.$http.post(`${this.$host}/base/stockInfo/search`,params).then(response=>{
-
         let res = response.data;
         if(res){
           console.log(res);
@@ -181,6 +180,7 @@
         this.$http.post(`${this.$host}/base/inventoryRecord/addInventoryRecord`,params).then(response => {
           if(response.data.result){
             this.$Message.success(response.data.msg)
+            this.$router.push("/repertory/record");
           }
 
         })
