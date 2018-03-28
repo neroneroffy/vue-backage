@@ -41,7 +41,7 @@
             key: 'total'
           },
           {
-            title: '盘库数量',
+            title: '入库数量',
             key: 'num'
           }
         ]
@@ -72,7 +72,6 @@
               let res=response.data;
               this.$Modal.remove();
               this.$Message.success(res.msg);
-
               console.log(res);
               this.$router.push('/repertory/in')
             })
