@@ -1,14 +1,17 @@
 <!--<template>-->
-<!--<div class="present">赠品管理</div>-->
+<!--<div class="present">字典管理</div>-->
 <template>
   <div class="present">
     <div class="search-wrapper">
       <Button type="primary" icon="plus-round" @click="addMember" class="add">新增</Button>
-      <!--<FormItem prop="id">
-        <Select v-model="id" :value="id" @on-change="tab" style="width:200px" placeholder="所有">
-          <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.warehouseName }}</Option>
+
+      <Form>
+      <FormItem prop="dictType">
+        <Select v-model="dictType" :value="dictType" @on-change="tab" style="width:200px">
+          <Option v-for="item in cityList" :value="item.dictType" :key="item.dictType">{{ item.dictName }}</Option>
         </Select>
-      </FormItem>-->
+      </FormItem>
+      </Form>
     </div>
     <Table :columns="columns" :data="listData" class="table"></Table>
   </div>
@@ -107,31 +110,44 @@
         ],
         cityList:[
           {
-            type:""
+            dictType:"无类",
+            dictKey:"123",
+            dictValue:"无知",
+            dictName:"sb"
           }
         ],
+        dictType:"",
+        dictName:"",
         listData:[
           {
             dictType:"无类",
             dictKey:"123",
             dictValue:"无知",
-            dictName:""
+            dictName:"sb"
           }
         ]
       }
     },
     mounted() {
       this.$http.get(`${this.api}/base/dict/findType`).then(response=>{
-        console.log(response)
+        let res = response.data;
+        this.dictType=res[0].dictType;
+        this.dictName=res[0].dictName;
+        this.cityList=res;
+        this.$http.get(`${this.api}/base/dict/findByDictType`, {params:{dictType:this.dictType}}).then(response => {
+          let data = response.data;
+          this.listData = data;
+        })
+      })
 
-      })
-      this.$http.get(`${this.api}/base/dict/findByDictType`, {params:{dictType:"num1"}}).then(response => {
-        // console.log(response)
-        let data = response.data;
-        this.listData = data;
-      })
     },
     methods: {
+      tab(){
+        this.$http.get(`${this.api}/base/dict/findByDictType`, {params:{dictType:this.dictType}}).then(response => {
+          let data = response.data;
+          this.listData = data;
+        })
+      },
       addMember() {
         this.$router.push('/editWordbook')
       },
