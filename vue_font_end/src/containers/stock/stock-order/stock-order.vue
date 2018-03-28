@@ -277,7 +277,7 @@
     },
     mounted(){
       this.user = JSON.parse(localStorage.getItem('user'));
-      this.user.roleCode = "finance"
+      console.log(`角色标识${this.user.roleCode}`);
 
       //初始请求分页
       this.pagination()

@@ -139,7 +139,7 @@
       let xAuthToken=localStorage.getItem("xAuthToken");
       this.url=`${this.$host}/base/orderItem/export?id=${this.$route.query.id}&token=${xAuthToken}`;
 
-      this.$http.get(`${this.api}/base/orderItem/findAll`,{
+      this.$http.get(`${this.$host}/base/orderItem/findAll`,{
         params:{ id:this.$route.query.id }
       }).then(response => {
         console.log(response.data)

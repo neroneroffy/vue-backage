@@ -39,7 +39,7 @@
 <script>
   import BastTitle from  "@/components/base-title";
   import CommodityPicker from '@/components/commodity-picker/commodity-picker'
-
+  import convertTime from "@/util/convertTime"
   export default {
     name: "edit-stock-out",
     data(){
@@ -590,6 +590,7 @@
         }).then(response =>{
           let res = response.data;
           console.log(res);
+          res.receiveTime =convertTime(parseInt(res.receiveTime))
           this.baseData = res;
           this.data = res.outboundOrderItemModelList;
 

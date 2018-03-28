@@ -41,7 +41,7 @@
     data() {
       return {
         value4: "爸爸的选择",
-        pageSizeList: [30, 10, 20],
+        pageSizeList: [30, 50, 100],
         pageSize: 30,
         total:0,
         currentPage:1,
@@ -90,7 +90,7 @@
           },
 */
           {
-            title: "商品金额",
+            title: "订单金额",
             key: "totalGoodsPrice",
           },
 /*          {
@@ -168,6 +168,28 @@
       cancel() {
 
       },
+      status(status){
+        switch(status){
+          case "UNCONFIRMED":
+            return "待客户确认";
+            break;
+          case "UNFINANCECONFIRMED":
+            return "待财务确认";
+            break;
+          case "UNSEND":
+            return "未发货";
+            break;
+          case "ALLSEND":
+            return "已发货";
+            break;
+          case "COMPLETE":
+            return "完成";
+            break;
+          case "CLOSE":
+            return "关闭";
+            break;
+        }
+      },
       //查看
       show(params){
         this.$router.push({path:'/selling/order-form/edit-order-form/',query:{id:params.row.id}})
@@ -188,7 +210,8 @@
           console.log(response)
           let res = response.data;
           res.pageList.forEach(v=>{
-            v.sendTime = convertTime(v.sendTime)
+            v.sendTime = convertTime(v.sendTime);
+            v.status = this.status(v.status)
           })
 
           this.data = res.pageList;
@@ -211,6 +234,7 @@
           let res = response.data;
           res.pageList.forEach(v=>{
             v.sendTime = convertTime(v.sendTime)
+            v.status = this.status(v.status)
           })
 
           this.data = res.pageList;

@@ -58,10 +58,10 @@
             title: '单位',
             key: 'units'
           },
-          {
+/*          {
             title: '金额',
             key: 'total'
-          },
+          },*/
           {
             title: '数量',
             key: 'num'
@@ -101,7 +101,7 @@
         cityList:[
           {
             id:"",
-            warehouseName:"所有"
+            warehouseName:"请选择"
           }
         ]
       }
