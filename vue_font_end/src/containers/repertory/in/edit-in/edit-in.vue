@@ -41,7 +41,7 @@
             key: 'total'
           },
           {
-            title: '盘库数量',
+            title: '入库数量',
             key: 'num'
           }
         ]

@@ -41,7 +41,7 @@
             key: 'total'
           },
           {
-            title: '盘库数量',
+            title: '出库数量',
             key: 'num'
           }
         ]
@@ -51,7 +51,7 @@
         BastTitle
       },
       mounted(){
-        ///base/inventoryOutboundItem/find this.$route.query.id
+        ///base/inventoryOutboundItem/find this.$route.query.id  /base/inventoryInboundItem/find
         this.$http.get(`${this.$host}/base/inventoryOutboundItem/find`,{params:{id:this.$route.query.id}}).then(response => {
           console.log(response);
           let res=response.data;
