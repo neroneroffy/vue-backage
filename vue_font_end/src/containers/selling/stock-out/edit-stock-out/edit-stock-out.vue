@@ -39,7 +39,7 @@
 <script>
   import BastTitle from  "@/components/base-title";
   import CommodityPicker from '@/components/commodity-picker/commodity-picker'
-
+  import convertTime from "@/util/convertTime"
   export default {
     name: "edit-stock-out",
     data(){
@@ -53,6 +53,7 @@
             {
               title:"新增",
               key:"add",
+              width:100,
               render:(h,params)=>{
                 return h('div', [
                   h('Button',{
@@ -93,7 +94,7 @@
               }
             },
             {
-              title:"货物名称",
+              title:"名称",
               key:"goodsName",
               render:(h,params)=>{
                 return h("div",{
@@ -118,6 +119,34 @@
                 },this.selectedGood[params.index].goodsName?this.selectedGood[params.index].goodsName:"请选择商品")
               }
 
+            },
+            {
+              title:"仓库",
+              key:"warehouseId",
+              width:200,
+              render:(h,params)=>{
+
+                return h('Select',{
+                  props:{
+                    value:this.data[params.index].warehouseId,
+                    placeholder:"选择仓库",
+                    disabled:this.isChecked
+                  },
+                  on:{
+                    input:(e)=>{
+                      params.row.warehouseId = e;
+                    }
+                  }
+                },this.warehouse.map((item)=>{
+                  return h('Option',{
+                    props:{
+                      value:item.id ,
+                      label:item.warehouseName,
+                    },
+
+                  })
+                }))
+              }
             },
             {
               title:"单位",
@@ -246,6 +275,7 @@
             {
               title:"新增",
               key:"add",
+              width:100,
               render:(h,params)=>{
                 return h('div', [
                   h('Button',{
@@ -286,7 +316,7 @@
               }
             },
             {
-              title:"货物名称",
+              title:"名称",
               key:"goodsName",
               render:(h,params)=>{
                 return h("div",{
@@ -313,8 +343,9 @@
 
             },
             {
-              title:"货物型号",
+              title:"型号",
               key:"modelSize",
+              width:80,
               render:(h,params)=>{
                 return h("div",{
                   style:{
@@ -324,13 +355,14 @@
                     borderRadius:"3px",
                     float:"left"
                   },
-                },this.selectedGood[params.index].goodsName?params.row.modelSize:"请先选择商品")
+                },this.selectedGood[params.index].goodsName?params.row.modelSize:"型号")
               }
 
             },
             {
               title:"仓库",
               key:"warehouseId",
+              width:200,
               render:(h,params)=>{
 
                 return h('Select',{
@@ -558,6 +590,7 @@
         }).then(response =>{
           let res = response.data;
           console.log(res);
+          res.receiveTime =convertTime(parseInt(res.receiveTime))
           this.baseData = res;
           this.data = res.outboundOrderItemModelList;
 
@@ -577,14 +610,14 @@
 
       }else{
         //调用仓库接口
-        this.$http.get(`${this.$api}/base/warehouse/warehouseFindAll`).then(response=> {
+        this.$http.get(`${this.$host}/base/warehouse/warehouseFindAll`).then(response=> {
           let res = response.data;
           this.warehouse = res
 
         });
 
         //单位接口
-      this.$http.get(`${this.$api}/base/units/findAll/`).then(response=>{
+      this.$http.get(`${this.$host}/base/units/findAll/`).then(response=>{
 
         let res = response.data;
         if(res){
@@ -695,6 +728,7 @@
       },
       //保存出库单
       save(){
+
         if(this.baseData.orderNo === ""){
           this.$Message.error("关联客户订单不能为空")
           return
@@ -705,7 +739,19 @@
           ...this.baseData,
           outboundOrderItemModelList:this.data
         };
-        console.log(submitData);
+        for(let i = 0;i<this.data.length;i++){
+          if(this.data[i].goodsId === ""){
+            this.$Message.error("请选择货物")
+            return
+          }
+          if(this.data[i].num === "") {
+            this.$Message.error("请填写数量")
+            return
+          }
+        }
+
+
+
         let url = this.$route.query.id?`${this.$host}/base/outboundOrder/updateOutboundOrder`:`${this.$host}/base/outboundOrder/saveOutboundOrder`;
         this.$http.post(url,{...submitData}).then(response=>{
           let res = response.data;

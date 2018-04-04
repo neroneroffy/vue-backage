@@ -6,7 +6,7 @@
         <Input v-model="editData.materielName"  :disabled="isChecked" placeholder="请输入名称" />
       </FormItem>
       <FormItem label="编号" prop="materielCode">
-        <Input v-model="editData.materielCode"  :disabled="isChecked" placeholder="请输入单位"/>
+        <Input v-model="editData.materielCode"  :disabled="isChecked" placeholder="请输入编号"/>
       </FormItem>
       <FormItem label="条形码" prop="barCode">
         <Input v-model="editData.barCode" :disabled="isChecked" placeholder="请输入价格"/>

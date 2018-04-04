@@ -4,8 +4,8 @@
       <Form inline>
 
         <FormItem prop="id">
-          <Select v-model="id" :value="id" @on-change="tab" style="width:200px" placeholder="所有">
-            <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.contacts }}</Option>
+          <Select v-model="id" :value="id" @on-change="tab" style="width:200px" placeholder="请选择">
+            <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.warehouseName }}</Option>
           </Select>
         </FormItem>
       </Form>
@@ -58,10 +58,10 @@
             title: '单位',
             key: 'units'
           },
-          {
+/*          {
             title: '金额',
             key: 'total'
-          },
+          },*/
           {
             title: '数量',
             key: 'num'
@@ -101,7 +101,7 @@
         cityList:[
           {
             id:"",
-            contacts:"所有"
+            warehouseName:"请选择"
           }
         ]
       }
@@ -121,7 +121,6 @@
         stockType:this.status
       }
       this.$http.post(`${this.$host}/base/stockInfo/search`,params).then(response=>{
-
         let res = response.data;
         if(res){
           console.log(res);
@@ -151,6 +150,10 @@
              inventoryType:"GOODS",
           }
          * */
+        if(this.id === ""){
+          this.$Message.error("请选择仓库")
+          return
+        }
         console.log(this.commodity)
         let params=[];
         this.commodity.forEach(item=>{
@@ -167,11 +170,17 @@
             }
             params.push(obj)
           }
-        })
-        console.log(params)
+        });
+        if(params.length === 0){
+          this.$Message.error("盘点数量不能都为空")
+          return
+        }
+
+
         this.$http.post(`${this.$host}/base/inventoryRecord/addInventoryRecord`,params).then(response => {
           if(response.data.result){
             this.$Message.success(response.data.msg)
+            this.$router.push("/repertory/record");
           }
 
         })

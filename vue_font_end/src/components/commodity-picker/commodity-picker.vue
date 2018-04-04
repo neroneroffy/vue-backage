@@ -1,7 +1,7 @@
 <template>
   <Modal
     :value="showPicker"
-    title="选择商品"
+    title="选择货品"
     width="630"
     @on-ok="selectDone"
     @on-cancel="cancel">
@@ -68,7 +68,7 @@
         v-if="data"
         :loading="loading"
         :data="data"
-        height="500"
+        height="350"
         width="600"
         :columns="typeColumn"
         highlight-row
@@ -167,10 +167,25 @@
                 name:"请选择产品型号"
               },
               {
+                name:"S"
+              },
+              {
                 name:"NB"
               },
               {
-                name:"S"
+                name:"M"
+              },
+              {
+                name:"L"
+              },
+              {
+                name:"XL"
+              },
+              {
+                name:"XXL"
+              },
+              {
+                name:"XXXL"
               }
             ]
           },

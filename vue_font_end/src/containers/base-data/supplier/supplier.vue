@@ -32,8 +32,8 @@
       name: "supplier",
       data(){
         return {
-          pageSizeList:[10,50,100],
-          pageSize:10,
+          pageSizeList:[30,50,100],
+          pageSize:30,
           total:0,
           currentPage:1,
           visible:false,
@@ -142,7 +142,14 @@
         //提交搜索
         handleSubmit() {
           console.log(this.searchContent);
-
+            if(this.searchContent.supplierCode==="" && this.searchContent.mobilePhone==="" ){
+              let params = {
+                currentPage:`${this.currentPage}`,
+                pageSize:`${this.pageSize}`
+              };
+              this.pagination(params);
+              return
+            }
             this.$http.post(`${this.$host}/base/supplier/findmobilePhone`,{...this.searchContent}).then(response=>{
               let res = response.data;
               this.listData = res.supplierList;
@@ -192,7 +199,7 @@
         pagination(customsParams){
           let defaultParams = {
             currentPage :"1",
-            pageSize : "10"
+            pageSize : "30"
           };
           let params = customsParams || defaultParams;
           this.$http.get(`${this.$host}/base/supplier/supplierFindAll`,{params}).then(response=>{

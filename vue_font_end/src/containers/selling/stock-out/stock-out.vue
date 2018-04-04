@@ -45,8 +45,8 @@
     data() {
       return {
         api:"http://192.168.31.168:8080",
-        pageSizeList: [5, 50, 100],
-        pageSize: 5,
+        pageSizeList: [30, 50, 100],
+        pageSize: 30,
         total: 0,
         data: "",
         loading: false,
@@ -68,18 +68,18 @@
             title: '出库类型',
             key: 'outboundType',
           },
-          {
+/*          {
             title: '所属销售人员账户',
             key: 'salesAccount',
-          },
+          },*/
           {
             title: '交货时间',
             key: 'receiveTime',
           },
-          {
+/*          {
             title: '出库人员唯一标识',
             key: 'operatorId',
-          },
+          },*/
           {
             title: '备注',
             key: 'mark',
@@ -222,7 +222,7 @@
           ...this.searchContent,
           outboundType: this.type,
           pageCount: 1,
-          pageSize: 5
+          pageSize: 30
         };
         let params = customsParams || defaultParams;
         let url = `${this.$host}/base/outboundOrder/findAllOutboundOrder`;

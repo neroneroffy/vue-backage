@@ -41,7 +41,7 @@
             key: 'total'
           },
           {
-            title: '盘库数量',
+            title: '入库数量',
             key: 'num'
           }
         ]
@@ -55,6 +55,7 @@
       this.$http.get(`${this.$host}/base/inventoryInboundItem/find`,{params:{id:this.$route.query.id}}).then(response => {
 
         let res=response.data;
+        console.log(res);
         this.commodity=res;
       })
     },
@@ -66,14 +67,14 @@
           content: '<p>请确定信息正确</p>',
           loading: true,
           onOk: () => {
-            this.$http.get(`${this.$host}/base/inventoryInboundItem/inBound`,{params:{id:this.$route.query.id}}).then(response => {
+            this.$http.get(`${this.$host}/base/inventoryInboundItem/Inbound`,{params:{id:this.$route.query.id}}).then(response => {
               console.log(response);
               let res=response.data;
-              this.$Modal.remove();
-              this.$Message.success(res.msg);
-
-              console.log(res);
-              this.$router.push('/repertory/in')
+              if(res){
+                this.$Modal.remove();
+                this.$Message.success("入库成功");
+                this.$router.push(`/repertory/in`)
+              }
             })
           }
         });

@@ -54,8 +54,8 @@
     name: "stock-order",
     data(){
       return{
-        pageSizeList:[5,50,100],
-        pageSize:5,
+        pageSizeList:[30,50,100],
+        pageSize:30,
         total:0,
         data:[],
         api:"http://192.168.31.222:8080",
@@ -65,50 +65,55 @@
           {
             title: '采购单编号',
             key: 'orderNo',
-            width:"180"
           },
-          {
+/*          {
             title: '供货商',
             key: 'supplierName',
           },
           {
             title: '采购员',
             key: 'nickName',
-          },
+          },*/
           {
-            title: '采购总价',
+            title: '总金额',
             key: 'totalPurchasePrice',
           },
+/*
           {
             title: '采购单含税总价',
             key: 'totalTaxPrice',
             width:"150"
           },
+*/
+/*
           {
             title: '折扣率',
             key: 'discountRate',
             width:"90"
           },
+*/
+/*
           {
             title: '优惠金额',
             key: 'discountAmount'
           },
+*/
           {
-            title: '实际采购总金额',
+            title: '实际总金额',
             key: 'realTotalPrice',
-            width:"150"
+
           },
           {
             title: '交货日期',
             key: 'receiveTime',
-            width:150
+
           },
           {
-            title: '采购单状态',
+            title: '状态',
             key: 'status',
           },
           {
-            title: '采购单审核状态',
+            title: '审核状态',
             key: 'auditStatus',
           },
           {
@@ -121,7 +126,8 @@
             align: 'center',
             width:180,
             render: (h, params) => {
-              return h('div', [
+
+              return this.user.roleCode === "finance"? h('div', [
                 h('Button', {
                   props: {
                     type: 'primary',
@@ -150,9 +156,44 @@
                     }
                   }
                 }, '编辑'),
-                /*h('Button', {
+                h('Button', {
+                    props: {
+                      type: 'default',
+                      size: 'small'
+                    },
+                    style: {
+                      marginRight: '5px'
+                    },
+                    on: {
+                      click: () => {
+
+                        this.$http.get(`${this.$host}/base/PurchaseOrder/updateAndItStatus`,{
+                          params:{
+                            id:params.row.id
+                          }
+                        }).then(response=>{
+                          let res = response.data;
+                          if(res.result){
+                            this.$Message.success(res.msg);
+                            let params = {
+                              ...this.searchContent,
+                              pageCount: this.pageCount,
+                              pageSize: this.pageSize
+                            };
+                            this.pagination(params)
+                          }
+
+                        })
+                      }
+                    }
+                  }, '审核')
+
+              ])
+                :
+                h('div', [
+                h('Button', {
                   props: {
-                    type: 'error',
+                    type: 'primary',
                     size: 'small'
                   },
                   style: {
@@ -160,10 +201,25 @@
                   },
                   on: {
                     click: () => {
-                      this.remove(params)
+                      this.show(params)
                     }
                   }
-                }, '删除')*/
+                }, '查看'),
+                h('Button', {
+                  props: {
+                    type: 'warning',
+                    size: 'small'
+                  },
+                  style: {
+                    marginRight: '5px'
+                  },
+                  on: {
+                    click: () => {
+                      this.edit(params)
+                    }
+                  }
+                }, '编辑'),
+
               ]);
             }
           }
@@ -213,11 +269,16 @@
             name: '已审核'
           },
         ],
-        type:"GOODS"
+        type:"GOODS",
+        user:""
       }
     },
-
+    create(){
+    },
     mounted(){
+      this.user = JSON.parse(localStorage.getItem('user'));
+      console.log(`角色标识${this.user.roleCode}`);
+
       //初始请求分页
       this.pagination()
     },
@@ -231,7 +292,7 @@
         this.currentTab = name;
         sessionStorage.setItem("currentTab",this.currentTab);
         this.pagination();
-        console.log(this.currentTab);
+
       },
       //提交搜索
       handleSubmit() {
@@ -313,7 +374,7 @@
           status:"",
           auditStatus:"",
           pageCount:1,
-          pageSize:5,
+          pageSize:30,
           purchaseType:this.tab
         };
         let params = customsParams || defaultParams;

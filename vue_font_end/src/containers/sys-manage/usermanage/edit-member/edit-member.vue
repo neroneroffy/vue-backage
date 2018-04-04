@@ -3,10 +3,18 @@
     <BastTitle :title="title"></BastTitle>
     <Form ref="editData" :model="editData" :label-width="40" v-if="editData" label-position="left">
       <FormItem label="账户" prop="id">
-        <Input v-model="editData.userName" :disabled="isChecked" placeholder="用户账户" />
+        <Input v-model="editData.userName" :disabled="!!this.$route.query.id" placeholder="用户账户" />
+      </FormItem>
+      <FormItem label="密码" prop="id" v-if="!this.$route.query.id">
+        <Input v-model="editData.password" type="password" :disabled="isChecked" placeholder="用户密码" />
       </FormItem>
       <FormItem label="昵称" prop="account">
         <Input v-model="editData.nickName" :disabled="isChecked" placeholder="用户昵称"/>
+      </FormItem>
+      <FormItem label="组织" prop="role">
+        <Select v-model="editData.orgId" :disabled="isChecked"  placeholder="请选择组织" @on-change = 'roleChange'>
+          <Option :value="v.id" :key="v.id" v-for="v in editOrgList">{{v.orgName}}</Option>
+        </Select>
       </FormItem>
       <FormItem label="角色" prop="role">
         <Select v-model="editData.roleId" :disabled="isChecked"  placeholder="请选择角色" @on-change = 'roleChange'>
@@ -61,10 +69,13 @@
               nickName:"",
               roleId:"",
               mobile:"",
-              thumbnail:""
+              thumbnail:"",
+              password:"",
+              orgId:""
             },
             checkMember:false,
             editRoleList: [],
+            editOrgList:[],
             headers:{
               token:localStorage.getItem('xAuthToken')
             }
@@ -79,7 +90,17 @@
           }else{
             this.checkMember = false
           }
-          //请求角色列表
+          //请求组织列表
+        this.$http.post(`${this.$host}/sys/org/list`,{}).then(response=>{
+          let res = response.data;
+          if(res.result){
+            console.log(res.data);
+            this.editOrgList = res.data
+
+          }
+        });
+
+        //请求角色列表
         this.$http.get(`${this.$host}/sys/user/addPre`).then(response=>{
           let res = response.data;
           if(res.result){
@@ -94,6 +115,7 @@
             let res = response.data;
             if(res.result){
               this.editData = res.data;
+              console.log(this.editData);
             }
           });
         }
@@ -107,6 +129,14 @@
         submit(){
 
           if(this.$route.query.id){
+            for(let k in this.editData){
+              if(this.editData[k] === "" ){
+                console.log(this.editData[k]);
+                this.$Message.error("请检查信息是否全部填写");
+                return
+              }
+            }
+
             this.$http.post(`${this.$host}/sys/user/update`,{...this.editData}).then(response=>{
               let res = response.data;
               if(res.result){
@@ -118,6 +148,11 @@
             })
             return
           }
+          if(this.editData.userName === "" || this.editData.nickName === ""|| this.editData.roleId === "" || this.editData.mobile === ""|| this.editData.password === ""|| this.editData.orgId === "" ){
+            this.$Message.error("请检查信息是否全部填写");
+            return
+          }
+
           this.$http.post(`${this.$host}/sys/user/add`,{...this.editData}).then(response=>{
             let res = response.data;
             if(res.result){
@@ -140,7 +175,7 @@
         },
         handleSuccess (response, file, fileList) {
           this.editData.thumbnail = response.data
-          console.log(response);
+          console.log(this.editData.thumbnail);
 
         },
         handleFormatError (file) {

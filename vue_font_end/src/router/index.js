@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router';
-
+import authRoute from '@/containers/auth'
 import login from '@/containers/login/login'
 import container from '@/containers/container/container'
 //资源管理
@@ -75,11 +75,19 @@ import editIn from '@/containers/repertory/in/edit-in/edit-in'//入库查询
 import Out from '@/containers/repertory/out/out'//出库
 import editOut from '@/containers/repertory/out/edit-out/edit-out'//出库查询
 
+import wordbook from '@/containers/sys-manage/wordbook/wordbook'//字典管理
+import editWordbook from '@/containers/sys-manage/wordbook/edit-wordbook/edit-wordbook'
+
 Vue.use(Router);
 
 const router = new Router({
 
   routes: [
+    {
+      path:"/authRoute",
+      name:"authRoute",
+      component:authRoute
+    },
     {
       path:"/login",
       name:"login",
@@ -110,6 +118,18 @@ const router = new Router({
           name: 'editrole',
           component: editrole
         },
+        /*字典管理*/
+        {
+          path:"/sys/dict",
+          name:"wordbook",
+          component:wordbook
+        },
+        {
+          path:"/sys/dict/editWordbook",
+          name:"wordbook",
+          component:editWordbook
+        },
+
         {
           path: '/sys/role/auth',
           name: 'auth',
@@ -337,7 +357,7 @@ const router = new Router({
 
         },
         {
-          path: '/selling/order-form/edit-order-form/edit-order-form',
+          path: '/selling/order-form/edit-order-form',
           name:'edit-order-form',
           component:editOrderForm
 

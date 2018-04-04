@@ -11,7 +11,7 @@
           </Select>
         </FormItem>
         <FormItem label="联系电话" prop="mobilePhone">
-          <Input v-model="editData.mobilePhone" placeholder="请输入联系电话" :disabled="isChecked" />
+          <Input v-model="editData.mobilePhone" placeholder="慎重填写，该号码将作为登陆账号，不可修改" :disabled="isChecked" />
         </FormItem>
         <FormItem label="座机" prop="telephone">
           <Input v-model="editData.telephone" placeholder="请输入座机号码" :disabled="isChecked" />
@@ -165,7 +165,10 @@
           this.editData.firstPurchaseTime = date
         },
         submit(){
-          console.log(this.editData);
+          if(this.editData.customerName === "" || this.editData.customerType === "" ||this.editData.mobilePhone === "" || this.editData.addressIds === "" || this.editData.detailAddress === ""){
+            this.$Message.error("重要信息不能为空")
+            return
+          }
           let url="/base/customer/add";
           if(this.$route.query.id){
             this.editData.id = this.$route.query.id;
@@ -176,7 +179,7 @@
             let res = response.data;
             console.log(response.data)
             if(!res.result){
-              this.$Message.error('格式错误');
+              this.$Message.error(res.msg);
             }else{
              this.$Message.success('成功');
              this.$router.push('/baseData/client')

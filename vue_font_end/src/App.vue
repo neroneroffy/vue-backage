@@ -7,6 +7,7 @@
 export default {
   name: 'App',
   created(){
+    this.$router.push('/authRoute')
   },
   updated(){
     let xAuthToken = localStorage.getItem('xAuthToken');

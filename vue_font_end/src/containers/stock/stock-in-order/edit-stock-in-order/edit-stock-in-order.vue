@@ -54,6 +54,7 @@
             {
               title:"新增",
               key:"add",
+              width:100,
               render:(h,params)=>{
                 return h('div', [
                   h('Button',{
@@ -93,7 +94,7 @@
               }
             },
             {
-              title:"货物名称",
+              title:"名称",
               key:"goodsId",
               render:(h,params)=>{
                 return h("div",{
@@ -121,6 +122,7 @@
             },
             {
               title:"仓库",
+              width:250,
               key:"warehouseId",
               render:(h,params)=>{
                 return h('Select',{
@@ -251,6 +253,7 @@
             {
               title:"新增",
               key:"add",
+              width:100,
               render:(h,params)=>{
                 return h('div', [
                   h('Button',{
@@ -291,7 +294,7 @@
               }
             },
             {
-              title:"货物名称",
+              title:"名称",
               key:"goodsId",
               render:(h,params)=>{
                 return h("div",{
@@ -318,8 +321,9 @@
 
             },
             {
-              title:"货物型号",
+              title:"型号",
               key:"modelSize",
+              width:100,
               render:(h,params)=>{
                 return h("div",{
                   style:{
@@ -329,13 +333,14 @@
                     borderRadius:"3px",
                     float:"left"
                   },
-                },this.selectedGood[params.index].goodsName?params.row.modelSize:"请先选择货物")
+                },this.selectedGood[params.index].goodsName?params.row.modelSize:"型号")
               }
 
             },
             {
               title:"仓库",
               key:"warehouseId",
+              width:250,
               render:(h,params)=>{
 
                 return h('Select',{
@@ -680,6 +685,17 @@
           });
           return
         }
+        for(let i = 0;i<this.data.length;i++){
+          if(this.data[i].goodsId === ""){
+            this.$Message.error("请选择货物")
+            return
+          }
+          if(this.data[i].num === "") {
+            this.$Message.error("请填写数量")
+            return
+          }
+        }
+
         this.baseData.inboundType = this.type;
         let submitData = {
           ...this.baseData,
@@ -700,7 +716,7 @@
               this.$router.push(`/stock/stock-in-order`)
               return
             }
-            this.$Message.success('成功');
+            this.$Message.info(res.msg);
             this.$router.push(`/stock/stock-in-order`)
           }else{
             this.$Message.error(res.msg);

@@ -9,8 +9,8 @@
         </Form >
         <Form>
           <FormItem prop="id">
-            <Select v-model="id" :value="id" style="width:200px;margin-left:30px" placeholder="请选择仓库">
-              <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.contacts }}</Option>
+            <Select @on-change="select" v-model="id" :value="id" style="width:200px;margin-left:30px" placeholder="请选择仓库">
+              <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.warehouseName }}</Option>
             </Select>
           </FormItem>
         </Form >
@@ -75,7 +75,7 @@
                   },
                   on: {
                     click: () => {
-                      this.$router.push({path:'/repertory/out/edit-out',query:{id:params.row.inventoryNo,ischecked:true}})
+                      this.$router.push({path:'/repertory/out/edit-out',query:{id:params.row.inventoryNo,ischecked:true,status:"INSTORAGE"}})
                     }
                   }
                 }, '已出库'),
@@ -90,7 +90,7 @@
                   },
                   on: {
                     click: () => {
-                      this.$router.push({path:'/repertory/out/edit-out',query:{id:params.row.inventoryNo}})
+                      this.$router.push({path:'/repertory/out/edit-out',query:{id:params.row.inventoryNo,status:"NOTINSTORAGE"}})
                     }
                   }
                 }, '待出库')
@@ -117,6 +117,9 @@
       BastTitle
     },
     methods:{
+      select(){
+        this.pagination()
+      },
       outboundType(type){
         switch(type){
           case "GOODS":

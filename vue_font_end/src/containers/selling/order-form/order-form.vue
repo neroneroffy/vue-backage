@@ -8,11 +8,11 @@
           <FormItem prop="orderNo">
             <Input type="text" style="width: 200px" v-model="searchContent.orderNo"  placeholder="请输入单据编号"/>
           </FormItem>
-          <FormItem prop="customerId">
-            <Input type="text" style="width: 200px" v-model="searchContent.customerId" placeholder="请输入客户名称"/>
+          <FormItem prop="customerName">
+            <Input type="text" style="width: 200px" v-model="searchContent.customerName" placeholder="请输入客户名称"/>
           </FormItem>
           <FormItem prop="salesId">
-            <Input type="text" style="width: 200px" v-model="searchContent.salesId"  placeholder="请输入销售人员名称"/>
+            <Input type="text" style="width: 200px" v-model="searchContent.nickName"  placeholder="请输入销售人员名称"/>
           </FormItem>
           <FormItem prop="logisticCode">
             <Input type="text" style="width: 200px" v-model="searchContent.logisticCode" placeholder="请输入物流单号"/>
@@ -41,7 +41,7 @@
     data() {
       return {
         value4: "爸爸的选择",
-        pageSizeList: [30, 10, 20],
+        pageSizeList: [30, 50, 100],
         pageSize: 30,
         total:0,
         currentPage:1,
@@ -59,17 +59,18 @@
           },
           {
             title: "客户名称",
-            key: "customerId",
+            key: "customerName",
 
           },
+/*
           {
             title: "名称",
             key: "nickName",
 
-          },
+          },*/
           {
             title: "销售人员名称",
-            key: "salesId",
+            key: "nickName",
           },
           {
             title: "订单状态",
@@ -82,18 +83,20 @@
             title: "发货时间",
             key: "sendTime",
           },
+/*
           {
             title: "收货信息",
             key: "address",
           },
+*/
           {
-            title: "商品金额",
+            title: "订单金额",
             key: "totalGoodsPrice",
           },
-          {
+/*          {
             title: "运费",
             key: "dispatchPrice",
-          },
+          },*/
           {
             title: "物流单号",
             key: "logisticCode",
@@ -130,7 +133,7 @@
         data: [
           {
             orderNo: "",
-            customerId: "",
+            customerName: "",
             salesId: "",
             status: "",
             sendTime: "",
@@ -165,17 +168,39 @@
       cancel() {
 
       },
+      status(status){
+        switch(status){
+          case "UNCONFIRMED":
+            return "待客户确认";
+            break;
+          case "UNFINANCECONFIRMED":
+            return "待财务确认";
+            break;
+          case "UNSEND":
+            return "未发货";
+            break;
+          case "ALLSEND":
+            return "已发货";
+            break;
+          case "COMPLETE":
+            return "完成";
+            break;
+          case "CLOSE":
+            return "关闭";
+            break;
+        }
+      },
       //查看
       show(params){
-        this.$router.push({path:'/selling/order-form/edit-order-form/edit-order-form',query:{id:params.row.id}})
+        this.$router.push({path:'/selling/order-form/edit-order-form/',query:{id:params.row.id}})
       },
       //提交搜索
       handleSubmit() {
         console.log(this.searchContent)
         let data = {
           orderNo: this.searchContent.orderNo,
-          customerId: this.searchContent.customerId,
-          salesId: this.searchContent.salesId,
+          customerName: this.searchContent.customerName,
+          nickName: this.searchContent.nickName,
           logisticCode: this.searchContent.logisticCode,
           currentPage: 1,
           pageSize: 30
@@ -184,6 +209,11 @@
         this.$http.post(`${this.$host}/base/order/find`,{...data}).then(response => {
           console.log(response)
           let res = response.data;
+          res.pageList.forEach(v=>{
+            v.sendTime = convertTime(v.sendTime);
+            v.status = this.status(v.status)
+          })
+
           this.data = res.pageList;
           this.total = res.count;
         })
@@ -192,8 +222,8 @@
       pagination(customsParams) {
         let defaultParams = {
           orderNo: this.searchContent.orderNo,
-          customerId: this.searchContent.customerId,
-          salesId: this.searchContent.salesId,
+          customerName: this.searchContent.customerName,
+          nickName: this.searchContent.nickName,
           logisticCode: this.searchContent.logisticCode,
           currentPage: 1,
           pageSize: 30
@@ -203,8 +233,8 @@
         this.$http.post(`${this.$host}/base/order/find`, params).then(response => {
           let res = response.data;
           res.pageList.forEach(v=>{
-            v.sendTime = convertTime(parseInt(v.sendTime))
-
+            v.sendTime = convertTime(v.sendTime)
+            v.status = this.status(v.status)
           })
 
           this.data = res.pageList;
@@ -217,8 +247,8 @@
         this.currentPage = currentPageNum;
         let params = {
           orderNo: this.searchContent.orderNo,
-          customerId: this.searchContent.customerId,
-          salesId: this.searchContent.salesId,
+          customerName: this.searchContent.customerName,
+          nickName: this.searchContent.nickName,
           logisticCode: this.searchContent.logisticCode,
           currentPage: this.currentPage,
           pageSize: this.pageSize
@@ -231,8 +261,8 @@
         this.currentPage = 1;
         let params = {
           orderNo: this.searchContent.orderNo,
-          customerId: this.searchContent.customerId,
-          salesId: this.searchContent.salesId,
+          customerName: this.searchContent.customerName,
+          nickName: this.searchContent.nickName,
           logisticCode: this.searchContent.logisticCode,
           currentPage: this.currentPage,
           pageSize: this.pageSize
