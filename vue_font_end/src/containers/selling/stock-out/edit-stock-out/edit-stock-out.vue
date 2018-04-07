@@ -45,7 +45,7 @@
     data(){
       return{
         api:'http://192.168.31.222:8080',
-        title:this.$route.query.id?this.$route.query.checked?`查看${this.$route.query.name}出库单`:`编辑${this.$route.query.name}出库单`:`新增${this.$route.query.name}出库单`,
+        title:this.$route.query.id?this.$route.query.checked?`查看${this.$route.query.name}出库单`:`编辑${this.$route.query.name}出库单`:`新增${this.$route.query.name}出库单(一旦新增，不可修改与删除)`,
         isChecked:this.$route.query.checked?true:false,
         isNew:this.$route.query.id?false:true,
         columns: this.$route.query.name === "物料"?
@@ -712,14 +712,21 @@
           });
           return
         }
-        this.$http.get(`${this.$host}/base/OutboundOrderItem/deleteOutboundOrderItem`,{params:{
-            id:params.row.id
-          }}).then(response=>{
-          let res = response.data;
-          console.log(res);
-          this.data.splice(params.index,1);
-          this.selectedGood.splice(params.index,1)
-        })
+        if(this.$route.query.id){
+          this.$http.get(`${this.$host}/base/outboundOrderItem/deleteOutboundOrderItem`,{params:{
+              id:params.row.id
+            }}).then(response=>{
+            let res = response.data;
+            console.log(res);
+            this.data.splice(params.index,1);
+            this.selectedGood.splice(params.index,1)
+          })
+          return
+        }
+        this.data.splice(params.index,1);
+        this.selectedGood.splice(params.index,1)
+
+
 
       },
       //选择仓库
