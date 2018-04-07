@@ -142,7 +142,7 @@
                     }
                   }
                 }, '查看'),
-                h('Button', {
+                /*h('Button', {
                   props: {
                     type: 'warning',
                     size: 'small'
@@ -155,7 +155,7 @@
                       this.edit(params)
                     }
                   }
-                }, '编辑'),
+                }, '编辑'),*/
                 h('Button', {
                     props: {
                       type: 'default',
@@ -205,7 +205,7 @@
                     }
                   }
                 }, '查看'),
-                h('Button', {
+                /*h('Button', {
                   props: {
                     type: 'warning',
                     size: 'small'
@@ -218,7 +218,7 @@
                       this.edit(params)
                     }
                   }
-                }, '编辑'),
+                }, '编辑'),*/
 
               ]);
             }

@@ -14,7 +14,7 @@
         </FormItem>
       </Form>
       <div  v-if="editData.unitsType === 'DOUBLE'">
-        <Form inline :label-width="100" v-for="(v,i) in units" :key="i">
+        <Form inline :label-width="100" v-for="(v,i) in units" v-if="i !==0" :key="i">
           <FormItem label="副单位名称" prop="units">
             <Input placeholder="请输入单位名称" style="width: 200px" v-model="v.viceUnit"/>
           </FormItem>
@@ -125,6 +125,13 @@
               unitTemp.push(v.viceUnit);
               numTemp.push(v.num)
             });
+            if(this.$route.query.id){
+              unitTemp.splice(0,1)
+              numTemp.splice(0,1)
+
+            }
+            console.log(unitTemp);
+            console.log(numTemp);
             unit = `${unitTemp.join(',')}(${numTemp.join(',')})`;
           }
           let submitData = {
@@ -133,6 +140,8 @@
             unitsType:this.editData.unitsType,
             id:this.$route.query.id
           };
+          console.log(submitData);
+
           this.$http.post(`${this.$host}/base/units/add`,{...submitData}).then(response=>{
             let res = response.data;
 
@@ -143,7 +152,7 @@
               this.$Message.info(`编辑失败`);
             }
           });
-          console.log(submitData)
+
         },
         addUnit(){
           this.units.push({
