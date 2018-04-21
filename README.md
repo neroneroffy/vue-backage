@@ -1,4 +1,4 @@
-## 后台管理系统
+## 基于vue的后台管理系统
 
 > 技术：vue, vuex, iview, webpack
 
